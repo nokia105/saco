@@ -12,14 +12,15 @@
 */
 
 Route::get('/', function () {
-    return view('login');
+
+
+    return view('welcome');
+
 });
 
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::resource('/members','MembersController');
-Route::resource('/shares','SharesController');
-Route::resource('/savings','SavingsController');
 
-
+Route::get('/table','TableController@table')->name('table');
