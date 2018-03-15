@@ -125,6 +125,7 @@ $(document).ready(function() {
                         <th>Extn.</th>
                         <th>Start date</th>
                         <th>Salary</th>
+                        
                     </tr>
                 </thead>
                 <tfoot>

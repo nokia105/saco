@@ -31,6 +31,15 @@
   <!-- bootstrap wysihtml5 - text editor -->
   <link rel="stylesheet" href="{{ asset('adminlte/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css') }}">
 
+     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.2.0/css/buttons.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.2.0/css/select.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="Editor/css/editor.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="Editor/examples/resources/syntax/shCore.css">
+    <link rel="stylesheet" type="text/css" href="Editor/examples/resources/demo.css">
+    <style type="text/css" class="init">
+  </style>
+
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
   <!--[if lt IE 9]>
@@ -359,6 +368,10 @@
 
 <!-- jQuery 3 -->
 <script src="{{ asset('adminlte/bower_components/jquery/dist/jquery.min.js') }}"></script>
+ <script type="text/javascript" language="javascript" src="//code.jquery.com/jquery-1.12.3.min.js">
+    </script>
+
+
 <!-- jQuery UI 1.11.4 -->
 <script src="{{ asset('adminlte/bower_components/jquery-ui/jquery-ui.min.js') }}"></script>
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
@@ -368,8 +381,6 @@
 <!-- Bootstrap 3.3.7 -->
 <script src="{{ asset('adminlte/bower_components/bootstrap/dist/js/bootstrap.min.js') }}"></script>
 <!-- Morris.js charts -->
-<script src="{{ asset('adminlte/bower_components/raphael/raphael.min.js') }}"></script>
-<script src="{{ asset('adminlte/bower_components/morris.js/morris.min.js') }}"></script>
 <!-- Sparkline -->
 <script src="{{ asset('adminlte/bower_components/jquery-sparkline/dist/jquery.sparkline.min.js') }}"></script>
 <!-- jvectormap -->
@@ -391,13 +402,35 @@
 <!-- AdminLTE App -->
 <script src="{{ asset('adminlte/dist/js/adminlte.min.js') }}"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-<script src="{{ asset('adminlte/dist/js/pages/dashboard.js') }}"></script>
+
 <!-- AdminLTE for demo purposes -->
 <script src="{{ asset('adminlte/dist/js/demo.js') }}"></script>
 <!-- DataTables -->
 <script src="{{ asset('adminlte/bower_components/datatables.net/js/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('adminlte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
 
+   
+    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js">
+    </script>
+       <script type="text/javascript" language="javascript" src="Editor/js/dataTables.editor.min.js">
+    </script>
+    <script type="text/javascript" language="javascript" src="Editor/examples/resources/syntax/shCore.js">
+    </script>
+    <script type="text/javascript" language="javascript" src="Editor/examples/resources/demo.js">
+    </script>
+    <script type="text/javascript" language="javascript" src="Editor/examples/resources/editor-demo.js">
+    </script>
+      <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.2.0/js/dataTables.buttons.min.js">
+    </script>
+    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/select/1.2.0/js/dataTables.select.min.js">
+    </script>
+
+
 <script src="{{ asset('js/custom_script.js') }}"></script>
+
+ 
+
+
+    
 </body>
 </html>
