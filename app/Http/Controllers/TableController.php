@@ -59,6 +59,7 @@ Editor::inst($db,'datatables_demo','id')
 	->fields(
 		Field::inst( 'first_name' )->validator( 'Validate::notEmpty' ),
 		Field::inst( 'last_name' )->validator( 'Validate::notEmpty' ),
+		Field::inst( 'test' )->setValue('5'),
 		Field::inst( 'email' )->validator( 'Validate::notEmpty' ),
 		Field::inst( 'position' )->validator( 'Validate::notEmpty' ),
 		Field::inst( 'office' )->validator( 'Validate::notEmpty' ),
@@ -72,7 +73,7 @@ Editor::inst($db,'datatables_demo','id')
 			->getFormatter( 'Format::date_sql_to_format', Format::DATE_ISO_8601 )
 			->setFormatter( 'Format::date_format_to_sql', Format::DATE_ISO_8601 )
 	)
-	->process( $_GET )
+	->process( $_GET)
 	->json();
   
 

@@ -3,131 +3,94 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Member;
-use App\User;
-use Auth;
+include(app_path()."\datatable\Editor\php\DataTables.php" );
+include(app_path()."\datatable\Editor\php\config.php" );
+include(app_path()."\datatable\Editor\php\Bootstrap.php" );
+/*
+include(app_path()."\datatable\Editor\php\Editor\Editor.php" );
+include(app_path()."\datatable\Editor\php\Editor\Field.php" );
+include(app_path()."\datatable\Editor\php\Editor\Format.php" );
+include(app_path()."\datatable\Editor\php\Editor\Join.php" );
+include(app_path()."\datatable\Editor\php\Editor\Mjoin.php" );
+include(app_path()."\datatable\Editor\php\Editor\Upload.php" );
+include(app_path()."\datatable\Editor\php\Editor\Validate.php" );*/
+
+
+// Alias Editor classes so they are easy to use
+use
+	DataTables\Editor,
+	DataTables\Editor\Field,
+	DataTables\Editor\Format,
+	DataTables\Editor\Mjoin,
+	DataTables\Editor\Upload,
+	DataTables\Editor\Validate;
+	use Auth;
+	//DataTables\Database\Database;
+
 
 class MembersController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
+    //
 
-    }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+      public function index(){
 
-        
-        return view('member.member');
-    }
+     $user_id=Auth::user()->id;
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
+
+     
+      	
+
+
+
+// Build our Editor instance and process the data coming from _POST
+
 /*
-        $this->validate(request(),[
+ * Example PHP implementation used for the index.html example
+ */
 
-         'firstname'=>'required',
-         'middlename'=>'required',
-         'lastname'=>'required',
-         'email'=>'required',
-         'phone'=>'required',
-         'bankname'=>'required',
-         'accountnumber'=>'required',
-         'nextkinname'=>'required',
-         'nextkinrelashiship'=>'required',
+// DataTables PHP library
+$sql_details = array(
+	"type" => "Mysql",  // Database type: "Mysql", "Postgres", "Sqlite" or "Sqlserver"
+	"user" => "root",       // Database user name
+	"pass" => "",       // Database password
+	"host" => "localhost",       // Database host
+	"port" => "",       // Database connection port (can be left empty for default)
+	"db"   => "saccoss"     // Database name
+	//"dsn"  => "charset=utf8"        // PHP DSN extra information. Set as `charset=utf8` if you are using MySQL
+);
+$db = new \DataTables\Database( $sql_details );
 
-
-        ]);
-*/
-
-         Member::create([
-
-          'firstname'=>request('firstname'),
-          'middlename'=>request('middlename'),
-          'lastname'=>request('lastname'),
-           'password'=>'password',   
-          'email'=>request('email'),
-          'phone'=>request('phone'),
-          'bankname'=>request('bankname'),
-          'accountnumber'=>request('accountnumber'),
-          'nextkinname'=>request('nextkinname'),
-          'nextkinrelationship'=>request('nextkinrelashioship'),
-           'joiningdate'=>date('Y-m-d H:i:s'),
-          'status'=>1,
-          'user_id'=>Auth::user()->id
-         ]);
-
-            $members=Member::all();
-
-          
-
-            return view('member.show',compact('members'));
+  
 
 
+// Build our Editor instance and process the data coming from _POST
+$mm=Editor::inst($db,'members','member_id')
+	->fields(
+		Field::inst( 'first_name' )->validator( 'Validate::notEmpty' ),
+		Field::inst( 'middle_name' )->validator( 'Validate::notEmpty' ),
+		Field::inst( 'last_name' )->validator( 'Validate::notEmpty' ),
+		Field::inst( 'status' )->setValue('1'),
+		Field::inst( 'user_id' )->setValue($user_id),
+		Field::inst( 'phone' )->validator( 'Validate::notEmpty' ),
+		Field::inst( 'password' )->validator( 'Validate::notEmpty' ),
+		Field::inst( 'email' )->validator( 'Validate::notEmpty' ),
+	    Field::inst( 'bank_name' )->validator( 'Validate::notEmpty' ),
+		Field::inst( 'account_number' )->validator( 'Validate::notEmpty' ),
+		Field::inst( 'nextkin_name' )->validator( 'Validate::notEmpty' ),
+		Field::inst( 'nextkin_relationship' )->validator( 'Validate::notEmpty' ),
+		Field::inst( 'joining_date' )->validator( 'Validate::notEmpty' )
+			->validator( 'Validate::dateFormat', array(
+				"format"  => Format::DATE_ISO_8601,
+				"message" => "Please enter a date in the format yyyy-mm-dd"
+			) )
+			->getFormatter( 'Format::date_sql_to_format', Format::DATE_ISO_8601 )
+			->setFormatter( 'Format::date_format_to_sql', Format::DATE_ISO_8601 )
+	)
+	->process( $_GET )
+	->json();
 
-    }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
+      	
+      }
 }
