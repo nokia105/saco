@@ -6,6 +6,14 @@
   <title>SACCOS | Dashboard</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+       <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.2.0/css/buttons.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.2.0/css/select.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="Editor/css/editor.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="Editor/examples/resources/syntax/shCore.css">
+    <!-- <link rel="stylesheet" type="text/css" href="Editor/examples/resources/demo.css"> -->
+    <style type="text/css" class="init">
+  </style>
    
   <!-- Bootstrap 3.3.7 -->
   <link rel="stylesheet" href="{{ asset('adminlte/bower_components/bootstrap/dist/css/bootstrap.min.css') }}">
@@ -31,14 +39,7 @@
   <!-- bootstrap wysihtml5 - text editor -->
   <link rel="stylesheet" href="{{ asset('adminlte/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css') }}">
 
-     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.2.0/css/buttons.dataTables.min.css">
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.2.0/css/select.dataTables.min.css">
-    <link rel="stylesheet" type="text/css" href="Editor/css/editor.dataTables.min.css">
-    <link rel="stylesheet" type="text/css" href="Editor/examples/resources/syntax/shCore.css">
-    <link rel="stylesheet" type="text/css" href="Editor/examples/resources/demo.css">
-    <style type="text/css" class="init">
-  </style>
+
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -137,7 +138,7 @@
       <!-- /.search form -->
       <!-- sidebar menu: : style can be found in sidebar.less -->
       @include('layouts.sidenav')
-
+ </aside>
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -367,6 +368,12 @@
 <!-- ./wrapper -->
 
 <!-- jQuery 3 -->
+ 
+
+
+    
+</body>
+
 <script src="{{ asset('adminlte/bower_components/jquery/dist/jquery.min.js') }}"></script>
  <script type="text/javascript" language="javascript" src="//code.jquery.com/jquery-1.12.3.min.js">
     </script>
@@ -426,11 +433,7 @@
     </script>
 
 
-<script src="{{ asset('js/custom_script.js') }}"></script>
-
- 
+      <script src="{{ asset('js/custom_script.js') }}"></script>
 
 
-    
-</body>
 </html>

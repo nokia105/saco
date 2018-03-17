@@ -51,7 +51,8 @@ $(document).ready(function() {
             {
                 label: "joining date:",
                 name: "joining_date",
-                type: "datetime"
+                type:"datetime"
+               
             }
         ]
     } );
@@ -69,17 +70,23 @@ $(document).ready(function() {
 
         
         columns: [
-            { data: "first_name" },
-             { data: "middle_name" },
-            { data: "last_name" },   
+            { data: null, render: function ( data, type, row ) {
+                // Combine the first and last names into a single table field
+                return data.first_name+' '+data.last_name;
+            } },
+            { data: "email" },   
             { data: "phone" },
-          
-            { data: "email" },
              { data: "bank_name" },
             { data: "account_number" },
              {data:"nextkin_name"},
              {data:"nextkin_relationship"},
-            { data: "joining_date", render: $.fn.dataTable.render.number( ',', '.', 0, '$' ) }
+            { data: "joining_date",
+             "render": function (data) {
+                var date = new Date(data);
+                var month = date.getMonth() + 1;
+                return (month.length > 1 ? month : "0" + month) + "/" + date.getDate() + "/" + date.getFullYear();
+                 }
+           }
         ],
         select: true,
         severSide:true,
