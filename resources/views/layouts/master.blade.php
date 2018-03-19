@@ -433,7 +433,10 @@
     </script>
 
 
-      <script src="{{ asset('js/custom_script.js') }}"></script>
+     <script src="{{ asset('js/custom_script.js') }}"></script> 
+    <script src="{{ asset('js/savings_script.js') }}"></script>
+    <script src="{{ asset('js/shares_script.js') }}"></script>
+    
 
 
 </html>
