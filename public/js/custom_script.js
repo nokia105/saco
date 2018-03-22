@@ -59,6 +59,7 @@ $(document).ready(function() {
  
 
     $('#example').DataTable( {
+        
         dom: "Bfrtip",
 
         ajax : {
@@ -72,8 +73,18 @@ $(document).ready(function() {
         columns: [
             { data: null, render: function ( data, type, row ) {
                 // Combine the first and last names into a single table field
-                return data.first_name+' '+data.last_name;
-            } },
+                name=data.first_name+' '+data.last_name;
+                return name
+            },
+
+                       
+
+               "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
+                name =oData.first_name+' '+oData.last_name;
+            $(nTd).html("<a href='/savings/"+ name+"'>"+name+"</a>");
+             }
+          
+             },
             { data: "email" },   
             { data: "phone" },
              { data: "bank_name" },
@@ -96,6 +107,7 @@ $(document).ready(function() {
             { extend: "remove", editor: editor }
         ]
     } );
+
 } );
  
 

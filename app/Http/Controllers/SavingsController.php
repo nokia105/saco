@@ -56,7 +56,7 @@ $sql_details = array(
     "pass" => "",       // Database password
     "host" => "localhost",       // Database host
     "port" => "",       // Database connection port (can be left empty for default)
-    "db"   => "saccos"     // Database name
+    "db"   => "saccoss"     // Database name
     //"dsn"  => "charset=utf8"        // PHP DSN extra information. Set as `charset=utf8` if you are using MySQL
 );
 $db = new \DataTables\Database( $sql_details );
@@ -65,7 +65,7 @@ $db = new \DataTables\Database( $sql_details );
 
 
 // Build our Editor instance and process the data coming from _POST
-$mm=Editor::inst($db,'savings','savings_id')
+$mm=Editor::inst($db,'savings','saving_id')
     ->fields(
         Field::inst( 'saving_date' )->validator( 'Validate::notEmpty' )
             ->validator( 'Validate::dateFormat', array(

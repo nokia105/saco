@@ -46,7 +46,7 @@ $(document).ready(function() {
                 var month = date.getMonth() + 1;
                 return (month.length > 1 ? month : "0" + month) + "/" + date.getDate() + "/" + date.getFullYear();
             }
-           }  
+           },  
             { data: "member_id" },   
             { data: "amount" },
              { data: "saving_code" }

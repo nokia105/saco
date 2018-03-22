@@ -7,7 +7,7 @@ use App\Shares;
 use App\User;
 use Auth;
 
-class SharesController extends Controller
+class LoansController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,7 +17,7 @@ class SharesController extends Controller
     public function index()
     {
         //
-    return view('shares.shares');
+    return view('loan.loan');
 
     }
 
@@ -31,7 +31,7 @@ class SharesController extends Controller
         //
 
         
-        return view('shares.shares');
+        return view('loan.loan');
     }
 
     /**

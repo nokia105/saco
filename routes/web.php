@@ -14,26 +14,28 @@
 Route::get('/', function () {
 
 
-    return view('welcome');
+    /*return view('welcome');*/
+    return view('member.member');
 
-});
+})->name('members')->middleware('auth');
+
  Route::get('/members', function () {
 
    return view('member.member');
 
-});
+})->middleware('auth');
   Route::get('/savings', function () {
 
 
    return view('savings.savings');
 
-});
+})->middleware('auth');
   Route::get('/shares', function () {
 
 
    return view('shares.shares');
 
-});
+})->middleware('auth');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
