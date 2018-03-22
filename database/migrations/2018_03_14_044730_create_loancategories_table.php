@@ -15,16 +15,16 @@ class CreateLoancategoriesTable extends Migration
     {
         Schema::create('loancategories', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('categoryName');
-            $table->float('interestRate');
-               $table->integer('defaultDuration');
+            $table->string('category_name');
+            $table->float('interest_rate');
+               $table->integer('default_duration');
                $table->string('status');
-               $table->string('categoryCode');
-               $table->float('repaymentPenalt');
-               $table->integer('gracePeriod');
-               $table->float('minAmount');
-              $table->float('maxAmount');
-            $table->timestamps();
+               $table->string('category_code');
+               $table->float('repayment_penalty');
+               $table->integer('grace_period');
+               $table->float('min_amount');
+              $table->float('max_amount');
+              $table->date('created_at');
         });
     }
 
