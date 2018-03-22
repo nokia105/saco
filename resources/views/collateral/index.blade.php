@@ -9,19 +9,13 @@
             <h3 class="box-title">Members <span>List</span></h3>
         </div>
         <div class="box-body">
-            <table id="Lcategory" class="table display  table-bordered table-striped" cellspacing="0" width="100%">
+            <table id="collateral" class="table display  table-bordered table-striped" cellspacing="0" width="100%">
                 <thead>
                     <tr>
-                        <th style="width:20%;">Category Name</th>
-                        <th>Category Code</th>
-                        <th>Interest Rate</th>
-                        <th>Duration</th>
-                        <th>status</th>
-                        <th>Repayment Penalty</th>
-                        <th>Grace Period</th>
-                        <th>Maximum Amount</th>
-                        <th>Minimum Amount</th>
-
+                        <th style="width:20%;">Collateral Name</th>
+                        <th>Collateral Type</th>
+                        <th>Collateral Value</th>
+                        <th>Collateral Evalution Date</th>
                     </tr>
                 </thead>
                 <tbody>

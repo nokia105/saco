@@ -25,11 +25,6 @@ $(document).ready(function() {
                 label: "Phone:",
                 name: "phone"
             }, 
-
-            {
-             	label:"password",
-             	name:"password"
-             },
             {
                 label: "Email:",
                 name: "email"
@@ -109,6 +104,164 @@ $(document).ready(function() {
     } );
 
 } );
+
+
+
+
+     $(document).ready(function() {
+    editor = new $.fn.dataTable.Editor( {
+        ajax : {
+        url     : "/loancat",
+        contentType: "application/json; charset=utf-8", 
+        type: "GET" 
+    },
+ 
+        table: "#Lcategory",
+        fields: [ {
+                label: "Category name:",
+                name: "category_name"
+            },
+             {
+                label: "Category Code:",
+                name: "category_code"
+            },
+
+
+             {
+                label: "Interest Rate:",
+                name: "interest_rate"
+            }, {
+                label: "Duration:",
+                name: "default_duration"
+            }, 
+
+             
+            {
+                label: "Status:",
+                name: "status"
+            }, 
+           
+            {  label:"Repayment Penalty",
+               name:"repayment_penalty"
+            },
+
+             {
+                label:"Grace Period:",
+                name:"grace_period"
+            }, 
+            {
+                label:"Minimum Amount",
+                name:"min_amount"
+            },
+            { label:"Maximum Amount",
+                 name:"max_amount"
+            },
+        ]
+    } );
+ 
+
+    $('#Lcategory').DataTable( {
+        dom: "Bfrtip",
+
+        ajax : {
+        url:   "/loancat", 
+        dataType: "json",
+        contentType: "application/json; charset=utf-8", 
+        type: "GET"
+        }, 
+
+        
+        columns: [
+
+            { data: "category_name" },   
+            { data: "category_code" },
+             { data: "interest_rate" },
+            { data: "default_duration" },
+             {data:"status"},
+             {data:"repayment_penalty"},
+            { data: "grace_period"},
+            { data: "min_amount"},
+            { data: "max_amount"}
+        ],
+        select: true,
+        severSide:true,
+        buttons: [
+            { extend: "create", editor: editor },
+            { extend: "edit",   editor: editor },
+            { extend: "remove", editor: editor }
+        ]
+    } );
+} );
+
+
+      $(document).ready(function() {
+    editor = new $.fn.dataTable.Editor( {
+        ajax : {
+        url     : "/collat",
+        contentType: "application/json; charset=utf-8", 
+        type: "GET" 
+    },
+ 
+        table: "#collateral",
+        fields: [ {
+                label: "Collateral name:",
+                name: "colateral_name"
+            },
+             {
+                label: "Collateral Type:",
+                name: "colateral_type"
+            },
+
+
+             {
+                label: "Collateral Value:",
+                name: "colateral_value"
+            }, {
+                label: "Evalution Date:",
+                name: "colateralevalution_date",
+                type:"datetime"
+            },
+        ]
+    } );
+ 
+
+    $('#collateral').DataTable( {
+        dom: "Bfrtip",
+
+        ajax : {
+        url:   "/collat", 
+        dataType: "json",
+        contentType: "application/json; charset=utf-8", 
+        type: "GET"
+        }, 
+
+        
+        columns: [
+        
+            { data: "colateral_name" },   
+            { data: "colateral_type" },
+             { data: "colateral_value" },
+            { data: "colateralevalution_date",
+
+                 "render": function (data) {
+                var date = new Date(data);
+                var month = date.getMonth() + 1;
+                return (month.length > 1 ? month : "0" + month) + "/" + date.getDate() + "/" + date.getFullYear();
+                 }
+
+             }
+           
+        ],
+        select: true,
+        severSide:true,
+        buttons: [
+            { extend: "create", editor: editor },
+            { extend: "edit",   editor: editor },
+            { extend: "remove", editor: editor }
+        ]
+    } );
+} );
+
  
 
   
