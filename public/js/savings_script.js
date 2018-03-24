@@ -11,18 +11,21 @@ $(document).ready(function() {
         table: "#savings",
         fields: [ {
                 label: "Saving Date:",
-                name: "saving_date",
+                name: "savings.saving_date",
                 type:"datetime"
             }, {
                 label: "Member ID:",
-                name: "member_id"
-            }, {
+                name: "savings.member_id",
+                 type: "select",
+                 placeholder: "Select a member"
+            }, 
+            {
                 label: "Amount:",
-                name: "amount"
+                name: "savings.amount"
             },              
             {
                 label: "Saving Code:",
-                name: "saving_code"
+                name: "savings.saving_code"
             }
         ]
     } );
@@ -40,16 +43,21 @@ $(document).ready(function() {
 
         
         columns: [
-             { data: "saving_date",
+             { data: "savings.saving_date",
              "render": function (data) {
                 var date = new Date(data);
                 var month = date.getMonth() + 1;
                 return (month.length > 1 ? month : "0" + month) + "/" + date.getDate() + "/" + date.getFullYear();
             }
            },  
-            { data: "member_id" },   
-            { data: "amount" },
-             { data: "saving_code" }
+            { data: null, render: function ( data, type, row ) {
+                // Combine the first and last names into a single table field
+                name=data.members.first_name+' '+data.members.last_name;
+                return name
+                 }
+            },  
+            { data: "savings.amount" },
+             { data: "savings.saving_code" }
         ],
         select: true,
         severSide:true,

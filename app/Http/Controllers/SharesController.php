@@ -70,7 +70,7 @@ $nn=Editor::inst($db,'shares','share_id')
         Field::inst( 'share_value' )->validator( 'Validate::notEmpty' ),
         Field::inst( 'min_shares' )->validator( 'Validate::notEmpty' ),
         Field::inst( 'max_shares' )->validator( 'Validate::notEmpty' ),
-        Field::inst( 'status' )->validator( 'Validate::notEmpty' ),
+        Field::inst( 'status' )->setValue('Active'),
         Field::inst( 'user_id' )->setValue($user_id)
         )  
     ->process( $_GET )

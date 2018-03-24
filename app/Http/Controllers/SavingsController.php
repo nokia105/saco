@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -17,6 +16,7 @@ include(app_path()."\datatable\Editor\php\Editor\Validate.php" );*/
 
 
 // Alias Editor classes so they are easy to use
+use Auth;
 use
     DataTables\Editor,
     DataTables\Editor\Field,
@@ -24,7 +24,9 @@ use
     DataTables\Editor\Mjoin,
     DataTables\Editor\Upload,
     DataTables\Editor\Validate;
-    use Auth;
+
+
+    
     //DataTables\Database\Database;
 
 
@@ -65,19 +67,24 @@ $db = new \DataTables\Database( $sql_details );
 
 
 // Build our Editor instance and process the data coming from _POST
-$mm=Editor::inst($db,'savings','saving_id')
+Editor::inst($db,'savings','saving_id')
     ->fields(
-        Field::inst( 'saving_date' )->validator( 'Validate::notEmpty' )
+        Field::inst( 'savings.saving_date' )->validator( 'Validate::notEmpty' )
             ->validator( 'Validate::dateFormat', array(
                 "format"  => Format::DATE_ISO_8601,
                 "message" => "Please enter a date in the format yyyy-mm-dd"
             ) )
             ->getFormatter( 'Format::date_sql_to_format', Format::DATE_ISO_8601 )
-            ->setFormatter( 'Format::date_format_to_sql', Format::DATE_ISO_8601 ),
-        Field::inst( 'member_id' )->validator( 'Validate::notEmpty' ),
-        Field::inst( 'amount' )->validator( 'Validate::notEmpty' ),
-        Field::inst( 'saving_code' )->validator( 'Validate::notEmpty' )
-        )  
+            ->setFormatter( 'Format::date_format_to_sql', Format::DATE_ISO_8601 ),    
+        Field::inst( 'savings.amount' )->validator( 'Validate::notEmpty' ),
+        Field::inst( 'savings.saving_code' )->validator( 'Validate::notEmpty' ),
+        Field::inst( 'savings.member_id' )
+           ->options( 'members', 'member_id', 'first_name' ),
+                   
+        Field::inst( 'members.first_name' ),
+        Field::inst( 'members.last_name' )
+        )
+    ->leftJoin( 'members','members.member_id','=', 'savings.member_id' ) 
     ->process( $_GET )
     ->json();
 

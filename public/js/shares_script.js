@@ -18,11 +18,11 @@ $(document).ready(function() {
             }, {
                 label: "Maximum Shares:",
                 name: "max_shares"
-            },              
-            {
+            }             
+           /* {
                 label: "Status:",
-                name: "status"
-            }
+              name: "status"
+            } */ 
         ]
     } );
  
