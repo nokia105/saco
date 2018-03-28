@@ -45,6 +45,15 @@
           </a>
        
         </li>
+        <li class="">
+          <a href="/loanview">
+            <i class="fa fa-briefcase"></i> <span>Loans</span>
+            <span class="pull-right-container">
+              <i class="fa  pull-right"></i>
+            </span>
+          </a>
+       
+        </li>
    
       </ul>
     </section>

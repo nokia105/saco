@@ -53,7 +53,7 @@ Route::get('/', function () {
 
 })->middleware('auth');
 
-    Route::get('/lonview', function () {
+    Route::get('/loanview', function () {
 
 
    return view('loans.clientprofile');
