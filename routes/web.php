@@ -53,6 +53,13 @@ Route::get('/', function () {
 
 })->middleware('auth');
 
+    Route::get('/lonview', function () {
+
+
+   return view('loans.clientprofile');
+
+})->middleware('auth');
+
 
 Auth::routes();
 
@@ -64,7 +71,8 @@ Route::get('/savingCreate','SavingsController@index')->name('savingCreate')->mid
 Route::get('/table','TableController@table')->name('table');
 Route::get('/loancat','LoancategoriesController@index')->name('loancat')->middleware('auth');
 Route::get('/collat','CollateralsController@index')->name('collat')->middleware('auth');
-Route::get('/loans','LoanController@index');
+Route::get('/loan','LoanController@index')->name('loan')->middleware('auth');
+//Route::get('/loans','LoanController@index');
 
 //Route::post('/loanCategory','LoancategoriesController@store')->middleware('auth');
 
