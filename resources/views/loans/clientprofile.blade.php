@@ -9,23 +9,23 @@
           
               <img class="profile-user-img img-responsive img-circle" src="{{ asset('adminlte/dist/img/user4-128x128.jpg') }}" alt="User profile picture">
 
-              <h3 class="profile-username text-center">Nina Mcintire</h3>
+              <h3 class="profile-username text-center">Mrs SaCoSS</h3>
 
               <p class="text-muted text-center">Software Engineer</p>
 
               <ul class="list-group list-group-unbordered">
                 <li class="list-group-item">
-                  <b>Followers</b> <a class="pull-right">1,322</a>
+                  <b>Good Loans</b> <a class="pull-right">1,322</a>
                 </li>
                 <li class="list-group-item">
-                  <b>Following</b> <a class="pull-right">543</a>
+                  <b>Bad Loans</b> <a class="pull-right">543</a>
                 </li>
                 <li class="list-group-item">
-                  <b>Friends</b> <a class="pull-right">13,287</a>
+                  <b>Othes</b> <a class="pull-right">13,287</a>
                 </li>
               </ul>
 
-              <a href="#" class="btn btn-info btn-block"><b>Follow</b></a>
+             <!--  <a href="#" class="btn btn-info btn-block"><b>Follow</b></a> -->
             </div>
             <!-- /.box-body -->
           </div>
@@ -85,13 +85,51 @@
                         </span>
 
                         
-                      </div>
+                  </div>
+          <div class="col-md-12">
+          <div class="box col-md-12">
+            <div class="box-header">
+              <h3 class="box-title">Data Table With Full Features</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <table id="example1" class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                  <th>Rendering engine</th>
+                  <th>Browser</th>
+                  <th>Platform(s)</th>
+                  <th>Engine version</th>
+                  <th>CSS grade</th>
+                </tr>
+                </thead>
+                <tbody>
+                
+                <tr>
+                  <td>Other browsers</td>
+                  <td>All others</td>
+                  <td>-</td>
+                  <td>-</td>
+                  <td>U</td>
+                </tr>
+                </tbody>
+               
+              </table>
+            </div>
+            <!-- /.box-body -->
+          </div>
+          <!-- /.box -->
+        </div>
 
-          
           </div>
           <!-- /.nav-tabs-custom -->
+
+
+
+          <!--/.
         </div>
         <!-- /.col -->
       </div>
       <!-- /.row -->
+
      @endsection
