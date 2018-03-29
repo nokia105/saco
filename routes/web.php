@@ -56,13 +56,15 @@ Route::get('/', function () {
     Route::get('/loanview', function () {
 
 
-   return view('loans.clientprofile');
+   return view('loans.index');
 
 })->middleware('auth');
 
 
+   
 Auth::routes();
 
+Route::get('/membersavings','MemberProfileController@savings');
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/memberRegister','MembersController@index')->name('memberRegister')->middleware('auth');
 Route::get('/shareCreate','SharesController@index')->name('shareCreate')->middleware('auth');

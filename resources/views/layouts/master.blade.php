@@ -157,6 +157,8 @@
     <section class="content">
       <!-- Small boxes (Stat box) -->
       @yield('content')
+
+       @yield('cover')
       <!-- /.row (main row) -->
 
     </section>
