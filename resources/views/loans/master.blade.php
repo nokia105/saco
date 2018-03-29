@@ -1,5 +1,5 @@
      @extends('layouts.master')
-      @section('content')
+      @section('cover')
      <div class="row">
         <div class="col-md-2">
 
@@ -42,7 +42,7 @@
                           <!-- <span class="line-height-1 bigger-170"> 55 </span>
 
                           <br /> -->
-                          <a href="#" class="btn btn-info btn-block"><b>Savings</b></a>
+                          <a href="/membersavings" class="btn btn-info btn-block"><b>Savings</b></a>
                         </span>
                         <span class="btn  btn-sm  no-hover">
                           <!-- <span class="line-height-1 bigger-170"> 55 </span>
@@ -54,7 +54,7 @@
                           <!-- <span class="line-height-1 bigger-170 blue"> 1,411 </span>
 
                           <br /> -->
-                          <a href="#" class="btn btn-info btn-block"><b>Loan</b></a>
+                          <a href="/" class="btn btn-info btn-block"><b>Loan</b></a>
                         </span>
 
                         <span class="btn  btn-sm  no-hover">
@@ -86,40 +86,7 @@
 
                         
                   </div>
-          <div class="col-md-12">
-          <div class="box col-md-12">
-            <div class="box-header">
-              <h3 class="box-title">Loan List</h3>
-            </div>
-            <!-- /.box-header -->
-            <div class="box-body">
-              <table id="example1" class="table table-bordered table-striped">
-                <thead>
-                <tr>
-                  <th>Rendering engine</th>
-                  <th>Browser</th>
-                  <th>Platform(s)</th>
-                  <th>Engine version</th>
-                  <th>CSS grade</th>
-                </tr>
-                </thead>
-                <tbody>
-                
-                <tr>
-                  <td>Other browsers</td>
-                  <td>All others</td>
-                  <td>-</td>
-                  <td>-</td>
-                  <td>U</td>
-                </tr>
-                </tbody>
-               
-              </table>
-            </div>
-            <!-- /.box-body -->
-          </div>
-          <!-- /.box -->
-        </div>
+                 @yield('userworkspace')
 
           </div>
           <!-- /.nav-tabs-custom -->
@@ -131,5 +98,8 @@
         <!-- /.col -->
       </div>
       <!-- /.row -->
+
+
+    
 
      @endsection

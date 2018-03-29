@@ -1,6 +1,9 @@
 var editor; // use a global for the submit and return data rendering in the examples
 
 $(document).ready(function() {
+
+
+
     editor = new $.fn.dataTable.Editor( {
         ajax : {
         url     : "/memberRegister",
@@ -58,8 +61,10 @@ $(document).ready(function() {
     } );
  
 
-    $('#example').DataTable( {
+    $('#example').dataTable( {
         
+            
+
         dom: "Bfrtip",
 
         ajax : {
@@ -73,15 +78,23 @@ $(document).ready(function() {
         columns: [
             { data: null, render: function ( data, type, row ) {
                 // Combine the first and last names into a single table field
+
+
                 name=data.first_name+' '+data.last_name;
-                return name
+                               return name
+             
             },
+                
 
-                       
 
+        
                "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
+                   //alert(oData.member_id);
+                   
+
                 name =oData.first_name+' '+oData.last_name;
-            $(nTd).html("<a href='/savings/"+ name+"'>"+name+"</a>");
+
+            $(nTd).html("<a href='/profile/'>"+name+"</a>");
              }
           
              },
@@ -92,6 +105,7 @@ $(document).ready(function() {
              {data:"nextkin_name"},
              {data:"nextkin_relationship"},
             { data: "joining_date",
+
              "render": function (data) {
                 var date = new Date(data);
                 var month = date.getMonth() + 1;
