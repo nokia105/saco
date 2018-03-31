@@ -56,7 +56,7 @@ Route::get('/', function () {
     Route::get('/loanview', function () {
 
 
-   return view('loans.index');
+   return view('loans.newloan');
 
 })->middleware('auth');
 
@@ -67,6 +67,7 @@ Auth::routes();
 Route::get('/membersavings','MemberProfileController@savings');
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/memberRegister','MembersController@index')->name('memberRegister')->middleware('auth');
+Route::get('/profile/{id}','MemberProfileController@index')->name('profile')->middleware('auth');
 Route::get('/shareCreate','SharesController@index')->name('shareCreate')->middleware('auth');
 Route::get('/savingCreate','SavingsController@index')->name('savingCreate')->middleware('auth');
 
@@ -74,6 +75,7 @@ Route::get('/table','TableController@table')->name('table');
 Route::get('/loancat','LoancategoriesController@index')->name('loancat')->middleware('auth');
 Route::get('/collat','CollateralsController@index')->name('collat')->middleware('auth');
 Route::get('/loan','LoanController@index')->name('loan')->middleware('auth');
+
 //Route::get('/loans','LoanController@index');
 
 //Route::post('/loanCategory','LoancategoriesController@store')->middleware('auth');

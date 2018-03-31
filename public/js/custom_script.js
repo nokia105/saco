@@ -89,12 +89,10 @@ $(document).ready(function() {
 
         
                "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
-                   //alert(oData.member_id);
-                   
 
                 name =oData.first_name+' '+oData.last_name;
 
-            $(nTd).html("<a href='/profile/'>"+name+"</a>");
+            $(nTd).html("<a href='/profile/"+oData.member_id+"'>"+name+"</a>");
              }
           
              },

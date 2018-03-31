@@ -8,7 +8,7 @@ class MemberProfileController extends Controller
 {
     // 
 
-     public function savings(){
+     public function index($id){
 
 
           return view('loans.savings');

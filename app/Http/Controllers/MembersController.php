@@ -67,6 +67,7 @@ $db = new \DataTables\Database( $sql_details );
 // Build our Editor instance and process the data coming from _POST
 $mm=Editor::inst($db,'members','member_id')
 	->fields(
+		Field::inst('member_id')->set(false),
 		Field::inst( 'first_name' )->validator( 'Validate::notEmpty' ),
 		Field::inst( 'middle_name' )->validator( 'Validate::notEmpty' ),
 		Field::inst( 'last_name' )->validator( 'Validate::notEmpty' ),
