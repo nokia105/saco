@@ -1,3 +1,5 @@
+  @extends('layouts.master')
+  @section('cover')
  <section class="content">
 
       <!-- SELECT2 EXAMPLE -->
@@ -70,7 +72,5 @@
         </div>
       </div>
       <!-- /.box -->
-
-     
-
     </section>
+    
