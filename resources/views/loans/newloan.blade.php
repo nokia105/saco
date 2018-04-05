@@ -72,7 +72,6 @@
                 <select class="form-control select2" style="width: 100%;">
                   <option value="">Flat</option>
                   <option value="">Declining Balance</option>
-                  
                 </select>
               </div>
          
@@ -167,14 +166,33 @@
             <!-- /.box-header -->
          <div class="box-body">
           <div class="row">
-            <div class="col-md-6">
-              
-              <div class="form-group">
-                  <label for="exampleInputEmail1">Principle</label>
-                  <input type="email" class="form-control" id="principle" placeholder="100000">
-                </div>
+               <div class="form-group">
+                    <div class="col-sm-4">
+                      <select id="colera" class="form-control select2" style="width: 100%;">
+                        <option value="">--Select Granters--</option>
+                        <option value="Car">Car</option>
+                        <option value="House">House</option>
+                        
+                      </select>
+                       
+                    </div>
+                    <div class="col-sm-1">
+                        <button class="btn newcolerateral">+</button>
+                    </div>
+              </div><br/><br/>
+            
+            <div class="col-md-12">
+
+                            <table class="table44  table" width="100%">
+                                <tr>
+                                  <th width="24%">Asset</th>
+                                  <th width="24%">Value</th>
+                                  <th align="right" width="24%">Valuation Date</th>
+                                  <th align="right" width="4%"></th>
+                                </tr> 
+                            </table>
             </div>
-            <!-- /.col -->
+
             <div class="col-md-6">
               <div class="form-group">
                 <br/>

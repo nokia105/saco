@@ -377,10 +377,6 @@
 </body>
 
 <script src="{{ asset('adminlte/bower_components/jquery/dist/jquery.min.js') }}"></script>
- <script type="text/javascript" language="javascript" src="//code.jquery.com/jquery-1.12.3.min.js">
-    </script>
-
-
 <!-- jQuery UI 1.11.4 -->
 <script src="{{ asset('adminlte/bower_components/jquery-ui/jquery-ui.min.js') }}"></script>
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
@@ -438,6 +434,24 @@
      <script src="{{ asset('js/custom_script.js') }}"></script> 
     <script src="{{ asset('js/savings_script.js') }}"></script>
     <script src="{{ asset('js/shares_script.js') }}"></script>
+    <script>
+    $(document).ready(function() {
+    $(function () {
+    $(".newcolerateral").click(function () {
+        if ( $("#colera").val() !='')
+        {
+        var row = $(".table44").find('tr:last');
+        $('<tr><td>'+$("#colera").val()+'</td><td>1000</td><td>23/09/2018</td><td width="20%"><input type="button" class="remove" style="color:red;" value="X" /></td></tr>').insertAfter(row);
+        $("#colera").val('');
+        }
+        return false;
+    });
+});
+    $('.table44').on('click', '.remove', function(){
+        $(this).closest('tr').remove();
+    });
+});
+</script>
     
 
 
