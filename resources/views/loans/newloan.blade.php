@@ -158,7 +158,7 @@
       </div>
 
      <!--/end Colleratels-->
-     <!--garantee row-->
+     <!--garantee and Charges row-->
      <div class="box col-md-12 box-danger">
             <div class="box-header">
               <h3 class="box-title">Garanters</h3>
@@ -170,9 +170,8 @@
                     <div class="col-sm-4">
                       <select id="colera" class="form-control select2" style="width: 100%;">
                         <option value="">--Select Granters--</option>
-                        <option value="Car">Car</option>
-                        <option value="House">House</option>
-                        
+                        <option value="John Juma">John Juma</option>
+                        <option value="Wangai Mathai">Wangai Mathai</option>
                       </select>
                        
                     </div>
@@ -193,18 +192,29 @@
                             </table>
             </div>
 
-            <div class="col-md-6">
-              <div class="form-group">
-                <br/>
-                 <div class="col-sm-12">
-                <label>Charges</label>
-                <select class="form-control select2" style="width: 100%;">
-                  <option value="">Loan Processing Fee</option>
-                  <option value="">Office fee</option>
-                  
-                </select>
-              </div>
-              </div>
+             <div class="form-group">
+              <label for="charges" class="col-md-12">Charges</label>
+                    <div class="col-sm-4">
+                      <select id="charges" class="form-control select2" style="width: 100%;">
+                        <option value="">--Select Fee--</option>
+                        <option value="Loan Processing Fee">Loan Processing Fee</option>
+                        <option value="Distuburse Fee">Distuburse Fee</option>
+                      </select>
+                       
+                    </div>
+                    <div class="col-sm-1">
+                        <button class="btn newcharge">+</button>
+                    </div>
+              </div><br/><br/>
+
+            <div class="col-md-12">
+              <table class="fee  table" width="100%">
+                                <tr>
+                                  <th width="24%">Fee </th>
+                                  <th width="24%">Percentage</th>
+                                  <th align="right" width="4%"></th>
+                                </tr> 
+                            </table>
 
             </div>
             <!-- /.col -->
@@ -215,9 +225,8 @@
       </div>
 
       <!--submit row-->
-           <div class="box col-md-12 box-primary">
-            
-            <!-- /.box-header -->
+      <div class="box col-md-12 box-primary">
+        <!-- /.box-header -->
          <div class="box-body">
           <div class="row">
             <div class="col-md-6">
@@ -231,15 +240,14 @@
             <div class="col-md-6">
               <div class="form-group">
                   <label for="exampleInputEmail1"></label>
-                  <input type="submit"  value="Cancel" class="form-control" id="principle" placeholder="100000">
+                  <input type="submit"  value="Cancel" class="form-control"  placeholder="100000">
               </div>
-
             </div>
             <!-- /.col -->
           </div>
           <!-- /.row -->
         </div>
-            <!-- /.box-body -->
+        <!-- /.box-body -->
       </div>
 
      <!--/end submit -->
