@@ -2,8 +2,6 @@ var editor; // use a global for the submit and return data rendering in the exam
 
 $(document).ready(function() {
 
-
-
     editor = new $.fn.dataTable.Editor( {
         ajax : {
         url     : "/memberRegister",
@@ -121,6 +119,11 @@ $(document).ready(function() {
     } );
 
 } );
+
+
+
+
+  
  
 
   

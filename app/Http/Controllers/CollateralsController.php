@@ -20,6 +20,9 @@ class CollateralsController extends Controller
 
     public function index(){
 
+       $id=request()->segment(2);
+
+      
 
     $sql_details = array(
     "type" => "Mysql",  // Database type: "Mysql", "Postgres", "Sqlite" or "Sqlserver"
@@ -35,13 +38,21 @@ $db = new \DataTables\Database( $sql_details );
 
 $mm=Editor::inst($db,'collaterals','id')
     ->fields(
-        Field::inst( 'colateral_name' )->validator( 'Validate::notEmpty' ),
-        Field::inst( 'colateral_type' )->validator( 'Validate::notEmpty' ),
-        Field::inst( 'colateral_value' )->validator( 'Validate::notEmpty' ),
-        Field::inst( 'member_id' )->setValue('1'),
-        Field::inst( 'colateralevalution_date' )
+        Field::inst('collaterals.colateral_name')->validator( 'Validate::notEmpty' ),
+        Field::inst('collaterals.colateral_type')->validator( 'Validate::notEmpty' ),
+        Field::inst('collaterals.colateral_value')->validator( 'Validate::notEmpty' ),
+        Field::inst('collaterals.member_id')->setValue($id),
+        Field::inst('collaterals.colateralevalution_date' )->validator( 'Validate::notEmpty' )
+            ->validator( 'Validate::dateFormat', array(
+                "format"  => Format::DATE_ISO_8601,
+                "message" => "Please enter a date in the format yyyy-mm-dd"
+            ) )
+            ->getFormatter( 'Format::date_sql_to_format', Format::DATE_ISO_8601 )
+            ->setFormatter( 'Format::date_format_to_sql', Format::DATE_ISO_8601 )
         
     )
+    ->leftJoin('members','members.member_id','=','collaterals.member_id')
+    ->where('members.member_id',$id)
     ->process( $_GET )
     ->json();
 
