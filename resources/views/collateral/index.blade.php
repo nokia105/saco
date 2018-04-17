@@ -1,8 +1,9 @@
 
  
-     @extends('layouts.master')
-      @section('content')
+      @extends('loans.template')
+      @section('memberworkspace')
 <div class="row">
+     <input type="hidden" value="{{$id=request()->route('id')}}" name=""> 
     <div class="col-xs-12">
      <div class="box">
           <div class="box-header">
@@ -36,6 +37,91 @@
         font-size: 12px;
     }
     </style>
+
+      @endsection
+
+      @section('js')
+
+         <script type="text/javascript">
+             
+               //colaterall
+
+    $(document).ready(function() {
+
+
+
+    editor = new $.fn.dataTable.Editor( {
+        ajax : {
+        url     : "/collat/{{$id}}",
+        contentType: "application/json; charset=utf-8", 
+        type: "GET" 
+    },
+ 
+        table: "#collateral",
+        fields: [ {
+                label: "collateral name:",
+                name: "collaterals.colateral_name"
+            }, {
+                label: "collateral Type:",
+                name: "collaterals.colateral_type"
+            }, {
+                label: "collateral Value:",
+                name: "collaterals.colateral_value"
+            }, 
+
+             
+            {
+                label: "Collateral evalution date:",
+                name: "collaterals.colateralevalution_date"
+            }
+
+           
+          
+        ]
+    } );
+ 
+
+    $('#collateral').dataTable( {
+        
+            
+
+        dom: "Bfrtip",
+
+        ajax : {
+        url:   "/collat/{{$id}}", 
+        dataType: "json",
+        contentType: "application/json; charset=utf-8", 
+        type: "GET"
+        }, 
+
+        
+        columns: [
+            { data: "collaterals.colateral_name" },   
+            { data: "collaterals.colateral_type" },
+             { data: "collaterals.colateral_value" },
+            { data: "collaterals.colateralevalution_date",
+
+             "render": function (data) {
+                var date = new Date(data);
+                var month = date.getMonth() + 1;
+                return (month.length > 1 ? month : "0" + month) + "/" + date.getDate() + "/" + date.getFullYear();
+                 }
+           }
+        ],
+        select: true,
+        severSide:true,
+        buttons: [
+            { extend: "create", editor: editor },
+            { extend: "edit",   editor: editor },
+            { extend: "remove", editor: editor }
+        ]
+    } );
+
+} );
+ 
+
+
+         </script>
 
       @endsection
 

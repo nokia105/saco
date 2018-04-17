@@ -14,7 +14,17 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+
+
+         /* view()->composer('loans.loannav',function($view){
+
+         $view->with('id',request()->route('id'));
+    
+      
+        });*/
         Schema::defaultStringLength(191);
+
+
 
     }
 

@@ -1,7 +1,7 @@
     <!-- Main content -->
 
-       @extends('loans.master')
-      @section('userworkspace')
+     @extends('loans.template')
+      @section('memberworkspace')
      <div class="col-md-12">
           <div class="box col-md-12">
             <div class="box-header">

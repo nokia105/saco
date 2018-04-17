@@ -40,7 +40,7 @@ Route::get('/', function () {
 
 })->middleware('auth');
 
-     Route::get('/collateral', function () {
+     Route::get('profile/{id}/collateral', function () {
 
     return view('collateral.index');
 
@@ -50,15 +50,11 @@ Route::get('/', function () {
 
 
    return view('shares.shares');
-
 })->middleware('auth');
 
-    Route::get('/loanview', function () {
 
 
-   return view('loans.newloan');
 
-})->middleware('auth');
 
 
    
@@ -66,14 +62,25 @@ Auth::routes();
 
 Route::get('/membersavings','MemberProfileController@savings');
 Route::get('/home', 'HomeController@index')->name('home');
+
 Route::get('/memberRegister','MembersController@index')->name('memberRegister')->middleware('auth');
-Route::get('/profile/{id}','MemberProfileController@index')->name('profile')->middleware('auth');
+Route::get('/profile/{mprofileid}','MembersProfileController@cover')->name('profile')->middleware('auth');
+Route::get('/profile/{id}/newloan','MembersProfileController@newloan')->name('newloan')->middleware('auth');
+
+Route::get('/interest','MembersProfileController@interest')->name('interest');
+Route::get('/membercollateral','MembersProfileController@membercollateral')->name('membercollateral');
+Route::get('/guarantors','MembersProfileController@guarantors')->name('guarantors');
+Route::post('/memberloan','MembersProfileController@createloan')->middleware('auth');
+
 Route::get('/shareCreate','SharesController@index')->name('shareCreate')->middleware('auth');
 Route::get('/savingCreate','SavingsController@index')->name('savingCreate')->middleware('auth');
 
 Route::get('/table','TableController@table')->name('table');
+
 Route::get('/loancat','LoancategoriesController@index')->name('loancat')->middleware('auth');
-Route::get('/collat','CollateralsController@index')->name('collat')->middleware('auth');
+
+
+Route::get('/collat/{id}','CollateralsController@index')->name('collat')->middleware('auth');
 Route::get('/loan','LoanController@index')->name('loan')->middleware('auth');
 
 //Route::get('/loans','LoanController@index');

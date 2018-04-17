@@ -9,8 +9,8 @@
        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.2.0/css/buttons.dataTables.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.2.0/css/select.dataTables.min.css">
-    <link rel="stylesheet" type="text/css" href="Editor/css/editor.dataTables.min.css">
-    <link rel="stylesheet" type="text/css" href="Editor/examples/resources/syntax/shCore.css">
+    <link rel="stylesheet" type="text/css" href="{{asset('Editor/css/editor.dataTables.min.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('Editor/examples/resources/syntax/shCore.css')}}">
     <!-- <link rel="stylesheet" type="text/css" href="Editor/examples/resources/demo.css"> -->
     <style type="text/css" class="init">
   </style>
@@ -417,13 +417,13 @@
    
     <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js">
     </script>
-       <script type="text/javascript" language="javascript" src="Editor/js/dataTables.editor.min.js">
+       <script type="text/javascript" language="javascript" src="{{asset('Editor/js/dataTables.editor.min.js')}}">
     </script>
-    <script type="text/javascript" language="javascript" src="Editor/examples/resources/syntax/shCore.js">
+    <script type="text/javascript" language="javascript" src="{{asset('Editor/examples/resources/syntax/shCore.js')}}">
     </script>
-    <script type="text/javascript" language="javascript" src="Editor/examples/resources/demo.js">
+    <script type="text/javascript" language="javascript" src="{{asset('Editor/examples/resources/demo.js')}}">
     </script>
-    <script type="text/javascript" language="javascript" src="Editor/examples/resources/editor-demo.js">
+    <script type="text/javascript" language="javascript" src="{{asset('Editor/examples/resources/editor-demo.js')}}">
     </script>
       <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.2.0/js/dataTables.buttons.min.js">
     </script>
@@ -437,6 +437,6 @@
     <script src="{{ asset('js/newloan_script.js') }}"></script>
    
     
-
+    @yield('js')
 
 </html>

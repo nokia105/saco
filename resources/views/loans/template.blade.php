@@ -1,9 +1,10 @@
      @extends('layouts.master')
       @section('cover')
+        <input type="hidden" value="{{$id=Request::segment(2)}}" name=""> 
      <div class="row">
         <div class="col-md-2">
-
-          <!-- Profile Image -->
+            
+                       <!-- Profile Image -->
           <div class="box box-info">
             <div class="box-body box-profile">
           
@@ -54,7 +55,8 @@
                           <!-- <span class="line-height-1 bigger-170 blue"> 1,411 </span>
 
                           <br /> -->
-                          <a href="/" class="btn btn-info btn-block"><b>Loan</b></a>
+                           
+                          <a href="{{URL::to('profile/'.$id.'/newloan')}}" class="btn btn-info btn-block"><b>new Loan</b></a>
                         </span>
 
                         <span class="btn  btn-sm  no-hover">
@@ -74,7 +76,7 @@
                           <!-- <span class="line-height-1 bigger-170"> 23 </span>
 
                           <br /> -->
-                          <a href="#" class="btn btn-info btn-block"><b>Coleratels</b></a>
+                          <a href="{{URL::to('profile/'.$id.'/collateral')}}" class="btn btn-info btn-block"><b>Coleratels</b></a>
                         </span>
 
                         <span class="btn  btn-sm  no-hover">
@@ -86,7 +88,7 @@
 
                         
                   </div>
-                 @yield('userworkspace')
+                 @yield('memberworkspace')
 
           </div>
           <!-- /.nav-tabs-custom -->
@@ -99,7 +101,7 @@
       </div>
       <!-- /.row -->
 
-
     
 
      @endsection
+

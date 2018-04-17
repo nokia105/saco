@@ -1,0 +1,166 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\LoanCategory;
+use Auth;
+use App\Member;
+use App\Collateral;
+use App\Loan;
+use App\Loaninsuarance;
+
+class MembersProfileController extends Controller
+{
+    // 
+
+  public function cover($mprofileid){
+
+    
+    return view('loans.profile');
+  }
+
+     // public function index($mprofileid){
+
+     //    $member=Member::find($mprofileid);
+  
+
+     //      return view('loans.profile',compact('member'));
+     // }
+
+
+      public function newloan($id){
+
+          
+        $username=Auth::user()->name;
+
+        $member=Member::find($id);
+     
+        $collaterals=Member::find($id)->collateral;      
+          
+        $loancategories=LoanCategory::select('id','category_name')->get();
+
+        $guarantors=Member::all()->where('member_id','!=',$id);
+
+           
+
+          return view('loans.newloan',compact('loancategories','username','member','collaterals','guarantors'));
+      }
+
+
+         public function interest(Request $request){
+
+         	 $pcategory_id=$request->pcategory;
+
+        
+
+
+              $interest=LoanCategory::select('id','default_duration','interest_rate')->find($pcategory_id);
+
+                 echo json_encode([
+                   'id'=>$interest->id,
+                   'interest'=>$interest->interest_rate,
+                   'duration'=>$interest->default_duration
+                 ]);
+                  
+         }
+
+         public function membercollateral(Request $request){
+
+
+                   $collateral_id=$request->collateral;
+                                  
+                          
+          //$collaterals=Member::find($id)->collateral->where('id','=',1); 
+
+              $collateral=Collateral::find($collateral_id);    
+
+            echo json_encode([
+                   'id'=>$collateral->id,
+                   'asset'=>$collateral->colateral_name,
+                   'value'=>$collateral->colateral_value,
+                   'duration'=>$collateral->colateralevalution_date
+                 ]);
+
+                  
+                  
+         }
+
+
+         public function guarantors(Request $request){
+             
+           $guarator_id=$request->g;
+
+            $guarator=Member::find($guarator_id);
+                   
+
+                     //return  $guarator->first_name;
+
+                 
+
+            echo json_encode([
+              'id'=>$guarator->member_id,
+              'firstname'=>$guarator->first_name,
+              'middlename'=>$guarator->middle_name,
+              'lastname'=>$guarator->last_name
+
+            ]);
+                
+         }
+
+      public function createloan(Request $request){
+
+
+            $member_id=$request->memberloan;
+            $pcategory_id=$request->pcategory;
+            $loanOfficer_id=$request->loanOfficer;
+            $principle=$request->principle;
+            $interest=$request->interest;
+            $Imethod=$request->Imethod;
+            $loanperiod=$request->loanperiod;
+            $loanwm=$request->loanwm;
+            $startpayment=$request->startpayment;
+            $collateral_id=$request->collateral;
+             //colateral from js field
+               $g=$request->g;
+            $collate_id=$request->collate;
+            $guarator_id=$request->guarantor;
+            $charges=$request->charges;
+
+            $user_id=Auth::user()->id;
+                 
+               $loan=Loan::create([
+
+                  'loanInssue_date'=>date('Y-m-d'),
+                  'inssued_by'=>$user_id,
+                  'loan_status'=>'active',
+                  'loancategory_id'=>$pcategory_id,
+                  'member_id'=>$member_id,
+                  'duration'=>$loanperiod,
+                  'loan_amount'=>$principle,
+                  'repatment_date'=>$startpayment,
+                  'no_of_installments'=>$loanperiod,
+                  'mounthlyrepayment_amount'=>12000,
+                  'mounthlyrepayment_principle'=>120000,
+                 'mounthlyrepayment_interest'=>$interest
+               ]);
+
+
+                 Loaninsuarance::create([
+                     'loan_id'=>$loan->id,
+                     'insuarance_pacentage'=>234.678
+                 ]);         
+
+              $loan->collaterals()->attach($collate_id);
+
+              $loan->guarantor()->attach( $guarator_id);
+
+
+                return back();
+
+            
+                 
+
+              
+      }
+}

@@ -14,7 +14,7 @@ $(document).ready(function() {
                 name: "savings.saving_date",
                 type:"datetime"
             }, {
-                label: "Member ID:",
+                label: "Member",
                 name: "savings.member_id",
                  type: "select",
                  placeholder: "Select a member"
