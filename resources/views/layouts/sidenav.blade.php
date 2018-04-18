@@ -45,7 +45,7 @@
           </a>
        
         </li>
-        <li class="">
+        <!-- <li class="">
           <a href="/loanview">
             <i class="fa fa-briefcase"></i> <span>Loans</span>
             <span class="pull-right-container">
@@ -53,7 +53,26 @@
             </span>
           </a>
        
+        </li> -->
+              <li class="">
+          <a href="/loanCategory">
+            <i class="fa fa-briefcase"></i> <span>Loan Category</span>
+            <span class="pull-right-container">
+              <i class="fa  pull-right"></i>
+            </span>
+          </a>
+       
         </li>
+          <li class="">
+          <a href="/loan_fee">
+            <i class="fa fa-briefcase"></i> <span>Loan Fee</span>
+            <span class="pull-right-container">
+              <i class="fa  pull-right"></i>
+            </span>
+          </a>
+       
+        </li>
+   
    
       </ul>
     </section>

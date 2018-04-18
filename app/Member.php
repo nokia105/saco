@@ -26,4 +26,10 @@ class Member extends Model
 
      	return $this->belongsToMany(Loan::class,'loan_guarantor','loan_id','guarator_id');
      }
+
+
+     public function loanlist(){
+
+         return $this->hasMany(Loan::class,'member_id');
+       }
 }

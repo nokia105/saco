@@ -13,17 +13,17 @@ use
     DataTables\Editor\Mjoin,
     DataTables\Editor\Upload,
     DataTables\Editor\Validate;
+     
+
  
 
 class LoancategoriesController extends Controller
 {
-    //
+     public function __construct()
+    {   
+    }
 
-    public function index(){
-
-
-
-
+ public function index(){
     $sql_details = array(
     "type" => "Mysql",  // Database type: "Mysql", "Postgres", "Sqlite" or "Sqlserver"
     "user" => "root",       // Database user name
@@ -32,8 +32,9 @@ class LoancategoriesController extends Controller
     "port" => "",       // Database connection port (can be left empty for default)
     "db"   => "saccoss"     // Database name
     //"dsn"  => "charset=utf8"        // PHP DSN extra information. Set as `charset=utf8` if you are using MySQL
+
 );
-$db = new \DataTables\Database( $sql_details );
+        $db = new \DataTables\Database( $sql_details );
 
 $mm=Editor::inst($db,'Loancategories','id')
     ->fields(
@@ -57,37 +58,30 @@ $mm=Editor::inst($db,'Loancategories','id')
     }
 
 
-   /* public function store(){
+    public function fee_category(){
+        $sql_details = array(
+    "type" => "Mysql",  // Database type: "Mysql", "Postgres", "Sqlite" or "Sqlserver"
+    "user" => "root",       // Database user name
+    "pass" => "",       // Database password
+    "host" => "localhost",       // Database host
+    "port" => "",       // Database connection port (can be left empty for default)
+    "db"   => "saccoss"     // Database name
+    //"dsn"  => "charset=utf8"        // PHP DSN extra information. Set as `charset=utf8` if you are using MySQL
 
+);
+        $db = new \DataTables\Database( $sql_details );
 
-    	$this->validate(request(),[
-        
-        'categoryname'=>'required',
-        'categorycode'=>'required',
-        'Irate'=>'required',
-        'duration'=>'required',
-        'repaypenaty'=>'required',
-        'graceperiod'=>'required',
-        'maxAmount'=>'required',
-        'minAmount'=>'required'
-
-    	]);
-
-
-    	 Loancategory::create([
-         'categoryName'=>request('categoryname'),
-         'interestRate'=>request('categorycode'),
-         'defaultDuration'=>request('duration'),
-         'status'=>'1',
-         'categoryCode'=>request('categorycode'),
-         'repaymentPenalt'=>request('repaypenaty'),
-         'gracePeriod'=>request('graceperiod'),
-         'minAmount'=>request('minAmount'),
-         'maxAmount'=>request('maxAmount')
-
-    	 ]);
+$mm=Editor::inst($db,'feescategories','id')
+    ->fields(
+        Field::inst( 'fee_name' )->validator( 'Validate::notEmpty' ),
+        Field::inst( 'fee_code' )->validator( 'Validate::notEmpty' ),
+        Field::inst( 'fee_value' )->validator( 'Validate::notEmpty' )
+       
+    )
+    ->process( $_GET )
+    ->json();
     }
-*/
+
 
 
 

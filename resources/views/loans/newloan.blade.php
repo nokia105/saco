@@ -209,8 +209,9 @@
                     <div class="col-sm-4">
                       <select id="charges" class="form-control select2" name="charges" style="width: 100%;">
                         <option value="">--Select Fee--</option>
-                        <option value=" ProcessingFee">Loan Processing Fee</option>
-                        <option value="DistuburseFee">Distuburse Fee</option>
+                        @foreach($fees as  $fee)
+                          <option value="{{$fee->id}}">{{$fee->fee_name}} </option>
+                          @endforeach
                       </select>
                        
                     </div>
@@ -221,11 +222,13 @@
 
             <div class="col-md-12">
               <table class="fee  table" width="100%">
+                               <thead>
                                 <tr>
                                   <th width="24%">Fee </th>
                                   <th width="24%">Percentage</th>
                                   <th align="right" width="4%"></th>
-                                </tr> 
+                                </tr>
+                                </thead> 
                             </table>
 
             </div>
@@ -354,17 +357,32 @@ success: function(data)
     /* /end of garanters row */
 
     /*remove script*/
-    $('.table44').on('click', '.remove', function(){
+    $('.fee').on('click', '.remove', function(){
         $(this).closest('tr').remove();
     });
 
 /*charges row script */
     $(".newcharge").click(function () {
+      
         if ( $("#charges").val() !='')
-        {
-        var row = $(".fee").find('tr:last');
-        $('<tr><td>'+$("#charges").val()+'</td><td>1.2%</td><td width="20%"><input type="button" class="remove" style="color:red;" value="X" /></td></tr>').insertAfter(row);
-        $("#charges").val('');
+        {   
+          var dataString='charge_id='+$("#charges").val();
+              $.ajax({         
+              url:'{{route('loancharges')}}',
+
+              type:"GET",
+               dataType: 'json',
+               data:dataString,
+              cache: true,
+              success: function(data)
+              {
+                     var row = $(".fee").find('tr:last');
+        $('<tr><td>'+data.fee_name+'<input type="hidden" name="charges[]" value="'+data.id+'" ></td><td>'+data.fee_value+'</td><td width="20%"><input type="button" class="remove" style="color:red;" value="X" /></td></tr>').insertAfter(row);
+                      $("#charges").val('');
+              }
+
+              });
+
         }
         return false;
     });
@@ -423,7 +441,7 @@ success: function(data)
         $(this).closest('tr').remove();
     });
 
-/*charges row script */
+/*charges row script 
     $(".newcharge").click(function () {
         if ( $("#charges").val() !='')
         {
@@ -433,7 +451,7 @@ success: function(data)
         }
         return false;
     });
-/*end of charge row */
+end of charge row */
 });                         
 
       </script>

@@ -56,7 +56,14 @@
 
                           <br /> -->
                            
-                          <a href="{{URL::to('profile/'.$id.'/newloan')}}" class="btn btn-info btn-block"><b>new Loan</b></a>
+                          <a href="{{URL::to('profile/'.$id.'/newloan')}}" class="btn btn-info btn-block"><b>New Loan</b></a>
+                        </span>
+                        <span class="btn  btn-sm btn-light no-hover">
+                          <!-- <span class="line-height-1 bigger-170 blue"> 1,411 </span>
+
+                          <br /> -->
+                           
+                          <a href="{{URL::to('profile/'.$id.'/loanlist')}}" class="btn btn-info btn-block"><b>Loans</b></a>
                         </span>
 
                         <span class="btn  btn-sm  no-hover">

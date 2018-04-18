@@ -6,21 +6,17 @@
     <div class="col-xs-12">
      <div class="box">
           <div class="box-header">
-            <h3 class="box-title">Loan <span>List</span></h3>
+            <h3 class="box-title">Fee <span>List</span></h3>
         </div>
         <div class="box-body">
-            <table id="loancategory" class="table display  table-bordered table-striped" cellspacing="0" width="100%">
+            <table id="loan_fee" class="table display  table-bordered table-striped" cellspacing="0" width="100%">
                 <thead>
                     <tr>
                         <th style="width:20%;">Category Name</th>
-                        <th>Category Code</th>
-                        <th>Interest Rate</th>
-                        <th>Duration</th>
-                        <!-- <th>status</th> -->
-                        <th>Repayment Penalty</th>
-                        <th>Grace Period</th>
-                        <th>Maximum Amount</th>
-                        <th>Minimum Amount</th>
+                        <th>Fee Code</th>
+                        <th>Fee Name</th>
+                        <th>Fee Valu(%)</th>
+                        
 
                     </tr>
                 </thead>

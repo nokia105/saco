@@ -25,4 +25,16 @@ class Loan extends Model
 
        	return $this->belongsToMany(Collateral::class);
        }
+       public function loan_fees(){
+
+        return $this->belongsToMany(Feescategory::class)->withTimestamps();
+       }
+
+      public function loancategory(){
+
+         return $this->belongsTo(loancategory::class);
+       }
+
+
+
 }

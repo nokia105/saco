@@ -21,6 +21,11 @@ Route::get('/', function () {
 
 })->name('members')->middleware('auth');
 
+Route::get('/table33', function () {
+   return view('table');
+
+})->middleware('auth');
+
  Route::get('/members', function () {
 
    return view('member.member');
@@ -37,6 +42,12 @@ Route::get('/', function () {
   Route::get('/loanCategory', function () {
 
     return view('LoanCategory.form');
+
+})->middleware('auth');
+
+   Route::get('/loan_fee', function () {
+
+    return view('fee.fee');
 
 })->middleware('auth');
 
@@ -66,9 +77,11 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/memberRegister','MembersController@index')->name('memberRegister')->middleware('auth');
 Route::get('/profile/{mprofileid}','MembersProfileController@cover')->name('profile')->middleware('auth');
 Route::get('/profile/{id}/newloan','MembersProfileController@newloan')->name('newloan')->middleware('auth');
+Route::get('/profile/{id}/loanlist','MembersProfileController@loanlist')->name('loanlist')->middleware('auth');
 
 Route::get('/interest','MembersProfileController@interest')->name('interest');
 Route::get('/membercollateral','MembersProfileController@membercollateral')->name('membercollateral');
+Route::get('/loancharges','MembersProfileController@loancharges')->name('loancharges');
 Route::get('/guarantors','MembersProfileController@guarantors')->name('guarantors');
 Route::post('/memberloan','MembersProfileController@createloan')->middleware('auth');
 
@@ -78,6 +91,7 @@ Route::get('/savingCreate','SavingsController@index')->name('savingCreate')->mid
 Route::get('/table','TableController@table')->name('table');
 
 Route::get('/loancat','LoancategoriesController@index')->name('loancat')->middleware('auth');
+Route::get('/fee_category','LoancategoriesController@fee_category')->name('fee_category')->middleware('auth');
 
 
 Route::get('/collat/{id}','CollateralsController@index')->name('collat')->middleware('auth');

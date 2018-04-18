@@ -435,6 +435,12 @@
     <script src="{{ asset('js/savings_script.js') }}"></script>
     <script src="{{ asset('js/shares_script.js') }}"></script>
     <script src="{{ asset('js/newloan_script.js') }}"></script>
+    <script src="{{ asset('js/loancategory_script.js') }}"></script>
+    <script type="text/javascript">
+      $(document).ready(function() {
+    $('#example1').DataTable();
+} );
+    </script>
    
     
     @yield('js')

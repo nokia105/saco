@@ -15,13 +15,13 @@ class CreateLoansTable extends Migration
     {
         Schema::create('loans', function (Blueprint $table) {
             $table->increments('id');
-            $table->date('loanInssue_date');
+            $table->dateTime('loanInssue_date');
             $table->integer('inssued_by');
             $table->string('loan_status');
             $table->integer('loancategory_id');
             $table->integer('member_id');
             $table->integer('duration');
-            $table->float('loan_amount',10);
+            $table->double('loan_amount',20);
             $table->date('repatment_date');
             $table->integer('no_of_installments');
             $table->float('mounthlyrepayment_amount',20);

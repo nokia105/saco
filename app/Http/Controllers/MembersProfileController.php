@@ -9,6 +9,8 @@ use App\Member;
 use App\Collateral;
 use App\Loan;
 use App\Loaninsuarance;
+use Illuminate\Support\Facades\DB;
+use App\Feescategory;
 
 class MembersProfileController extends Controller
 {
@@ -41,10 +43,11 @@ class MembersProfileController extends Controller
         $loancategories=LoanCategory::select('id','category_name')->get();
 
         $guarantors=Member::all()->where('member_id','!=',$id);
+        $fees=Feescategory::all();
 
            
 
-          return view('loans.newloan',compact('loancategories','username','member','collaterals','guarantors'));
+          return view('loans.newloan',compact('loancategories','username','member','collaterals','guarantors','fees'));
       }
 
 
@@ -108,6 +111,25 @@ class MembersProfileController extends Controller
                 
          }
 
+        public function loancharges(Request $request){
+             
+           $charge_id=$request->charge_id;
+
+          $charge=DB::table('feescategories')
+                     ->select('id','fee_value','fee_name')
+                     ->where('id', $charge_id)
+                     ->get();
+
+                foreach ($charge as $key) {
+                        $data=array('id'=>$key->id,
+                    'fee_name'=>$key->fee_name,
+                    'fee_value'=>$key->fee_value );
+                   }
+           
+            echo json_encode($data);
+                
+         }
+
       public function createloan(Request $request){
 
 
@@ -120,9 +142,9 @@ class MembersProfileController extends Controller
             $loanperiod=$request->loanperiod;
             $loanwm=$request->loanwm;
             $startpayment=$request->startpayment;
-            $collateral_id=$request->collateral;
+            
              //colateral from js field
-               $g=$request->g;
+              
             $collate_id=$request->collate;
             $guarator_id=$request->guarantor;
             $charges=$request->charges;
@@ -131,7 +153,7 @@ class MembersProfileController extends Controller
                  
                $loan=Loan::create([
 
-                  'loanInssue_date'=>date('Y-m-d'),
+                  'loanInssue_date'=>date('Y-m-d H:i:s'),
                   'inssued_by'=>$user_id,
                   'loan_status'=>'active',
                   'loancategory_id'=>$pcategory_id,
@@ -146,21 +168,32 @@ class MembersProfileController extends Controller
                ]);
 
 
-                 Loaninsuarance::create([
+                /* Loaninsuarance::create([
                      'loan_id'=>$loan->id,
                      'insuarance_pacentage'=>234.678
-                 ]);         
+                 ]); */        
 
               $loan->collaterals()->attach($collate_id);
 
               $loan->guarantor()->attach( $guarator_id);
+              $loan->loan_fees()->attach($charges);
+
+
+
+           
 
 
                 return back();
-
-            
-                 
-
-              
+      
       }
+
+public function loanlist($id)
+    {
+      
+
+        $loanlists=Member::find($id)->loanlist;
+      return view('loans.loanlist' , compact('loanlists')); 
+
+
+    }
 }
