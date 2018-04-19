@@ -185,6 +185,4 @@ public function updateloan(Request $request)
             
   return redirect()->route('loanlist',['id'=>$member_id]) ;  
  }
-
-
 }

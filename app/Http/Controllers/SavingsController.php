@@ -91,4 +91,45 @@ Editor::inst($db,'savings','saving_id')
 
         
       }
+
+
+
+      public function membersavings()
+
+      {
+
+
+       $id=request()->segment(2);
+
+          $sql_details = array(
+    "type" => "Mysql",  // Database type: "Mysql", "Postgres", "Sqlite" or "Sqlserver"
+    "user" => "root",       // Database user name
+    "pass" => "",       // Database password
+    "host" => "localhost",       // Database host
+    "port" => "",       // Database connection port (can be left empty for default)
+    "db"   => "saccoss"     // Database name
+    //"dsn"  => "charset=utf8"        // PHP DSN extra information. Set as `charset=utf8` if you are using MySQL
+);
+$db = new \DataTables\Database( $sql_details );
+
+
+
+         Editor::inst($db,'membersavings','id')
+    ->fields(
+        Field::inst( 'saving_date' )->validator('Validate::notEmpty')
+            ->validator( 'Validate::dateFormat', array(
+                "format"  => Format::DATE_ISO_8601,
+                "message" => "Please enter a date in the format yyyy-mm-dd"
+            ) )
+            ->getFormatter( 'Format::date_sql_to_format', Format::DATE_ISO_8601 )
+            ->setFormatter( 'Format::date_format_to_sql', Format::DATE_ISO_8601 ),    
+        Field::inst( 'amount')->validator( 'Validate::notEmpty' ),
+        Field::inst( 'member_id' )->setValue( $id),  
+          Field::inst( 'saving_code' )->validator( 'Validate::notEmpty' )    
+        )
+    ->process( $_GET )
+    ->json();
+
+
+      }
 }

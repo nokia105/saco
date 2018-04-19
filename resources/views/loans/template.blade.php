@@ -10,13 +10,13 @@
           
               <img class="profile-user-img img-responsive img-circle" src="{{ asset('adminlte/dist/img/user4-128x128.jpg') }}" alt="User profile picture">
 
-              <h3 class="profile-username text-center">Mrs SaCoSS</h3>
+              <h3 class="profile-username text-center">{{$member->first_name}} {{$member->last_name}}</h3>
 
-              <p class="text-muted text-center">Software Engineer</p>
+             <!--  <p class="text-muted text-center">Software Engineer</p> -->
 
               <ul class="list-group list-group-unbordered">
                 <li class="list-group-item">
-                  <b>Good Loans</b> <a class="pull-right">1,322</a>
+                  <b>Number Loans</b> <a class="pull-right">{{$no_loans}}</a>
                 </li>
                 <li class="list-group-item">
                   <b>Bad Loans</b> <a class="pull-right">543</a>
@@ -43,13 +43,13 @@
                           <!-- <span class="line-height-1 bigger-170"> 55 </span>
 
                           <br /> -->
-                          <a href="/membersavings" class="btn btn-info btn-block"><b>Savings</b></a>
+                          <a href="{{URL::to('profile/'.$id.'/membersavings')}}" class="btn btn-info btn-block"><b>Savings</b></a>
                         </span>
                         <span class="btn  btn-sm  no-hover">
                           <!-- <span class="line-height-1 bigger-170"> 55 </span>
 
                           <br /> -->
-                          <a href="#" class="btn btn-info btn-block"><b>Sharings</b></a>
+                          <a href="{{URL::to('profile/'.$id.'/membershares')}}" class="btn btn-info btn-block"><b>Shares</b></a>
                         </span>
                         <span class="btn  btn-sm btn-light no-hover">
                           <!-- <span class="line-height-1 bigger-170 blue"> 1,411 </span>
