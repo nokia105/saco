@@ -3,17 +3,17 @@
      @extends('loans.template')
       @section('memberworkspace')
       
-      <form method="post" action="/memberloan">
+      <form method="post" action="/updateloan">
 
        
           
           {{csrf_field()}}
-
+          <input type="hidden" value="{{Request::segment(4)}}" name="loanid"> 
           <input type="hidden" value="{{$id=request()->route('id')}}" name="memberloan"> 
      <div class="col-md-12">
           <div class="box col-md-12 box-info">
             <div class="box-header">
-              <h3 class="box-title">Create Loan</h3>
+              <h3 class="box-title">Edit Loan</h3>
             </div>
             <!-- /.box-header -->
          <div class="box box-body box-info">
@@ -22,13 +22,14 @@
               <div class="box-header">
               <h3 class="box-title">Basic Details</h3>
             </div>
+    @foreach($loans as $loankey )
               <div class="form-group">
                 <label>Product Category</label>
                 <select class="form-control select2" style="width: 100%;" id="pcategory" name="pcategory">
                     <option value="">--Select Category--</option>
                   @foreach($loancategories as $loancategory)
                 
-                    <option value="{{$loancategory->id}}">{{$loancategory->category_name}}</option>
+                    <option value="{{ $loancategory->id }}" @php  if ($loankey->loancategory_id==$loancategory->id) echo 'selected'   @endphp>{{$loancategory->category_name}}</option>
                    @endforeach
                 </select>
               </div>
@@ -69,17 +70,17 @@
               
               <div class="form-group">
                   <label for="">Principle</label>
-                  <input type="text" class="form-control" id="principle" name="principle" placeholder="100000">
+                  <input type="text" class="form-control" id="principle" value="{{$loankey->principle}}" name="principle" placeholder="100000">
                 </div>
                 <div class="form-group">
                   <label for="">Interest</label>
-                  <input type="text" value="" class="form-control" name="interest" id="interest">
+                  <input type="text"  class="form-control" value="{{$loankey->interest}}" name="interest" id="interest">
                 </div>
                 <div class="form-group">
                 <label>Interest Method</label>
                 <select class="form-control select2"   name="Imethod" style="width: 100%;">
-                  <option value="flat">Flat</option>
-                  <option value="decline">Declining Balance</option>
+                  <option value="flat" @php if ($loankey->interest_method=='flat') echo 'selected' @endphp>Flat</option>
+                  <option value="decline" @php if ($loankey->interest_method=='decline') echo 'selected' @endphp>Declining Balance</option>
                 </select>
               </div>
          
@@ -90,12 +91,12 @@
                   <label for="" class="col-md-12">Loan Period</label>
                 
                     <div class="col-sm-8">
-                        <input type="text" class="form-control"  name="loanperiod" value="" id="period">
+                        <input type="text" class="form-control"  name="loanperiod" value="{{$loankey->duration}}" id="period">
                     </div>
                     <div class="col-sm-4">
                         <select class="col-md-4 form-control"  name="loanwm" style="width: 100%;">
                           <option value="month">Month</option>
-                          <option value="week">Week</option>
+                         <!--  <option value="week">Week</option> -->
                         </select>
                     </div>
               </div>
@@ -104,7 +105,7 @@
                 <div class="col-sm-12">
                    <br/>
                   <label for="exampleInputEmail1">First Payment on</label>
-                  <input type="date" data-date-format="yyyy-mm-dd" class="form-control" name="startpayment" placeholder="10">
+                  <input type="date" data-date-format="yyyy-mm-dd" class="form-control" value="{{$loankey->repayment_date}}" name="startpayment" placeholder="10">
                 </div>
               </div>
               <div class="form-group">
@@ -155,7 +156,17 @@
                                   <th align="right" width="24%">Valuation Date</th>
                                   <th align="right" width="4%"></th>
                                 </tr>
-                                </thead> 
+                              </thead>
+                                @foreach($loankey->collaterals as $col)
+                                <tr>
+
+                                  <td >{{$col->colateral_name}} <input type="hidden" name="collate[]" value="{{$col->id}}" /> </td>
+                                  <td> {{$col->colateral_value}} </td>
+                                  <td > {{$col->colateralevalution_date}} </td>
+                                  <td width="20%" ><input type="button" class="remove" style="color:red;" value="X" /></td>
+                                </tr>
+                                @endforeach 
+
                             </table>
             </div>
 
@@ -195,8 +206,8 @@
             
             <div class="col-md-12">
 
-                            <table class="table45  table" width="100%">
-                              <thead class="thead-dark" style="background-color: #eee;">
+                            <table class="table table45" width="100%">
+                                <thead class="thead-dark" style="background-color: #eee;">
                                 <tr>
 
                                   <th width="24%">Firstname</th>
@@ -205,6 +216,19 @@
                                   <th align="right" width="4%"></th>
                                 </tr> 
                               </thead>
+                              <tbody>
+                                @foreach($loankey->guarantor as $grantors)
+                                <tr>
+
+                                  <td >{{$grantors->first_name}} <input type="hidden" name="guarantor[]" value="{{$grantors->member_id}}" /> </td>
+                                  <td> {{$grantors->middle_name}} </td>
+                                  <td > {{$grantors->last_name}} </td>
+                                  <td width="20%" ><input type="button" class="remove" style="color:red;" value="X" /></td>
+                                </tr>
+                                @endforeach 
+                              </tbody>
+                                
+
                             </table>
             </div>
 
@@ -232,7 +256,16 @@
                                   <th width="24%">Percentage</th>
                                   <th align="right" width="4%"></th>
                                 </tr>
-                                </thead> 
+                                </thead>
+                               @foreach($loankey->loan_fees as $fee)
+                                <tr>
+
+                                  <td >{{$fee->fee_name}} <input type="hidden" name="charges[]" value="{{$fee->id}}" /> </td>
+                                  <td> {{$fee->fee_value}} </td>
+                                  
+                                  <td width="20%" ><input type="button" class="remove" style="color:red;" value="X" /></td>
+                                </tr>
+                                @endforeach  
                             </table>
 
             </div>
@@ -242,7 +275,7 @@
         </div>
             <!-- /.box-body -->
       </div>
-    
+@endforeach  
 
       <!--submit row-->
       <div class="box col-md-12 box-primary">
@@ -361,7 +394,7 @@ success: function(data)
     /* /end of garanters row */
 
     /*remove script*/
-    $('.fee').on('click', '.remove', function(){
+    $('.fee,.table44').on('click', '.remove', function(){
         $(this).closest('tr').remove();
     });
 

@@ -19,20 +19,22 @@
                   <th>Loan Period</th>
                   <th>Payment Startdate</th>
                   <th>End Date</th>
+                  <th>Action</th>
                 </tr>
                 </thead>
                 <tbody>
                 @foreach($loanlists as $loanlist )
                 <tr>
                   <td>{{  $loanlist->loancategory->category_name }}</td>
-                  <td>{{  $loanlist->loan_amount }}</td>
-                  <td>{{  $loanlist->mounthlyrepayment_interest }}</td>
+                  <td>{{  $loanlist->principle }}</td>
+                  <td>{{  $loanlist->interest }}</td>
                   <td>{{  $loanlist->duration }}</td>
-                  <td>{{  $loanlist->repatment_date }}</td>
+                  <td>{{  $loanlist->repayment_date }}</td>
                   <td>@php 
-                    echo $effectiveDate = date('Y-m-d', strtotime($loanlist->duration.' month', strtotime($loanlist->repatment_date)));
+                    echo $effectiveDate = date('Y-m-d', strtotime($loanlist->duration.' month', strtotime($loanlist->repayment_date)));
                 @endphp
                   </td>
+                  <td><a href="{{ URL::to('profile/'.$id.'/editloan/' . $loanlist->id) }}"<i class="fa fa-edit"></a></i></td>
                 </tr>
                 @endforeach
                 </tbody>

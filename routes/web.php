@@ -77,6 +77,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/memberRegister','MembersController@index')->name('memberRegister')->middleware('auth');
 Route::get('/profile/{mprofileid}','MembersProfileController@cover')->name('profile')->middleware('auth');
 Route::get('/profile/{id}/newloan','MembersProfileController@newloan')->name('newloan')->middleware('auth');
+Route::get('/profile/{id}/editloan/{lid}','MembersProfileController@editloan')->name('editloan')->middleware('auth');
 Route::get('/profile/{id}/loanlist','MembersProfileController@loanlist')->name('loanlist')->middleware('auth');
 
 Route::get('/interest','MembersProfileController@interest')->name('interest');
@@ -84,6 +85,7 @@ Route::get('/membercollateral','MembersProfileController@membercollateral')->nam
 Route::get('/loancharges','MembersProfileController@loancharges')->name('loancharges');
 Route::get('/guarantors','MembersProfileController@guarantors')->name('guarantors');
 Route::post('/memberloan','MembersProfileController@createloan')->middleware('auth');
+Route::post('/updateloan','MembersProfileController@updateloan')->middleware('auth');
 
 Route::get('/shareCreate','SharesController@index')->name('shareCreate')->middleware('auth');
 Route::get('/savingCreate','SavingsController@index')->name('savingCreate')->middleware('auth');

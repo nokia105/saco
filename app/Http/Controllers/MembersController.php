@@ -74,7 +74,7 @@ $mm=Editor::inst($db,'members','member_id')
 		Field::inst( 'status' )->setValue('1'),
 		Field::inst( 'user_id' )->setValue($user_id),
 		Field::inst( 'phone' )->validator( 'Validate::notEmpty' ),
-		Field::inst( 'password' )->setValue('password'),
+		/*Field::inst( 'password' )->setValue('password'),*/
 		Field::inst( 'email' )->validator( 'Validate::notEmpty' ),
 	    Field::inst( 'bank_name' )->validator( 'Validate::notEmpty' ),
 		Field::inst( 'account_number' )->validator( 'Validate::notEmpty' ),

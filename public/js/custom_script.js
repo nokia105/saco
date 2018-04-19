@@ -27,10 +27,10 @@ $(document).ready(function() {
                 name: "phone"
             }, 
 
-            {
+            /*{
              	label:"password",
              	name:"password"
-             },
+             },*/
             {
                 label: "Email:",
                 name: "email"
@@ -90,7 +90,7 @@ $(document).ready(function() {
 
                 name =oData.first_name+' '+oData.last_name;
 
-            $(nTd).html("<a href='/profile/"+oData.member_id+"'>"+name+"</a>");
+            $(nTd).html("<a href='/profile/"+oData.member_id+"/loanlist'>"+name+"</a>");
              }
           
              },
