@@ -4,7 +4,7 @@ namespace App;
 
 
 
-class Shares extends Model
+class Share extends Model
 {
     //
 

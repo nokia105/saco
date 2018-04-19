@@ -59,19 +59,33 @@ Route::get('/table33', function () {
  
   Route::get('/shares', function () {
 
-
    return view('shares.shares');
 })->middleware('auth');
 
 
+   Route::get('/profile/{id}/membersavings', function () {
 
+   return view('savings.membersavings');
+})->middleware('auth');
+
+
+   //membershare
+   Route::get('/profile/{id}/membershares', function () {
+
+   return view('shares.membershares');
+})->middleware('auth');
+
+ 
 
 
 
    
 Auth::routes();
 
-Route::get('/membersavings','MemberProfileController@savings');
+Route::get('/membersavings/{id}','SavingsController@membersavings');
+
+Route::get('/memberShares/{id}','SharesController@membershare');
+
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/memberRegister','MembersController@index')->name('memberRegister')->middleware('auth');
@@ -84,6 +98,7 @@ Route::get('/membercollateral','MembersProfileController@membercollateral')->nam
 Route::get('/loancharges','MembersProfileController@loancharges')->name('loancharges');
 Route::get('/guarantors','MembersProfileController@guarantors')->name('guarantors');
 Route::post('/memberloan','MembersProfileController@createloan')->middleware('auth');
+
 
 Route::get('/shareCreate','SharesController@index')->name('shareCreate')->middleware('auth');
 Route::get('/savingCreate','SavingsController@index')->name('savingCreate')->middleware('auth');

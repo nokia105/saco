@@ -194,6 +194,8 @@ public function loanlist($id)
         $loanlists=Member::find($id)->loanlist;
       return view('loans.loanlist' , compact('loanlists')); 
 
-
     }
+
+
+    
 }

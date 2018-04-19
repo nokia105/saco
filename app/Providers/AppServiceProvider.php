@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
+use App\Member;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -16,12 +17,15 @@ class AppServiceProvider extends ServiceProvider
     {
 
 
-         /* view()->composer('loans.loannav',function($view){
+          view()->composer('loans.template',function($view){
 
-         $view->with('id',request()->route('id'));
-    
-      
-        });*/
+                  $id=request()->segment(2);
+         $view->with('member',Member::find($id));
+        
+            $view->with('no_loans',Member::find($id)->loanlist->count());
+        });
+
+
         Schema::defaultStringLength(191);
 
 
