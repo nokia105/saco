@@ -17,6 +17,7 @@ class CreateCollateralLoanTable extends Migration
             $table->increments('id');
             $table->integer('loan_id');
             $table->integer('collateral_id');
+            $table->timestamps();
            
         });
     }

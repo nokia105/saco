@@ -15,6 +15,8 @@
                 <tr>
                   <th>Category</th>
                   <th>Principle</th>
+                  <th>Total to be payed</th>
+                  <th>Pay per month</th>
                   <th>Interest </th>
                   <th>Loan Period</th>
                   <th>Payment Startdate</th>
@@ -26,9 +28,11 @@
                 @foreach($loanlists as $loanlist )
                 <tr>
                   <td>{{  $loanlist->loancategory->category_name }}</td>
-                  <td>{{  $loanlist->principle }}</td>
-                  <td>{{  $loanlist->interest }}</td>
-                  <td>{{  $loanlist->duration }}</td>
+                  <td>{{  $loanlist->principle }} Tsh</td>
+                  <td>{{($loanlist->principle+(($loanlist->interest/100)*$loanlist->principle))+$loanlist->loan_fees->sum('fee_value')}} Tsh</td>
+                  <td>{{$loanlist->mounthlyrepayment_amount}} Tsh</td>
+                  <td>{{  $loanlist->interest }} %</td>
+                  <td>{{  $loanlist->duration }} months</td>
                   <td>{{  $loanlist->repayment_date }}</td>
                   <td>@php 
                     echo $effectiveDate = date('Y-m-d', strtotime($loanlist->duration.' month', strtotime($loanlist->repayment_date)));

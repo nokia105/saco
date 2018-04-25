@@ -49,13 +49,13 @@ $(document).ready(function() {
         table: "#memberSaving",
         fields: [ {
                 label: "Savings Amount:",
-                name: "amount"
+                name: "membersavings.amount"
             }, {
                 label: "Savings Code:",
-                name: "saving_code"
+                name: "membersavings.saving_code"
             }, {
                 label: "Savings Date:",
-                name: "saving_date",
+                name: "membersavings.saving_date",
                 type:"datetime"
             }
 
@@ -78,9 +78,9 @@ $(document).ready(function() {
         
         columns: [
           
-            { data: "amount" },   
-            { data: "saving_code" },
-            { data: "saving_date",
+            { data: "membersavings.amount" },   
+            { data: "membersavings.saving_code" },
+            { data: "membersavings.saving_date",
              "render": function (data) {
                 var date = new Date(data);
                 var month = date.getMonth() + 1;

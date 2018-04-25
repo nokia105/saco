@@ -11,8 +11,9 @@
               <table id="memberShare" class="table table-bordered table-striped">
                 <thead>
                 <tr>
-                  <th>No of Shares</th>
-                  <th>Share Date</th>
+                  <th>Amount</th>
+                   <th>No of Shares</th>
+                    <th>Share Date</th>
               
                 </tr>
                 </thead>
@@ -44,18 +45,20 @@ $(document).ready(function() {
  
         table: "#memberShare",
         fields: [ {
-                label: "No of share:",
-                name: "No_shares"
+                label: "Amount:",
+                name: "member_share.amount"
             }, {
                 label: "Share Date:",
-                name: "share_date",
+                name: "member_share.share_date",
                 type:"datetime"
-            }
+            },
+
+            
         ]
     } );
 
     $('#memberShare').dataTable( {
-        
+            
             
 
         dom: "Bfrtip",
@@ -68,8 +71,9 @@ $(document).ready(function() {
         }, 
    
         columns: [
-            { data: "No_shares" },   
-            { data: "share_date",
+            { data: "member_share.amount" }, 
+             { data: "member_share.No_shares" },  
+            { data: "member_share.share_date",
              "render": function (data) {
                 var date = new Date(data);
                 var month = date.getMonth() + 1;

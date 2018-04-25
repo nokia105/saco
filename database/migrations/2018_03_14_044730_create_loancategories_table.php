@@ -26,6 +26,7 @@ class CreateLoancategoriesTable extends Migration
                $table->float('min_amount');
               $table->float('max_amount');
               $table->date('created_at');
+              
 
         });
     }

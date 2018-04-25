@@ -17,6 +17,7 @@ class CreateLoanGuarantorTable extends Migration
             $table->increments('id');
             $table->integer('loan_id');
             $table->integer('guarator_id');
+            $table->timestamps();
         });
     }
 

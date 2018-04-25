@@ -116,17 +116,19 @@ $db = new \DataTables\Database( $sql_details );
 
          Editor::inst($db,'membersavings','id')
     ->fields(
-        Field::inst( 'saving_date' )->validator('Validate::notEmpty')
+        Field::inst( 'membersavings.saving_date' )->validator('Validate::notEmpty')
             ->validator( 'Validate::dateFormat', array(
                 "format"  => Format::DATE_ISO_8601,
                 "message" => "Please enter a date in the format yyyy-mm-dd"
             ) )
             ->getFormatter( 'Format::date_sql_to_format', Format::DATE_ISO_8601 )
             ->setFormatter( 'Format::date_format_to_sql', Format::DATE_ISO_8601 ),    
-        Field::inst( 'amount')->validator( 'Validate::notEmpty' ),
-        Field::inst( 'member_id' )->setValue( $id),  
-          Field::inst( 'saving_code' )->validator( 'Validate::notEmpty' )    
+        Field::inst( 'membersavings.amount')->validator( 'Validate::notEmpty' ),
+        Field::inst( 'membersavings.member_id' )->setValue( $id),  
+          Field::inst( 'membersavings.saving_code' )->validator( 'Validate::notEmpty' )    
         )
+    ->leftJoin('members','members.member_id','=','membersavings.member_id')
+    ->where('members.member_id',$id)
     ->process( $_GET )
     ->json();
 

@@ -32,4 +32,14 @@ class Member extends Model
 
          return $this->hasMany(Loan::class,'member_id');
        }
+
+       public function no_shares(){
+
+         return $this->hasMany(Member_share::class,'member_id');
+       }
+
+       public function savingamount(){
+
+         return $this->hasMany(Membersaving::class,'member_id');
+       }
 }

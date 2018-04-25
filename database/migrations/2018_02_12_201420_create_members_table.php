@@ -27,7 +27,8 @@ class CreateMembersTable extends Migration
             $table->string('nextkin_relationship',30);
             $table->date('joining_date',30);
             $table->integer('status')->nullable();
-            $table->integer('user_id')->nullable();  
+            $table->integer('user_id')->nullable(); 
+            $table->timestamps(); 
           
 
         });

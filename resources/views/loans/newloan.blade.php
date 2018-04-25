@@ -72,7 +72,7 @@
                   <input type="text" class="form-control" id="principle" name="principle" placeholder="100000">
                 </div>
                 <div class="form-group">
-                  <label for="">Interest</label>
+                  <label for="">Interest in pacentage</label>
                   <input type="text" value="" class="form-control" name="interest" id="interest">
                 </div>
                 <div class="form-group">

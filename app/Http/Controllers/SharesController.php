@@ -79,11 +79,17 @@ $nn=Editor::inst($db,'shares','share_id')
 
 
       public function membershare(){
+
+        
     
            $id=request()->segment(2);
+           $user_id=Auth::user()->id;
 
-            $share_id=Share::select('share_id')->first();
+           $share=Share::select('share_value')->first();
 
+            //$no_share=$amount/$share;
+         
+          
            $sql_details = array(
     "type" => "Mysql",  // Database type: "Mysql", "Postgres", "Sqlite" or "Sqlserver"
     "user" => "root",       // Database user name
@@ -96,14 +102,20 @@ $nn=Editor::inst($db,'shares','share_id')
 $db = new \DataTables\Database( $sql_details );
 
 // Build our Editor instance and process the data coming from _POST
+
+
 $nn=Editor::inst($db,'member_share','id')
     ->fields(
-        Field::inst( 'No_shares' )->validator( 'Validate::notEmpty' ),
-        Field::inst( 'share_date' )->validator( 'Validate::notEmpty' ),
-        Field::inst( 'member_id' )->setValue($id),
-        Field::inst( 'share_id' )->setValue($share_id)
+        Field::inst( 'member_share.No_shares' )->setValue(10000),
+         Field::inst( 'member_share.amount' )->validator( 'Validate::notEmpty' ),
+        Field::inst( 'member_share.share_date' )->validator( 'Validate::notEmpty' ),
+        Field::inst( 'member_share.member_id' )->setValue($id),
+        Field::inst( 'member_share.user_id' )->setValue($user_id)
         
-        )  
+        )
+
+         ->leftJoin('members','members.member_id','=','member_share.member_id')
+    ->where('members.member_id',$id)  
     ->process( $_GET )
     ->json();
 
