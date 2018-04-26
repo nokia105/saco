@@ -16,14 +16,14 @@ class Loan extends Model
 
      public function guarantor(){
 
-     	return $this->belongsToMany(Member::class,'loan_guarantor','loan_id','guarator_id');
+     	return $this->belongsToMany(Member::class,'loan_guarantor','loan_id','guarator_id')->withTimestamps();
      }
 
 
 
        public function collaterals(){
 
-       	return $this->belongsToMany(Collateral::class);
+       	return $this->belongsToMany(Collateral::class)->withTimestamps();
        }
        public function loan_fees(){
 

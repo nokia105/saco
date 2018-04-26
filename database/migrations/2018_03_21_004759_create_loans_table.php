@@ -21,7 +21,7 @@ class CreateLoansTable extends Migration
             $table->integer('loancategory_id');
             $table->integer('member_id');
             $table->integer('duration');
-            $table->integer('interest_method');
+            $table->string('interest_method');
             $table->float('interest');
             $table->double('principle',20);
             $table->date('repayment_date');
