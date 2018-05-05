@@ -2,11 +2,25 @@
 
      @extends('loans.template')
       @section('memberworkspace')
+
+        <div class="error" style="padding-top:50px; text-align:center;">
+
+
+            @if (session('error'))
+                    <div class="alert alert-danger">
+                        <strong>Warning! </strong>{{ session('error') }}
+                    </div>
+                @endif
+            
+            @if (session('status'))
+                    <div class="alert alert-success">
+                        {{ session('status') }}
+                    </div>
+                @endif
+        </div>
       
       <form method="post" action="/memberloan">
 
-       
-          
           {{csrf_field()}}
 
           <input type="hidden" value="{{$id=request()->route('id')}}" name="memberloan"> 
@@ -22,7 +36,7 @@
               <div class="box-header">
               <h3 class="box-title">Basic Details</h3>
             </div>
-              <div class="form-group">
+              <div class="form-group{{ $errors->has('pcategory') ? ' has-error' : '' }}">
                 <label>Product Category</label>
                 <select class="form-control select2" style="width: 100%;" id="pcategory" name="pcategory">
                     <option value="">--Select Category--</option>
@@ -31,6 +45,7 @@
                     <option value="{{$loancategory->id}}">{{$loancategory->category_name}}</option>
                    @endforeach
                 </select>
+                   <small class="text-danger">{{ $errors->first('pcategory') }}</small>
               </div>
               <!-- /.form-group -->
               
@@ -67,20 +82,23 @@
           <div class="row">
             <div class="col-md-6">
               
-              <div class="form-group">
-                  <label for="">Principle</label>
-                  <input type="text" class="form-control" id="principle" name="principle" placeholder="100000">
+              <div class="form-group{{ $errors->has('principle') ? ' has-error' : '' }}">
+                  <label for="principle">Principle</label>
+                  <input type="text" class="form-control" id="principle" name="principle" placeholder="100000" value="{{ old('principle')}}">
+                   <small class="text-danger">{{ $errors->first('principle') }}</small>
                 </div>
-                <div class="form-group">
+                <div class="form-group{{ $errors->has('interest') ? ' has-error' : '' }}">
                   <label for="">Interest in pacentage</label>
-                  <input type="text" value="" class="form-control" name="interest" id="interest">
+                  <input type="text" class="form-control" name="interest" id="interest" value="{{ old('interest')}}">
+                  <small class="text-danger">{{ $errors->first('interest') }}</small>
                 </div>
-                <div class="form-group">
+                <div class="form-group{{ $errors->has('Imethod') ? ' has-error' : '' }}">
                 <label>Interest Method</label>
                 <select class="form-control select2"   name="Imethod" style="width: 100%;">
                   <option value="flat">Flat</option>
                   <option value="decline">Declining Balance</option>
                 </select>
+                    <small class="text-danger">{{ $errors->first('Imethod') }}</small>
               </div>
          
             </div>
@@ -89,8 +107,9 @@
             <div class="form-group">
                   <label for="" class="col-md-12">Loan Period</label>
                 
-                    <div class="col-sm-8">
-                        <input type="text" class="form-control"  name="loanperiod" value="" id="period">
+                    <div class="col-sm-8{{ $errors->has('loanperiod') ? ' has-error' : '' }}">
+                        <input type="text" class="form-control"  name="loanperiod" value="{{old('loanperiod')}}" id="period">
+                        <small class="text-danger">{{ $errors->first('loanperiod') }}</small>
                     </div>
                     <div class="col-sm-4">
                         <select class="col-md-4 form-control"  name="loanwm" style="width: 100%;">
@@ -101,10 +120,11 @@
               </div>
 
               <div class="form-group">
-                <div class="col-sm-12">
+                <div class="col-sm-12{{ $errors->has('startpayment') ? ' has-error' : '' }}">
                    <br/>
                   <label for="exampleInputEmail1">First Payment on</label>
                   <input type="date" data-date-format="yyyy-mm-dd" class="form-control" name="startpayment" placeholder="10">
+                    <small class="text-danger">{{ $errors->first('startpayment') }}</small>
                 </div>
               </div>
               <div class="form-group">
@@ -124,7 +144,7 @@
           <!--Colleratels row-->
      <div class="box col-md-12 box-danger">
             <div class="box-header">
-              <h3 class="box-title">Colletarals</h3>
+              <h3 class="box-title">Collateral</h3>
             </div>
             <!-- /.box-header -->
          <div class="box-body">
@@ -348,7 +368,7 @@ success: function(data)
 {
     //alert(data);
       var row = $(".table44").find('tr:last');
-        $('<tr><td>'+data.asset+'</td><td>'+data.value+'</td><td>'+data.duration+'<input type="hidden" value="'+data.id+'" name="collate[]"></td><td width="20%"><input type="button" class="remove" style="color:red;" value="X" /></td></tr>').insertAfter(row);
+        $('<tr><td>'+data.asset+'</td><td>'+data.value+'</td><td>'+data.duration+'<input type="hidden" value="'+data.id+'" name="collate[]" class="collate_check"></td><td width="20%"><input type="button" class="remove" style="color:red;" value="X" /></td></tr>').insertAfter(row);
         $("#collateral").val('');
 }
 

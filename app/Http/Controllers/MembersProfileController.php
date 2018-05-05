@@ -24,12 +24,7 @@ class MembersProfileController extends Controller
     return view('loans.profile');
   }
 
-     // public function index($mprofileid){
-
-     //    $member=Member::find($mprofileid);
-  
-
-     //      return view('loans.profile',compact('member'));
+     
      // }
 
 
@@ -118,6 +113,17 @@ class MembersProfileController extends Controller
             $charges=$request->charges;
             $user_id=Auth::user()->id; 
 
+
+                $this->validate(request(),[
+                 'pcategory'=>'required',
+                 'principle'=>'required|numeric',
+                 'interest'=>'required|numeric',
+                 'Imethod'=>'required',
+                 'loanperiod'=>'required|numeric',
+                 'startpayment'=>'required|date'
+
+                ]);
+
              //$mInterest=($interest/100)*$principle;
 
                $no_shares=Member::find($member_id)->no_shares->sum('No_shares');
@@ -156,23 +162,23 @@ class MembersProfileController extends Controller
               $loan->guarantor()->attach( $guarator_id);
               $loan->loan_fees()->attach($charges);
 
-                     return back();
+                     return back()->with('status','your loan is accepted');
 
               }
 
-                 return redirect('/savings');
+                  return back()->with('error','You asked for a loan which is more than your savings');
 
               
 
               }
 
-              return redirect('/');
+              return back()->with('error','you must have 10000 shares in your account');
       }
 
    public function loanlist($id)
       {
       
-
+           
        $loanlists=Member::find($id)->loanlist;
       return view('loans.loanlist' , compact('loanlists','id')); 
     }
@@ -230,7 +236,7 @@ public function updateloan(Request $request)
   return redirect()->route('loanlist',['id'=>$member_id]) ; 
 
   }
-   return back(); 
+   return back()->with('error','You asked for a loan which is more than your savings'); 
  }
 
 }
