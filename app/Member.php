@@ -30,7 +30,7 @@ class Member extends Model
 
      public function loanlist(){
 
-         return $this->hasMany(Loan::class,'member_id');
+         return $this->hasMany(Loan::class,'member_id')->orderBy('repayment_date','ASC');
        }
 
        public function no_shares(){

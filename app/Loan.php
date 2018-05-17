@@ -35,6 +35,15 @@ class Loan extends Model
          return $this->belongsTo(loancategory::class);
        }
 
+          public function loanschedule(){
 
+            return $this->hasMany(Loanschedule::class)->orderBy('duedate');
+          }
+
+
+         public function loanrepayment(){
+
+            return $this->hasManyThrough(Repayment::class, Loanschedule::class);
+         }
 
 }

@@ -1,10 +1,13 @@
 <?php
 namespace App\Http\Controllers;
 
+
+
 use Illuminate\Http\Request;
 include(app_path()."\datatable\Editor\php\DataTables.php" );
 include(app_path()."\datatable\Editor\php\config.php" );
 include(app_path()."\datatable\Editor\php\Bootstrap.php" );
+//require( 'ssp.class.php' );
 /*
 include(app_path()."\datatable\Editor\php\Editor\Editor.php" );
 include(app_path()."\datatable\Editor\php\Editor\Field.php" );
@@ -98,7 +101,7 @@ Editor::inst($db,'savings','saving_id')
 
       {
 
-
+       $user_id=Auth::user()->id;
        $id=request()->segment(2);
 
           $sql_details = array(
@@ -124,9 +127,11 @@ $db = new \DataTables\Database( $sql_details );
             ->getFormatter( 'Format::date_sql_to_format', Format::DATE_ISO_8601 )
             ->setFormatter( 'Format::date_format_to_sql', Format::DATE_ISO_8601 ),    
         Field::inst( 'membersavings.amount')->validator( 'Validate::notEmpty' ),
-        Field::inst( 'membersavings.member_id' )->setValue( $id),  
+        Field::inst( 'membersavings.member_id' )->setValue( $id),
+        Field::inst( 'membersavings.user_id' )->setValue( $user_id),   
           Field::inst( 'membersavings.saving_code' )->validator( 'Validate::notEmpty' )    
         )
+
     ->leftJoin('members','members.member_id','=','membersavings.member_id')
     ->where('members.member_id',$id)
     ->process( $_GET )

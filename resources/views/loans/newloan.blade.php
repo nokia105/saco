@@ -41,11 +41,17 @@
                 <select class="form-control select2" style="width: 100%;" id="pcategory" name="pcategory">
                     <option value="">--Select Category--</option>
                   @foreach($loancategories as $loancategory)
-                
-                    <option value="{{$loancategory->id}}">{{$loancategory->category_name}}</option>
+
+                     @if(\Illuminate\Support\Facades\Input::old('pcategory')==$loancategory->id)
+                    <option value="{{$loancategory->id}}" selected>{{$loancategory->category_name}}</option>
+                      @else
+                         <option value="{{$loancategory->id}}">{{$loancategory->category_name}}</option>
+                     @endif
+
                    @endforeach
                 </select>
-                   <small class="text-danger">{{ $errors->first('pcategory') }}</small>
+                  
+                  <small class="text-danger">{{ $errors->first('pcategory') }}</small>
               </div>
               <!-- /.form-group -->
               
@@ -56,11 +62,11 @@
              <!--  <div class="box box-body box-primary"> -->
             <div class="form-group">
                   <label for="">Loan Officer</label>
-                  <input type="text" class="form-control" value="{{$username}}"  name="loanOfficer"  placeholder="Enter name" readonly="true">
+                  <input type="text" class="form-control" id="loanOfficer" value="{{$username}}"  name="loanOfficer"  placeholder="Enter name" readonly="true">
               </div>
               <div class="form-group">
                   <label for="exampleInputEmail1">Loan Requestor</label>
-                  <input type="text" class="form-control"  value="{{$member->first_name}} {{$member->middle_name}} {{$member->last_name}}" readonly="true">
+                  <input type="text" class="form-control"  id="loanrequestor" name="loanrequestor" value="{{$member->first_name}} {{$member->middle_name}} {{$member->last_name}}" readonly="true">
               </div>
             <!-- </div> -->
             </div>
@@ -88,18 +94,26 @@
                    <small class="text-danger">{{ $errors->first('principle') }}</small>
                 </div>
                 <div class="form-group{{ $errors->has('interest') ? ' has-error' : '' }}">
-                  <label for="">Interest in pacentage</label>
+                  <label for="">Interest in percentage</label>
                   <input type="text" class="form-control" name="interest" id="interest" value="{{ old('interest')}}">
                   <small class="text-danger">{{ $errors->first('interest') }}</small>
                 </div>
                 <div class="form-group{{ $errors->has('Imethod') ? ' has-error' : '' }}">
                 <label>Interest Method</label>
-                <select class="form-control select2"   name="Imethod" style="width: 100%;">
-                  <option value="flat">Flat</option>
-                  <option value="decline">Declining Balance</option>
+                <select class="form-control select2" id="Imethod"  name="Imethod" style="width: 100%;">
+                    <option value="">---select Interest Method---</option>
+                   @foreach($interestmethods as $interestmethod)
+                    @if(\Illuminate\Support\Facades\Input::old('Imethod')==$interestmethod->id)
+                    <option value="{{$interestmethod->id}}" selected>{{$interestmethod->method}}</option>
+                      @else
+                         <option value="{{$interestmethod->id}}">{{$interestmethod->method}}</option>
+                     @endif
+                  @endforeach
                 </select>
                     <small class="text-danger">{{ $errors->first('Imethod') }}</small>
               </div>
+
+              <div class="btn btn-info" id="calculate" data-toggle="modal" data-target="#modal-default" data-backdrop="false">calculate</div>
          
             </div>
             <!-- /.col -->
@@ -107,9 +121,9 @@
             <div class="form-group">
                   <label for="" class="col-md-12">Loan Period</label>
                 
-                    <div class="col-sm-8{{ $errors->has('loanperiod') ? ' has-error' : '' }}">
-                        <input type="text" class="form-control"  name="loanperiod" value="{{old('loanperiod')}}" id="period">
-                        <small class="text-danger">{{ $errors->first('loanperiod') }}</small>
+                    <div class="col-sm-8{{ $errors->has('period') ? ' has-error' : '' }}">
+                        <input type="text" class="form-control"  name="period" value="{{old('period')}}" id="period">
+                        <small class="text-danger">{{ $errors->first('period') }}</small>
                     </div>
                     <div class="col-sm-4">
                         <select class="col-md-4 form-control"  name="loanwm" style="width: 100%;">
@@ -123,7 +137,7 @@
                 <div class="col-sm-12{{ $errors->has('startpayment') ? ' has-error' : '' }}">
                    <br/>
                   <label for="exampleInputEmail1">First Payment on</label>
-                  <input type="date" data-date-format="yyyy-mm-dd" class="form-control" name="startpayment" placeholder="10">
+                  <input type="text"  id="startpayment" class="form-control" data-provide="datepicker"  data-date-format="yyyy-mm-dd" class="form-control" name="startpayment" placeholder="yyyy-mm-dd" value="{{old('startpayment')}}">
                     <small class="text-danger">{{ $errors->first('startpayment') }}</small>
                 </div>
               </div>
@@ -142,7 +156,12 @@
 
      <!--/end terms-->
           <!--Colleratels row-->
-     <div class="box col-md-12 box-danger">
+
+           <div  style="padding-bottom:15px;"><input id="checkbox" type="checkbox" name="checkbox"><h4><strong> Use Collaterals</strong></h4></div>
+           
+             <div class="collateral_checkbox">
+
+                 <div class="box col-md-12 box-danger">
             <div class="box-header">
               <h3 class="box-title">Collateral</h3>
             </div>
@@ -175,7 +194,31 @@
                                   <th align="right" width="24%">Valuation Date</th>
                                   <th align="right" width="4%"></th>
                                 </tr>
-                                </thead> 
+                                </thead>
+                                
+                                  @php 
+                                     if(!empty(old('collate'))){
+                                  $collaterals=\App\Collateral::whereIn('id',old('collate'))->get();
+
+                                   @endphp
+                                @foreach($collaterals as $collateral)
+                                      
+                                 <tr>
+                                  <td width="24%">{{$collateral->colateral_name}}
+                                     <input type="hidden" value="{{$collateral->id}}" name="collate[]" class="collate_check">
+                                  </td>
+                                  <td width="24%">{{$collateral->colateral_value}}</td>
+                                  <td align="right" width="24%">{{$collateral->colateralevalution_date}}</td>
+                                  <td align="right" width="4%"><input type="button" class="remove" style="color:red;" value="X" /></td>
+                                </tr>
+                                 @endforeach 
+                                  @php
+                                   }
+                               
+
+                                     @endphp
+                                
+                                 
                             </table>
             </div>
 
@@ -185,6 +228,8 @@
           </div>
           <!-- /.row -->
         </div>
+               
+             </div>
             <!-- /.box-body -->
       </div>
 
@@ -225,6 +270,26 @@
                                   <th align="right" width="4%"></th>
                                 </tr> 
                               </thead>
+
+                               @php 
+                                     if(!empty(old('guarantor'))){
+                                  $guras=\App\Member::whereIn('member_id',old('guarantor'))->get();
+                                   @endphp
+                                @foreach($guras as $gura)
+                                      
+                                 <tr>
+                                  <td width="24%">{{$gura->first_name}}
+                                     <input type="hidden" value="{{$gura->member_id}}" name="guarantor[]" class="guarantor_check">
+                                  </td>
+                                  <td width="24%">{{$gura->middle_name}}</td>
+
+                                  <td align="right" width="24%">{{$gura->last_name}}</td>
+                                  <td align="right" width="4%"><input type="button" class="remove" style="color:red;" value="X" /></td>
+                                </tr>
+                                 @endforeach 
+                                  @php
+                                   }
+                                   @endphp
                             </table>
             </div>
 
@@ -249,10 +314,34 @@
                                <thead class="thead-dark" style="background-color: #eee;">
                                 <tr>
                                   <th width="24%">Fee </th>
-                                  <th width="24%">Percentage</th>
+                                  <th width="24%">Amount</th>
                                   <th align="right" width="4%"></th>
                                 </tr>
                                 </thead> 
+
+
+                              @php 
+                                     if(!empty(old('charges'))){
+                                  $charges=\App\Feescategory::whereIn('id',old('charges'))->get();
+                                   @endphp
+                                @foreach($charges as $charge)
+                                      
+                                 <tr>
+                                  <td width="24%">{{$charge->fee_name}}
+                                     <input type="hidden" value="{{$charge->id}}" name="charges[]" class="charge_check">
+                                  </td>
+
+                                   <td width="24%">{{$charge->fee_value}}
+                                   
+                                  </td>
+                                  
+                                  <td align="right" width="4%"><input type="button" class="remove" style="color:red;" value="X" /></td>
+                                </tr>
+                                 @endforeach 
+                                  @php
+                                   }
+                                   @endphp
+
                             </table>
 
             </div>
@@ -294,14 +383,136 @@
 
           <!-- /.box -->
         </div>
-      </form>
+      
+       </form>
+
+        <style type="text/css">
 
 
+          
+          .modal-header {
+            
+            border-bottom:1px solid red;
+          }
+
+          .modal-content {
+            border:5px solid #00BFFF;
+          }
+
+          .modal-content h4{
+            font-family: 'Rokkitt', serif;
+          }
+            .modal-footer button i{
+              color:red;
+            }
+
+           .close{
+            outline:0; 
+            color:red;
+            font-size:30px;
+           }
+            .close span:hover{
+               color:red;
+            } 
+        </style>
+       <div class="modal fade" id="modal-default">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span></button>
+                 <div><h4>Loan  Requestor: <strong id="Name"></strong></h4></div>
+              </div>
+              <div class="modal-body">
+
+                  <div class="col-md-6">
+                <div> <h4>Monthly repayment  <strong id="mrepayment"></strong> Tsh</h4></div>
+                <div><h4>First repayment  <strong id="frepayment"></strong></h4></div>
+                <div><h4>Last repayment  <strong id="lrepayment"></strong></h4></div>
+                     
+                    </div> 
+                 <div class="col-md-6">
+                   <div class="duration"> <h4>Loan Duration <strong id="lduration"></strong> Month(s)</h4></div>
+               <div> <h4>principle is <strong id="lprinciple"></strong> Tsh</h4></div>
+               <div> <h4>Interest is <strong id="linterest"></strong> %</h4></div>
+                 </div>
+                 
+                <div><h4>Loan issued by  <strong id="lofficer"></strong></h4></div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-danger pull-left" data-dismiss="modal">close</button>
+                <button id="pdfview">Download PDF <i class="fa fa-file-pdf-o"></i></button>
+              </div>
+            </div>
+            <!-- /.modal-content -->
+          </div>
+          <!-- /.modal-dialog -->
+        </div>
+        
+           
     @endsection
-
 
       @section('js')
       <script type="text/javascript">
+            
+
+              //interest method pop up
+
+
+          $(document).ready(function () {
+
+
+// code to get all records from table via select box
+$('#calculate').click(function()
+{ 
+
+ 
+var pcategoryid = $(this).find(":selected").val();
+
+  
+    var principle=$('#principle').val();
+
+     var period=$('#period').val();
+      var interest=$('#interest').val();
+      var startpayment=$('#startpayment').val();
+      var Imethod=$('#Imethod').val();
+      var loanrequestor=$('#loanrequestor').val();
+      var loanOfficer=$('#loanOfficer').val();
+
+       var dataString='principle='+principle+'&period='+period+'&interest='+interest+'&startpayment='+startpayment+'&Imethod='+Imethod+'&loanrequestor='+loanrequestor+'&loanOfficer='+loanOfficer;
+
+
+         
+         
+$.ajax
+({
+         
+url:'{{route('interestmethod')}}',
+type:"GET",
+ dataType: 'json',
+data: dataString,
+cache: true,
+success: function(data)
+{
+
+var dwn_url='<a href="/pdf_download/'+data.principle+'/'+data.interest+'/'+data.loanperiod+'/'+data.firstpayment+'">Download PDF <i class="fa fa-file-pdf-o"></i></a>'
+           
+$("#lprinciple").html(data.principle);
+$("#Name").html(data.loanrequestor);
+$("#linterest").html(data.interest);
+$("#mrepayment").html(data.monthlyrepayment);
+$("#frepayment").html(data.firstpayment);
+$("#lrepayment").html(data.lastpayment);
+$("#lofficer").html(data.loanOfficer);
+$("#lduration").html(data.loanperiod);
+ $("#pdfview").html(dwn_url);
+
+}
+
+});
+})
+
+});
         
 
                      $(document).ready(function () {
@@ -335,6 +546,19 @@ $("#period").val(data.duration);
 })
 
 });
+ 
+   $(document).ready(function(){
+
+         $('.collateral_checkbox').hide();
+
+        $('#checkbox').click(function(){
+
+     $(".collateral_checkbox").toggle();
+        });
+      
+      
+   });
+
 
 
 
@@ -351,10 +575,19 @@ $("#period").val(data.duration);
           var collateralid=$("#collateral").val();
                  
                   var dataString='collateral='+ collateralid;
+                       
 
 
 
  if(collateralid !=''){
+  var check='';
+  var inputs=$(".collate_check");
+  if (inputs.length > 0){
+  for(var i = 0; i < inputs.length; i++){
+  if ($(inputs[i]).val()===collateralid ) check=1;
+  }
+    }
+  if (check===''){
 
        //alert('mmmmmhh');
 $.ajax({         
@@ -375,13 +608,16 @@ success: function(data)
 });
 
 }
+else  alert('Repeated collateral');
+
+}
         return false;
   
 });
     /* /end of garanters row */
 
     /*remove script*/
-    $('.fee').on('click', '.remove', function(){
+    $('.fee,.table44').on('click', '.remove', function(){
         $(this).closest('tr').remove();
     });
 
@@ -389,8 +625,20 @@ success: function(data)
     $(".newcharge").click(function () {
       
         if ( $("#charges").val() !='')
-        {   
-          var dataString='charge_id='+$("#charges").val();
+        { 
+
+          var charge_id=$("#charges").val();  
+          var dataString='charge_id='+charge_id;
+
+           var check='';
+  var inputs=$(".charge_check");
+  if (inputs.length > 0){
+  for(var i = 0; i < inputs.length; i++){
+  if ($(inputs[i]).val()===charge_id) check=1;
+
+  }
+    } 
+             if (check===''){
               $.ajax({         
               url:'{{route('loancharges')}}',
 
@@ -401,11 +649,17 @@ success: function(data)
               success: function(data)
               {
                      var row = $(".fee").find('tr:last');
-        $('<tr><td>'+data.fee_name+'<input type="hidden" name="charges[]" value="'+data.id+'" ></td><td>'+data.fee_value+'</td><td width="20%"><input type="button" class="remove" style="color:red;" value="X" /></td></tr>').insertAfter(row);
+        $('<tr><td>'+data.fee_name+'<input type="hidden" name="charges[]" class="charge_check" value="'+data.id+'" ></td><td>'+data.fee_value+'</td><td width="20%"><input type="button" class="remove" style="color:red;" value="X" /></td></tr>').insertAfter(row);
                       $("#charges").val('');
               }
 
               });
+
+            }else{
+               
+               alert('Repeated charge');
+
+            }
 
         }
         return false;
@@ -437,6 +691,18 @@ success: function(data)
              //     alert(dataString);
  if(guarantorid !=''){
 
+
+ var check='';
+  var inputs=$(".guarantor_check");
+
+  if (inputs.length > 0){
+  for(var i = 0; i < inputs.length; i++){
+  if ($(inputs[i]).val()===guarantorid) check=1;
+
+  }
+    } 
+
+    if (check===''){
      
 $.ajax({         
 url:'{{route('guarantors')}}',
@@ -448,11 +714,16 @@ success: function(data)
 {
     //alert(data);
       var row = $(".table45").find('tr:last');
-        $('<tr><td>'+data.firstname+'</td><td>'+data.middlename+'</td><td>'+data.lastname+'<input type="hidden" value="'+data.id+'" name="guarantor[]"></td><td width="20%"><input type="button" class="remove" style="color:red;" value="X" /></td></tr>').insertAfter(row);
+        $('<tr><td>'+data.firstname+'</td><td>'+data.middlename+'</td><td>'+data.lastname+'<input type="hidden" value="'+data.id+'" name="guarantor[]" class="guarantor_check"></td><td width="20%"><input type="button" class="remove" style="color:red;" value="X" /></td></tr>').insertAfter(row);
         $("#guarantor").val('');
 }
 
 });
+
+  }else{
+
+      alert('repeated guarantor');
+  }
 
 }
         return false;

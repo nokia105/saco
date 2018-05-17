@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCollateralsTable extends Migration
+class CreateLoanschedulesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,15 @@ class CreateCollateralsTable extends Migration
      */
     public function up()
     {
-        Schema::create('collaterals', function (Blueprint $table) {
+        Schema::create('loanschedules', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('colateral_name');
-            $table->string('colateral_type');
-            $table->float('colateral_value',20);
-            $table->date('colateralevalution_date');
-            $table->integer('member_id');
+            $table->integer('loan_id');
+            $table->integer('month');
+            $table->float('monthprinciple',20);
+            $table->float('monthinterest',20);
+            $table->string('status')->nullable();
+            $table->dateTime('duedate');
             $table->timestamps();
-          
         });
     }
 
@@ -32,6 +32,6 @@ class CreateCollateralsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('collaterals');
+        Schema::dropIfExists('loanschedules');
     }
 }

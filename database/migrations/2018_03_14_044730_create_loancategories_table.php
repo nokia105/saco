@@ -23,8 +23,8 @@ class CreateLoancategoriesTable extends Migration
                $table->string('category_code');
                $table->float('repayment_penalty');
                $table->integer('grace_period');
-               $table->float('min_amount');
-              $table->float('max_amount');
+               $table->float('min_amount',20);
+              $table->float('max_amount',20);
               $table->date('created_at');
               
 

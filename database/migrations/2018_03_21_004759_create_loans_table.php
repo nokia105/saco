@@ -21,7 +21,7 @@ class CreateLoansTable extends Migration
             $table->integer('loancategory_id');
             $table->integer('member_id');
             $table->integer('duration');
-            $table->string('interest_method');
+            $table->integer('interestmethod_id');
             $table->float('interest');
             $table->double('principle',20);
             $table->date('repayment_date');
@@ -29,6 +29,7 @@ class CreateLoansTable extends Migration
             $table->float('mounthlyrepayment_amount',20);
             $table->float('mounthlyrepayment_principle',20);
             $table->float('mounthlyrepayment_interest',20);
+            $table->integer('user_id');
             $table->timestamps();
         });
     }

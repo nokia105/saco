@@ -16,7 +16,7 @@ class CreateCollateralLoanTable extends Migration
         Schema::create('collateral_loan', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('loan_id');
-            $table->integer('collateral_id');
+            $table->integer('collateral_id')->nullable();
             $table->timestamps();
            
         });
