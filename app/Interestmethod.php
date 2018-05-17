@@ -3,8 +3,7 @@
 namespace App;
 
 
-
-class Membersaving extends Model
+class Interestmethod extends Model
 {
     //
 }

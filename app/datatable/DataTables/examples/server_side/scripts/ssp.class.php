@@ -232,6 +232,35 @@ class SSP {
 	 */
 	static function simple ( $request, $conn, $table, $primaryKey, $columns )
 	{
+
+
+           $table = <<<EOT
+ (
+    SELECT
+      a.id,
+      a.name,
+      b.position
+    FROM table a
+    LEFT JOIN positions b ON a.position_id = b.id
+ ) temp
+EOT;
+
+$primaryKey = 'id';
+
+$columns = array(
+   array( 'db' => 'id',          'dt' => 0 ),
+   array( 'db' => 'name',        'dt' => 1 ),
+   array( 'db' => 'position',    'dt' => 2 )
+);
+
+$sql_details = array(
+   'user' => '',
+   'pass' => '',
+   'db'   => '',
+   'host' => ''
+);
+
+
 		$bindings = array();
 		$db = self::db( $conn );
 

@@ -72,6 +72,17 @@
           </a>
        
         </li>
+
+
+           <li class="">
+          <a href="/reports">
+            <i class="fa fa-file"></i> <span>Reports</span>
+            <span class="pull-right-container">
+              <i class="fa  pull-right"></i>
+            </span>
+          </a>
+       
+        </li>
    
    
       </ul>

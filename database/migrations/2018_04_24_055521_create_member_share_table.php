@@ -16,7 +16,7 @@ class CreateMemberShareTable extends Migration
         Schema::create('member_share', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('member_id');
-            $table->float('amount');
+            $table->float('amount',20);
             $table->integer('No_shares');
             $table->dateTime('share_date');
             $table->integer('user_id');

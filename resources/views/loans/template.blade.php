@@ -75,7 +75,7 @@
                           <!-- <span class="line-height-1 bigger-170"> 4 </span>
 
                           <br /> -->
-                          <a href="#" class="btn btn-info btn-block"><b>Payments</b></a>
+                          <a href="{{URL::to('profile/'.$id.'/payment')}}" class="btn btn-info btn-block"><b>Payments</b></a>
                           
                         </span>
 
