@@ -20,7 +20,7 @@ class CreateLoanschedulesTable extends Migration
             $table->float('monthprinciple',20);
             $table->float('monthinterest',20);
             $table->string('status')->nullable();
-            $table->dateTime('duedate');
+            $table->date('duedate');
             $table->timestamps();
         });
     }

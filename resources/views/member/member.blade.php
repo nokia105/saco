@@ -8,15 +8,23 @@
     <div class="col-xs-12">
      <div class="box">
           <div class="box-header">
-            <h3 class="box-title">Members <span>List</span></h3>
+            <h3 class="box-title">Members</h3>
         </div>
         <div class="box-body">
             <table id="example" class="table display  table-bordered table-striped" cellspacing="0" width="100%">
                 <thead>
                     <tr>
                         <th style="width:20%;">Name</th>
+                        <th>Reg No:#</th>
+                        <th>Gender</th>
+                        <th>D.O.B</th>
+                        <th>Martial status</th>
+                        <th>Couple</th>
+                         <th>Mobile</th>
                         <th>Email</th>
-                        <th>Mobile</th>
+                        
+                         <th>Street</th>
+                         <th>House No:</th>
                         <th>Bank</th>
                         <th>A/C No</th>
                         <th>Next of Kin</th>
@@ -42,7 +50,30 @@
     th {
         font-size: 12px;
     }
+
+
+     div.DTE_Field_Type_radio.DTE_Field_Name_{myFieldName} div.DTE_Field_InputControl > div > div {
+  float: left;
+  width: 100%; 
+  /* change as needed */
+}
     </style>
+
+      @endsection
+
+      @section('js')
+
+       <script type="text/javascript">
+           
+                 $(document).ready(function(){
+
+                   /*$(self._dom.background).click( function (e) {
+                     self._dte.close('background');
+                       } );
+*/
+                 });
+
+       </script>
 
       @endsection
 

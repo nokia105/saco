@@ -18,7 +18,7 @@ class CreateMemberShareTable extends Migration
             $table->integer('member_id');
             $table->float('amount',20);
             $table->integer('No_shares');
-            $table->dateTime('share_date');
+            $table->date('share_date');
             $table->integer('user_id');
            
             $table->timestamps();

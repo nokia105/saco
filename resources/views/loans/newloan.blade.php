@@ -27,7 +27,7 @@
      <div class="col-md-12">
           <div class="box col-md-12 box-info">
             <div class="box-header">
-              <h3 class="box-title">Create Loan</h3>
+              <h3 class="box-title">New Loan</h3>
             </div>
             <!-- /.box-header -->
          <div class="box box-body box-info">
@@ -136,8 +136,8 @@
               <div class="form-group">
                 <div class="col-sm-12{{ $errors->has('startpayment') ? ' has-error' : '' }}">
                    <br/>
-                  <label for="exampleInputEmail1">First Payment on</label>
-                  <input type="text"  id="startpayment" class="form-control" data-provide="datepicker"  data-date-format="yyyy-mm-dd" class="form-control" name="startpayment" placeholder="yyyy-mm-dd" value="{{old('startpayment')}}">
+                  <label for="">First Payment on</label>
+                  <input type="text"  id="startpayment" class="form-control dp1 span2"  name="startpayment"  value="{{old('startpayment')}}" placeholder="yyyy-mm-dd" autocomplete="off">
                     <small class="text-danger">{{ $errors->first('startpayment') }}</small>
                 </div>
               </div>
@@ -362,14 +362,22 @@
               
               <div class="form-group">
                   <label for=""></label>
-                  <input type="submit"  value="Save" class="form-control btn btn-info pull-left" placeholder="100000">
+                  <input type="submit"  value="Save"   name="submit"  class="form-control btn btn-info pull-left" placeholder="100000">
+              </div>
+            </div>
+
+             <div class="col-md-2">
+              
+              <div class="form-group">
+                  <label for=""></label>
+                  <input type="submit"  value="draft"  name="submit" class="form-control btn btn-info pull-left" placeholder="100000">
               </div>
             </div>
             <!-- /.col -->
             <div class="col-md-2">
               <div class="form-group">
                   <label for=""></label>
-                  <input type="submit"  value="Cancel" class="form-control btn btn-danger pull-right"  placeholder="100000">
+                  <input type="submit"  value="Cancel"  class="form-control btn btn-danger pull-right"  placeholder="100000">
               </div>
             </div>
             <!-- /.col -->
@@ -665,7 +673,25 @@ else  alert('Repeated collateral');
         return false;
     });
 /*end of charge row */
-});   
+
+
+
+
+}); 
+
+
+
+   $(function(){
+  $('.dp1').fdatepicker({
+   // initialDate: '2018-02-06',
+    format: 'yyyy-mm-dd',
+    disableDblClickSelection: true,
+    leftArrow:'<<',
+    rightArrow:'>>',
+    closeIcon:'X',
+    closeButton: true
+  });
+});  
 
 
 

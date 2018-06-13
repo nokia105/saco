@@ -14,40 +14,30 @@
               <table id="example1" class="table table-bordered table-striped">
                 <thead>
                 <tr>
-                  <th>Month</th>
+                 <th>Month</th>
                   <th>No: Loans</th>
-                  <th>No: Completed</th>
-                  <th>No: Incomplete</th>
-                  <th>Amount Aut</th>
-                  <th>Amount In</th>
-                  <th>Amount pending</th>
-                  <th>Interest Generated</th>
-                  <th>% interest</th>
-
-                 
-                 
+                  <th>Total Principle</th>
+                  <th>Total Interest</th>
                 </tr>
                 </thead>
                 <tbody>
 
-
-                
+                 
+                 @foreach($loans as $loan)
                   
                 <tr>
-                     
-                   <td></td>
-                   <td></td>
-                   <td></td>
-                    <td></td>
-                   <td></td>
-                   <td></td>
-                   <td></td>
-                   <td></td>
-                   <td></td>
-                  
+                   <td>@php $month=date('m',strtotime($loan->monthloan));
+               echo DateTime::createFromFormat('!m',$month)->format('F');
+         @endphp</td>
+                   <td>{{$loan->numberloan}}</td>
+                  <td>{{$loan->principle}}</td>
+                  <td>{{$loan->interest}}</td>
+
+                   
                    
                 </tr>
-                
+                 @endforeach
+                 
                  
 
 

@@ -17,11 +17,17 @@
   </style>
    
   <!-- Bootstrap 3.3.7 -->
+
   <link rel="stylesheet" href="{{ asset('adminlte/bower_components/bootstrap/dist/css/bootstrap.min.css') }}">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="{{ asset('adminlte/bower_components/font-awesome/css/font-awesome.min.css') }}">
+
   <!-- DataTables -->
+  <link href="//netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome.css" rel="stylesheet">
+  
   <link rel="stylesheet" href="{{ asset('adminlte/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css') }}">
+
+  <link rel="stylesheet" type="text/css" href="{{asset('css/foundation-datepicker.css')}}">
   <!-- Ionicons -->
   <link rel="stylesheet" href="{{ asset('adminlte/bower_components/Ionicons/css/ionicons.min.css') }}">
   <!-- Theme style -->
@@ -40,7 +46,8 @@
   <!-- bootstrap wysihtml5 - text editor -->
   <link rel="stylesheet" href="{{ asset('adminlte/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css') }}">
 
-
+           
+            @yield('css')
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -145,7 +152,6 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        SaCoSS
         <small></small>
       </h1>
       <ol class="breadcrumb">
@@ -160,6 +166,8 @@
       @yield('content')
 
        @yield('cover')
+
+       @yield('loans')
       <!-- /.row (main row) -->
 
     </section>
@@ -300,7 +308,8 @@
           <div class="form-group">
             <label class="control-sidebar-subheading">
               Report panel usage
-              <input type="checkbox" class="pull-right" checked>
+              <input type="check
+              x" class="pull-right" checked>
             </label>
 
             <p>
@@ -405,9 +414,11 @@
 <script src="{{ asset('adminlte/bower_components/jquery-slimscroll/jquery.slimscroll.min.js') }}"></script>
 <!-- FastClick -->
 <script src="{{ asset('adminlte/bower_components/fastclick/lib/fastclick.js') }}"></script>
+<script src="//cdn.datatables.net/buttons/1.2.1/js/buttons.print.min.js"></script>
 <!-- AdminLTE App -->
 <script src="{{ asset('adminlte/dist/js/adminlte.min.js') }}"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+  <script type="text/javascript" src="{{asset('js/foundation-datepicker.js')}}"></script>
 
 <!-- AdminLTE for demo purposes -->
 <script src="{{ asset('adminlte/dist/js/demo.js') }}"></script>

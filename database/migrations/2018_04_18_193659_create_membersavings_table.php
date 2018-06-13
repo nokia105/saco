@@ -18,7 +18,7 @@ class CreateMembersavingsTable extends Migration
             $table->integer('member_id');
             $table->string('saving_code');
             $table->float('amount',20);
-            $table->dateTime('saving_date');
+            $table->date('saving_date');
             $table->integer('user_id');
            
         });

@@ -21,18 +21,7 @@
                 </thead>
                 <tbody>
                 
-                @foreach($shares as $share)
-
-                    <tr>
-                  <td>{{$share->share_value}}</td>
-                  <td>{{$share->min_shares}}</td>
-                  <td>{{$share->max_shares}}</td>
-                  <td>{{$share->status}}</td>
-
-                 
-                </tr>
-
-                @endforeach
+               
                 </tbody>
            
               </table>

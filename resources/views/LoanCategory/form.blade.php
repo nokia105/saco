@@ -6,7 +6,7 @@
     <div class="col-xs-12">
      <div class="box">
           <div class="box-header">
-            <h3 class="box-title">Loan <span>List</span></h3>
+            <h3 class="box-title">Loan <span>Categories</span></h3>
         </div>
         <div class="box-body">
             <table id="loancategory" class="table display  table-bordered table-striped" cellspacing="0" width="100%">

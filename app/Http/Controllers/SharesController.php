@@ -106,7 +106,7 @@ $db = new \DataTables\Database( $sql_details );
 
 $nn=Editor::inst($db,'member_share','id')
     ->fields(
-        Field::inst( 'member_share.No_shares' )->setValue(10000),
+        Field::inst( 'member_share.No_shares' )->setValue(1000),
          Field::inst( 'member_share.amount' )->validator( 'Validate::notEmpty' ),
         Field::inst( 'member_share.share_date' )->validator( 'Validate::notEmpty' ),
         Field::inst( 'member_share.member_id' )->setValue($id),

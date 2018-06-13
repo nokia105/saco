@@ -8,6 +8,16 @@ class Loan extends Model
 {
     //
 
+
+   public $timestamps = false;
+
+
+
+        public function insurances(){
+
+         return $this->belongsTo('App\Insurance','insurance_id');
+       }
+
     public function user(){
 
     	return $this->belongsTo(User::class);
@@ -37,7 +47,7 @@ class Loan extends Model
 
           public function loanschedule(){
 
-            return $this->hasMany(Loanschedule::class)->orderBy('duedate');
+            return $this->hasMany(Loanschedule::class);
           }
 
 
@@ -45,5 +55,20 @@ class Loan extends Model
 
             return $this->hasManyThrough(Repayment::class, Loanschedule::class);
          }
+
+            
+             public function member(){
+
+              return $this->belongsTo(Member::class,'member_id');
+             }
+
+
+            
+          public function shares(){
+
+
+             return $this->hasMany(Member_share::class);
+          }
+         
 
 }

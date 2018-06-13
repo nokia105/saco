@@ -38,6 +38,8 @@ class MembersController extends Controller
      $user_id=Auth::user()->id;
 
 
+
+
      
       	
 
@@ -71,27 +73,48 @@ $mm=Editor::inst($db,'members','member_id')
 		Field::inst( 'first_name' )->validator( 'Validate::notEmpty' ),
 		Field::inst( 'middle_name' )->validator( 'Validate::notEmpty' ),
 		Field::inst( 'last_name' )->validator( 'Validate::notEmpty' ),
+		Field::inst( 'registration_no' )->validator( 'Validate::notEmpty' ),
 		Field::inst( 'status' )->setValue('1'),
 		Field::inst( 'user_id' )->setValue($user_id),
 		Field::inst( 'phone' )->validator( 'Validate::notEmpty' ),
-		/*Field::inst( 'password' )->setValue('password'),*/
-		Field::inst( 'email' )->validator( 'Validate::notEmpty' ),
+		Field::inst( 'password' )->setValue(bcrypt('password')),
+		Field::inst( 'email' )->validator('Validate::notEmpty' ),
 	    Field::inst( 'bank_name' )->validator( 'Validate::notEmpty' ),
 		Field::inst( 'account_number' )->validator( 'Validate::notEmpty' ),
 		Field::inst( 'nextkin_name' )->validator( 'Validate::notEmpty' ),
 		Field::inst( 'nextkin_relationship' )->validator( 'Validate::notEmpty' ),
-		Field::inst( 'joining_date' )->validator( 'Validate::notEmpty' )
+	    Field::inst( 'marital_status' )->validator( 'Validate::notEmpty' ),
+		Field::inst( 'couple_names' ),
+		Field::inst( 'gender' )->validator( 'Validate::notEmpty' ),
+        Field::inst( 'box_number' )->validator( 'Validate::notEmpty' ),
+        Field::inst( 'street_name' )->validator( 'Validate::notEmpty' ),
+        Field::inst( 'house_no' )->validator( 'Validate::notEmpty' ),
+		Field::inst( 'birth_date' )->validator( 'Validate::notEmpty' )
+			->validator( 'Validate::dateFormat', array(
+				"format"  => Format::DATE_ISO_8601,
+				"message" => "Please enter a date in the format yyyy-mm-dd"
+			) )
+			->getFormatter( 'Format::date_sql_to_format', Format::DATE_ISO_8601 )
+			->setFormatter( 'Format::date_format_to_sql', Format::DATE_ISO_8601 ),
+           
+
+       Field::inst( 'joining_date' )->validator( 'Validate::notEmpty' )
 			->validator( 'Validate::dateFormat', array(
 				"format"  => Format::DATE_ISO_8601,
 				"message" => "Please enter a date in the format yyyy-mm-dd"
 			) )
 			->getFormatter( 'Format::date_sql_to_format', Format::DATE_ISO_8601 )
 			->setFormatter( 'Format::date_format_to_sql', Format::DATE_ISO_8601 )
+
 	)
+		
 	->process( $_GET )
 	->json();
 
 
       	
       }
+
+
+      
 }

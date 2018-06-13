@@ -18,6 +18,12 @@ class Loanschedule extends Model
 
     	 return $this->belongsToMany(Repayment::class);
     }
+
+
+      public function loan(){
+
+            return $this->belongsTo(Loan::class);
+          }
 }
 
 

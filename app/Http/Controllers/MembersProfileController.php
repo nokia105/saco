@@ -19,6 +19,8 @@ use PDF;
 use App\Loanschedule;
 use App\Repayment;
 use App\Membersaving;
+use App\Insurance;
+use App\Code;
 class MembersProfileController extends Controller
 {
     // 
@@ -35,7 +37,11 @@ class MembersProfileController extends Controller
 
       public function newloan($id){
 
+               
             
+
+                
+
             $username=Auth::user()->name;
 
             $member=Member::find($id);
@@ -130,6 +136,7 @@ class MembersProfileController extends Controller
 
       public function createloan(Request $request){
 
+
             $member_id=$request->memberloan;
             $pcategory_id=$request->pcategory;
             $loanOfficer_id=$request->loanOfficer;
@@ -143,157 +150,165 @@ class MembersProfileController extends Controller
             $collate_id=$request->collate;
             $guarator_id=$request->guarantor;
             $charges=$request->charges;
-           
 
-
-                /*$validator=$this->validate(request(),[
+                  /*dd(Member::check_registered_days($member_id));*/
+                    
+                $validator=$this->validate(request(),[
                  'pcategory'=>'required',
                  'principle'=>'required|numeric',
                  'interest'=>'required|numeric',
                  'Imethod'=>'required',
-                 'loanperiod'=>'required|numeric',
+                 'period'=>'required|numeric',
                  'startpayment'=>'required|date'
 
-                ]);*/
+                ]);
 
              //$mInterest=($interest/100)*$principle;
 
-                 $no_shares=Member::find($member_id)->no_shares->sum('No_shares');
+                    $no_shares=Member::find($member_id)->no_shares->sum('No_shares');
                 
-                  $max_shares=Share::select('max_shares')->first()->max_shares; 
-               
-                 if($no_shares==$max_shares){
+                    $max_shares=Share::select('max_shares')->first()->max_shares; 
+
+                    $totalsaving=Member::find($member_id)->savingamount->sum('amount');
+
+                    $differ_register_days=Member::find($member_id)->joining_date->diffInDays(Carbon::now());
+                     
+                    $insurance=Insurance::first()->percentage_insurance; //since we had only one insurance
+                       
+                   // $newprinciple= $principle-$request->principle*$insurance/100;
+
+                        //dd($newprinciple);
+                       
+
+                     if($differ_register_days<=90){
+
+                               //testing purpose <=
+                         if($no_shares==$max_shares){
 
                    if($request->has('collate')){
                       
                   $totalcollateral_value=Collateral::find($collate_id)->sum('colateral_value');
 
-                   if($principle<=80/100*$totalcollateral_value){
+                   if(/*$principle<=(80/100*$totalcollateral_value+$totalsaving ) ||*/ $principle<=80/100*$totalcollateral_value ){
+                            
+                             $loan=Loan::create([
+                            'loanInssue_date'=>date('Y-m-d H:i:s'),
+                            'inssued_by'=>Auth::user()->id,
 
-                  
-                   $loan=Loan::create([
-                  'loanInssue_date'=>date('Y-m-d H:i:s'),
-                  'inssued_by'=>Auth::user()->id,
-                  'loan_status'=>'active',
-                  'loancategory_id'=>$pcategory_id,
-                  'member_id'=>$member_id,
-                  'duration'=>$loanperiod,
-                  'interestmethod_id'=> $Imethod,
-                  'interest'=>$interest,
-                  'principle'=>$principle,
-                  'repayment_date'=>$startpayment,
-                  'no_of_installments'=>$loanperiod,
-                  'mounthlyrepayment_amount'=>($principle/$loanperiod)+(($interest/100)*$principle)/$loanperiod,//total monthly pricinple+m.niterest+other changes 1month
-                  'mounthlyrepayment_principle'=>$principle/$loanperiod, 
-                 'mounthlyrepayment_interest'=>(($interest/100)*$principle)/$loanperiod,
-                 'user_id'=>Auth::user()->id //to be deleted
+                            'loan_status'=>($request->submit=='draft') ? 'draft' :'submitted',
+                            'loancategory_id'=>$pcategory_id,
+                            'member_id'=>$member_id,
+                            'duration'=>$loanperiod,
+                            'interestmethod_id'=> $Imethod,
+                            'interest'=>$interest,
+                            'principle'=>$principle,
+                            'repayment_date'=>$startpayment,
+                            'no_of_installments'=>$loanperiod,
+                            'mounthlyrepayment_amount'=>($principle/$loanperiod)+(($interest/100)*$principle)/$loanperiod,//total monthly pricinple+m.niterest+other changes 1month
+                            'mounthlyrepayment_principle'=>$principle/$loanperiod, 
+                           'mounthlyrepayment_interest'=>(($interest/100)*$principle)/$loanperiod,
+                          
+                           'insurance_id'=>Insurance::first()->id
                ]);
-                Loaninsuarance::create([
-                     'loan_id'=>$loan->id,
-                     'insuarance_pacentage'=>234.678
-                 ]);        
-              $loan->collaterals()->attach($collate_id);
-              $loan->guarantor()->attach( $guarator_id);
-              $loan->loan_fees()->attach($charges);
 
-                           for($i=0; $i<$loanperiod; $i++){
-                Loanschedule::create([
-                             
-                              'loan_id'=>$loan->id,
-                               'month'=>date('m',strtotime($startpayment))+$i,
-                               'monthprinciple'=>$principle/$loanperiod,
-                               'monthinterest'=>(($interest/100)*$principle)/$loanperiod,
-                               'duedate'=>date('Y-m-d', strtotime($i.' month', strtotime($startpayment))),
 
-                           ]);
+                                    $loan->collaterals()->attach($collate_id);
+                                    $loan->guarantor()->attach( $guarator_id);
+                                    $loan->loan_fees()->attach($charges);
 
-                           }
+                        
 
-                     return back()->with('status','your loan is accepted');   
-
-                      
+                                             return back()->with('status','your loan is accepted');         
 
                    }
 
-                    return back()->with('error','your loan must be 80% of your collaterals')->withInput();
+                                            return back()->with('error','your loan must be 80%  or of your collaterals')->withInput();
 
 
                    }else{
                   
-                     $totalsaving=Member::find($member_id)->savingamount->sum('amount');
+                    // $totalsaving=Member::find($member_id)->savingamount->sum('amount');
 
-                      if($principle<=3*$totalsaving){
+                    if($principle<=3*$totalsaving){
 
-               $loan=Loan::create([
-                  'loanInssue_date'=>date('Y-m-d H:i:s'),
-                  'inssued_by'=>Auth::user()->id,
-                  'loan_status'=>'active',
-                  'loancategory_id'=>$pcategory_id,
-                  'member_id'=>$member_id,
-                  'duration'=>$loanperiod,
-                  'interestmethod_id'=> $Imethod,
-                  'interest'=>$interest,
-                  'principle'=>$principle,
-                  'repayment_date'=>$startpayment,
-                  'no_of_installments'=>$loanperiod,
-                  'mounthlyrepayment_amount'=>($principle/$loanperiod)+(($interest/100)*$principle)/$loanperiod,//total monthly pricinple+m.niterest+other changes 1month
-                  'mounthlyrepayment_principle'=>$principle/$loanperiod, 
-                 'mounthlyrepayment_interest'=>(($interest/100)*$principle)/$loanperiod,
-                 'user_id'=>Auth::user()->id //deleated
+                $loan=Loan::create([
+
+                            'loanInssue_date'=>date('Y-m-d H:i:s'),
+                            'inssued_by'=>Auth::user()->id,
+                            'loan_status'=>($request->submit=='draft') ? 'draft' :'submitted',
+                            'loancategory_id'=>$pcategory_id,
+                            'member_id'=>$member_id,
+                            'duration'=>$loanperiod,
+                            'interestmethod_id'=> $Imethod,
+                            'interest'=>$interest,
+                            'principle'=>$principle,
+                            'repayment_date'=>$startpayment,
+                            'no_of_installments'=>$loanperiod,
+                            'mounthlyrepayment_amount'=>($principle/$loanperiod)+(($interest/100)*$principle)/$loanperiod,//total monthly pricinple+m.niterest+other changes 1month
+                            'mounthlyrepayment_principle'=>$principle/$loanperiod, 
+                           'mounthlyrepayment_interest'=>(($interest/100)*$principle)/$loanperiod,
+                         
+                           'insurance_id'=>Insurance::first()->id
+
+
                ]);
-                 Loaninsuarance::create([
-                     'loan_id'=>$loan->id,
-                     'insuarance_pacentage'=>234.678
-                 ]);         
+                         
              
               $loan->guarantor()->attach($guarator_id);
               $loan->loan_fees()->attach($charges);
 
 
-                           for($i=0; $i<$loanperiod; $i++){
+                    /*           for($i=0; $i<$loanperiod; $i++){
+                            $duedate=date('Y-m-d', strtotime($i.' month', strtotime($startpayment)));
                 Loanschedule::create([
                              
-                              'loan_id'=>$loan->id,
-                               'month'=>date('m',strtotime($startpayment))+$i,
+                              'loan_id'=>$loan->id, 
                                'monthprinciple'=>$principle/$loanperiod,
                                'monthinterest'=>(($interest/100)*$principle)/$loanperiod,
-                               'duedate'=>date('Y-m-d', strtotime($i.' month', strtotime($startpayment))),
+                               'duedate'=>$duedate,
+                               'month'=>date('m',strtotime($duedate))
 
                            ]);
 
-                           }
+                           }*/
 
-                     return back()->with('status','your loan is accepted');
+                                     return back()->with('status','your loan is accepted');
 
               }  
                   
 
-                   return back()->with('error','You asked for a loan which is more than your savings')->withInput();     
+                                     return back()->with('error','You asked for a loan which is more than your savings')->withInput();     
 
                    }
 
                    
                  }else{
 
-               return back()->with('error','you must have 1000 shares in your account')->withInput();
+                                     return back()->with('error','you must have 1000 shares in your account')->withInput();
 
                     }
 
 
+                     }else{
 
+
+                                      return back()->with('error','you must be a member for three months')->withInput();
+                     }
+               
       }
 
    public function loanlist($id)
       {
       
-           
-       $loanlists=Member::find($id)->loanlist;
+        $code=Code::where('name','=','loan')->first()->code_number;
+
+       $loanlists=Member::find($id)->loanlist->where('loan_status','=','approved');
             
            
         
 
         //dd($loanlist->interrepayment->sum('amountpayed'));
-      return view('loans.loanlist' , compact('loanlists','id')); 
+      return view('loans.loanlist' , compact('loanlists','id','code')); 
     }
 
   public function editloan($id){
@@ -461,17 +476,30 @@ public function updateloan(Request $request)
 
 
 
-      public function schedule($id){
+      public function schedule(){
 
            $loan_id=request()->segment(4);
+           $member_id=request()->segment(2);
 
            $loan=Loan::find($loan_id);
+
+            $loancollaterals=Loan::find( $loan_id)->collaterals;
+               
+               $loanguarantors=Loan::find($loan_id)->guarantor;
+
+               $insurance=Insurance::first();
+
+               $loanfees=Loan::find( $loan_id)->loan_fees;
+         
+
+          $code=Code::where('name','=','loan')->first()->code_number;
+
 
            //$code=2000+$loan_id+$id;
 
 
 
-           return view('loans.schedule',compact('loan','code'));
+           return view('loans.schedule',compact('loan','code','loan_id','member_id','loancollaterals','loanguarantors','insurance','loanfees'));
       }
 
 
@@ -499,44 +527,163 @@ public function updateloan(Request $request)
                        foreach($member_loans as $loan){
                            
                           foreach($loan->loanschedule  as $loan_schedule){
+                             
+                               $month_paid_interest=$loan_schedule->monthrepayment->sum('interestpayed');
+                                $month_paid_principle=$loan_schedule->monthrepayment->sum('principlepayed');
+                                $month_paid_amount=$month_paid_interest+$month_paid_principle;
+                                      
+                                         
 
                                            // dd($loan_schedule);
-                                 if($loan_schedule->status!=='paid'){
+                                 if($loan_schedule->status!='paid') {
                                                       //get first row in table
-                                          $totalmonthpay=$loan_schedule->monthprinciple+$loan_schedule->monthinterest;
+                                          $totalmonthpay=($loan_schedule->monthprinciple+$loan_schedule->monthinterest)-$month_paid_amount;
+
+
                                               
-                                              if($request->payment==$totalmonthpay){
-                                                   
-                                                 $repayment=Repayment::create([
-                                                      'loanschedule_id'=>$loan_schedule->id,
-                                                      'principlepayed'=>$loan_schedule->monthprinciple,
-                                                      'interestpayed'=>$loan_schedule->monthinterest,
-                                                      'amountpayed'=>$totalmonthpay,
-                                                      'paymentdate'=>date('Y-m-d H:i:s'),
-                                                      'user_id'=>Auth::user()->id
 
-                                                 ]);  
+                                            $interest_to_pay=$loan_schedule->monthinterest-$month_paid_interest;
 
-                                                        $amountinput=0;
+
+                                                $principle_to_pay=$loan_schedule->monthprinciple-$month_paid_principle;
+
+                                                         $total_to_pay=($principle_to_pay+$interest_to_pay);
+                                                          
+                                                          if($amountinput==$totalmonthpay){         
+                                                               
+                                                             $repayment=Repayment::create([
+                                                                  'loanschedule_id'=>$loan_schedule->id,
+                                                                  'principlepayed'=> $principle_to_pay,
+                                                                  'interestpayed'=>$interest_to_pay,
+                                                                  'amountpayed'=>$total_to_pay,
+                                                                  'paymentdate'=>date('Y-m-d H:i:s'),
+                                                                  'user_id'=>Auth::user()->id
+
+                                                             ]);  
+
+                                                          //$newamount=0;
                                                            
                                                            $repayment->monthrepayment()->attach($loan_schedule->id);
                                                             $loan_schedule->status='paid';
                                                             $loan_schedule->save();
 
                                                                          
-                                                          /*   if($loan->loanrepayment->sum('amountpayed')==($loan_schedule->sum('monthprinciple')+$loan_schedule->sum('monthinterest'))){
+                                                      /*if($loan->loanrepayment->sum('amountpayed')==($loan_schedule->sum('monthprinciple')+$loan_schedule->sum('monthinterest'))){
 
-                                                     $loan->status='inactive';
+                                                     $loan->loan_status='inactive';
                                                       $loan->save();*/
-                                               } 
-                                                                                                                           
-                                                   break; 
+                                                              return back()->with('status','Loan deposited'); 
+                                                              break; 
+
+                                                        
+
+                                               }
+                                               else if($amountinput>$totalmonthpay){
+
+                                                           
+                                                           $repayment=Repayment::create([
+
+                                                                  'loanschedule_id'=>$loan_schedule->id,
+                                                                  'principlepayed'=> $principle_to_pay,
+                                                                  'interestpayed'=>$interest_to_pay,
+                                                                  'amountpayed'=>$total_to_pay,
+                                                                  'paymentdate'=>date('Y-m-d H:i:s'),
+                                                                  'user_id'=>Auth::user()->id
+
+                                                 ]);  
+
+                                                                    $newamount=$amountinput-$totalmonthpay;
+                                                                   
+                                                                    $repayment->monthrepayment()->attach($loan_schedule->id);
+                                                                    $loan_schedule->status='paid';
+                                                                    $loan_schedule->save();
+                                                                    
+
+                                                  
+                                                              //return back()->with('status','Loan deposited'); 
+                                                                            
+
+                                                
+
+                                               }
+                                               else if($amountinput<$totalmonthpay){
 
 
-                                              }
+                                                /*  if(($loan_schedule->monthinterest+$loan_schedule->monthprinciple)!=$loan_schedule->monthrepayment->sum('amountpayed')){*/
+
+                                                     if($amountinput<$interest_to_pay){
+
+                                                               
+                                                                 $repayment=Repayment::create([
+
+                                                                  'loanschedule_id'=>$loan_schedule->id,
+                                                                  'principlepayed'=> 0,
+                                                                  'interestpayed'=>$interest_to_pay,
+                                                                  'amountpayed'=>$interest_to_pay,
+                                                                  'paymentdate'=>date('Y-m-d H:i:s'),
+                                                                  'user_id'=>Auth::user()->id
+
+                                                 ]);  
+
+                                                                    $newamount=0;
+                                                                   
+                                                                    $repayment->monthrepayment()->attach($loan_schedule->id);
+                                                                    $loan_schedule->status='incomplete';
+                                                                    $loan_schedule->save();
+
+                                                  
+                                                              return back()->with('status','Loan repaid'); 
+                                                             
+                                                              break;
+                                                              
+
+                                                        }else if($amountinput>=$interest_to_pay){
 
 
-                                                 
+                                                                        
+
+
+                                                                   $repayment=Repayment::create([
+
+                                                                  'loanschedule_id'=>$loan_schedule->id,
+                                                                  'principlepayed'=>($amountinput-$interest_to_pay),
+                                                                  'interestpayed'=>$interest_to_pay,
+                                                                  'amountpayed'=>$amountinput,
+                                                                  'paymentdate'=>date('Y-m-d H:i:s'),
+                                                                  'user_id'=>Auth::user()->id
+
+                                                 ]);  
+
+                                                                    $newamount=0;
+                                                                   
+                                                                    $repayment->monthrepayment()->attach($loan_schedule->id);
+                                                                    $loan_schedule->status='incomplete';
+                                                                    $loan_schedule->save();
+
+                                                  
+                                                              return back()->with('status','Loan deposited'); 
+                                                             
+                                                              break;
+
+
+                                                        } 
+
+
+                                                   
+                                                       
+
+                                               }
+
+
+
+                                                if($newamount>0){
+
+
+                                                           $amountinput=$newamount;
+                                                        } 
+                                                else return back()->with('status','Loan repaid');
+
+                                              }//loan status               
                                                
                                  }
                                    
@@ -564,11 +711,11 @@ public function updateloan(Request $request)
 
                          ]);
 
-                           return back();
+                          return back()->with('status','your share deposited'); 
                 } else{
 
 
-                    echo 'you have enough share';
+                    return back()->with('error','No more shares are needed');
                 }
                   
 
@@ -584,12 +731,15 @@ public function updateloan(Request $request)
                                'saving_date'=>date('Y-m-d H:i:s')
                            ]);
 
-                             echo 'saving is guud';
+                            return back()->with('status','your savings deposited'); 
 
                      }
 
                 
                     }
+
+
+
        
 
 }
