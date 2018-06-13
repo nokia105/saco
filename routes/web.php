@@ -11,12 +11,8 @@
 |
 */
 
-
-
 Route::get('/', function () {
 
-
-    /*return view('welcome');*/
     return view('member.member');
 
 })->name('members')->middleware('auth');
@@ -37,6 +33,40 @@ Route::get('/table33', function () {
    return view('savings.savings');
 
 })->middleware('auth');
+
+
+    //codes
+
+  Route::get('/codes_registration', function () {
+
+
+   return view('codes.registration');
+
+})->middleware('auth');
+ 
+   //induarance
+
+  Route::get('/insurances', function () {
+
+    return view('Insurance.insurance');
+
+})->middleware('auth');
+
+
+   Route::get('/penalties', function () {
+
+    return view('Penalty.penalties');
+
+})->middleware('auth');
+       
+        //interest method
+
+    Route::get('/interest_methods', function () {
+
+    return view('Methods.method');
+
+})->middleware('auth');
+
 
 
   Route::get('/loanCategory', function () {
@@ -101,9 +131,9 @@ Route::get('/profile/{id}/schedule/{lid}','MembersProfileController@schedule')->
 Route::get('/profile/{id}/loanlist','MembersProfileController@loanlist')->name('loanlist')->middleware('auth');
 
 Route::get('/interest','MembersProfileController@interest')->name('interest');
-Route::get('/membercollateral','MembersProfileController@membercollateral')->name('membercollateral');
-Route::get('/loancharges','MembersProfileController@loancharges')->name('loancharges');
-Route::get('/guarantors','MembersProfileController@guarantors')->name('guarantors');
+Route::get('/membercollateral','MembersProfileController@membercollateral')->name('members')->middleware('auth')->name('membercollateral');
+Route::get('/loancharges','MembersProfileController@loancharges')->name('members')->middleware('auth')->name('loancharges');
+Route::get('/guarantors','MembersProfileController@guarantors')->name('members')->middleware('auth')->name('guarantors');
 Route::post('/memberloan','MembersProfileController@createloan')->middleware('auth');
 Route::post('/updateloan','MembersProfileController@updateloan')->middleware('auth');
 
@@ -122,13 +152,55 @@ Route::get('/loan','LoanController@index')->name('loan')->middleware('auth');
          
            //pdf download
 Route::get('/pdf_download/{principle}/{interest}/{period}/{firstpayment}','MembersProfileController@pdfview')->name('pdfview');
-Route::get('/profile/{id}/payment','MembersProfileController@payment')->middleware('auth');;
+Route::get('/profile/{id}/payment','MembersProfileController@payment')->middleware('auth');
 Route::post('/payment','MembersProfileController@storepayments');
 
   //reports
-  Route::get('/reports/loans','ReportsController@loansshow');
-  Route::get('/reports/members','ReportsController@membersshow');
-
-
-
+  Route::get('/reports/loans','ReportsController@loansshow')->middleware('auth');
+  Route::get('/reports/members','ReportsController@membersshow')->middleware('auth');
   
+        //loans
+
+  Route::get('newloans_received','loansController@newloans_received')->middleware('auth');
+  Route::get('/newloan_receive/{id}','loansController@newloan_receive')->middleware('auth');
+  Route::get('/pending_loans','loansController@appended_loans')->name('members')->middleware('auth');
+  Route::get('/rejected_loans','loansController@rejected_loans')->name('members')->middleware('auth');
+  Route::get('/approved_loans','loansController@approved_loans')->name('members')->middleware('auth');
+
+  Route::get('/approve/{id}','loansController@approve')->name('approve')->name('members')->middleware('auth');
+  Route::post('/approve_submitted','loansController@approve_submitted')->name('members')->middleware('auth');
+
+ Route::get('/reject/{id}','loansController@reject')->name('reject')->name('members')->middleware('auth');
+ Route::post('/reject_submitted','loansController@reject_submitted')->name('members')->middleware('auth');
+
+ Route::get('/pending/{id}','loansController@pending')->name('pending')->name('members')->middleware('auth');
+ Route::post('/pending_submitted','loansController@pending_submitted')->name('members')->middleware('auth');
+
+
+ //isuarance by ajax
+ Route::get('/insuarance','InsurancesController@index')->name('insurance');
+ Route::get('/interestmethods','InterestmethodsController@index')->name('members')->middleware('auth');
+
+         //penalty
+
+ Route::get('/penalty','PenaltyController@index')->name('members')->middleware('auth')->name('penalty');
+                  //codes
+ Route::get('/codes','CodeController@index')->name('members')->middleware('auth')->name('codes');
+
+
+ Route::get('reports/loans_month','ReportsController@loans_month')->name('members')->middleware('auth');
+ Route::post('reports/loans_month','ReportsController@retrive_loans_month')->name('members')->middleware('auth');
+ Route::get('reports/loans_time_range','ReportsController@loans_time_range')->name('members')->middleware('auth');
+ Route::post('reports/loans_time_range','ReportsController@retrive_loans_time_range')->name('members')->middleware('auth');
+
+ Route::get('reports/expected_profit','ReportsController@expected_profit')->name('members')->middleware('auth');
+ Route::post('reports/retrive_expected_profit','ReportsController@retrive_expected_profit')->name('members')->middleware('auth');
+
+ Route::get('/admin','Admincontroller@index');
+
+  Route::get('member/login','Auth\MemberloginController@showLoginForm');
+  Route::post('member/login','Auth\MemberloginController@login')->name('member.login');
+
+ Route::resource('Admin_member','AdminmemberController');
+ Route::resource('permissions','permissionController');
+ Route::resource('roles','RoleController');

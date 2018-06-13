@@ -23,14 +23,19 @@ class CreateLoansTable extends Migration
             $table->integer('duration');
             $table->integer('interestmethod_id');
             $table->float('interest');
-            $table->double('principle',20);
+            $table->double('principle',30);
             $table->date('repayment_date');
             $table->integer('no_of_installments');
-            $table->float('mounthlyrepayment_amount',20);
-            $table->float('mounthlyrepayment_principle',20);
-            $table->float('mounthlyrepayment_interest',20);
-            $table->integer('user_id');
-            $table->timestamps();
+            $table->float('mounthlyrepayment_amount',30);
+            $table->float('mounthlyrepayment_principle',30);
+            $table->float('mounthlyrepayment_interest',30);
+            $table->string('action_status')->nullable();
+            $table->string('action_reason')->nullable();
+            $table->date('action_date')->nullable();
+            $table->date('action_workingdate')->nullable();
+            $table->integer('action_person')->nullable();
+            $table->integer('insurance_id'); //manually added
+
         });
     }
 

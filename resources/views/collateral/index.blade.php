@@ -7,7 +7,7 @@
     <div class="col-xs-12">
      <div class="box">
           <div class="box-header">
-            <h3 class="box-title">Collerateral <span>List</span></h3>
+            <h3 class="box-title">Colleraterals</span></h3>
         </div>
         <div class="box-body">
             <table id="collateral" class="table display  table-bordered table-striped" cellspacing="0" width="100%">
@@ -20,8 +20,10 @@
                     </tr>
                 </thead>
                 <tbody>
-
+                  
+                  <tfoot></tfoot>
                 </tbody>
+                
             </table>
         </div>
     </div>
@@ -47,6 +49,9 @@
                //colaterall
 
     $(document).ready(function() {
+
+
+
 
 
 
@@ -83,8 +88,27 @@
  
 
     $('#collateral').dataTable( {
-        
-            
+   
+     
+  /*  'initComplete': function (settings, json){
+        this.api().columns('.sum').every(function(){
+            var column = this;
+
+            var sum = column
+                .data()
+                .reduce(function (a, b) { 
+                   a = parseInt(a, 10);
+                   if(isNaN(a)){ a = 0; }                   
+
+                   b = parseInt(b, 10);
+                   if(isNaN(b)){ b = 0; }
+
+                   return a + b;
+                });
+
+            $(column.footer()).html('Sum: ' + sum);
+        });
+    },*/
 
         dom: "Bfrtip",
 
@@ -115,8 +139,14 @@
             { extend: "create", editor: editor },
             { extend: "edit",   editor: editor },
             { extend: "remove", editor: editor }
-        ]
+        ],
+
     } );
+
+
+
+ 
+
 
 } );
  

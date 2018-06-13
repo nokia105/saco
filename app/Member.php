@@ -1,14 +1,41 @@
 <?php
 
 namespace App;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Spatie\Permission\Traits\HasRoles;
 
 
 
-class Member extends Model
+
+class Member extends Authenticatable
 {
     //
 
+     use Notifiable;
+
+    use HasRoles;
+
      protected $primaryKey = 'member_id';
+
+     protected $dates = ['joining_date'];
+
+     protected $guard = 'member';
+
+     protected $fillable = [
+        'name', 'email', 'password',
+    ];
+
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'password', 'remember_token',
+    ];
+
+     
 
     public function user(){
 
@@ -42,4 +69,8 @@ class Member extends Model
 
          return $this->hasMany(Membersaving::class,'member_id');
        }
+
+
+
+
 }

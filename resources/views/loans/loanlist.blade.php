@@ -32,7 +32,7 @@
                 <tbody>
                 @foreach($loanlists as $loanlist )
                 <tr>
-                  <td><i><a href="{{ URL::to('profile/'.$id.'/schedule/' . $loanlist->id) }}">#{{2000+$loanlist->id+$id}}</a></i></td>
+                  <td><i><a href="{{ URL::to('profile/'.$id.'/schedule/' . $loanlist->id) }}">#{{$code+$loanlist->id+$id}}</a></i></td>
                   <td>{{  $loanlist->loancategory->category_name}}</td>
                   <td>{{  $loanlist->principle }} Tsh</td>
                    <td>{{$loanlist->loanrepayment->sum('amountpayed')}}</td>

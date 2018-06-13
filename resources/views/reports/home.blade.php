@@ -3,11 +3,11 @@
       @section('content')
 <div class="row">
 <div class="row">
-       <div class="col-xs-12">
+       <div class="col-xs-10">
 
           <div class="box">
             <div class="box-header">
-              <h3 class="box-title">Loan Report</h3>
+              <h3 class="box-title">Report</h3>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
@@ -17,30 +17,38 @@
                   <th>Report name</th>
                   <th>Type</th>
                   <th>Category</th>
-                  <th>view report</th>
-                 
+                  
                  
                 </tr>
                 </thead>
                 <tbody>
                 
                 <tr>
-
-                   <td >Loan</a></td>
+                 
+                   <td><a href="reports/loans_time_range">Loan time range</a></td>
                    <td>Table</td>
                    <td>Loan</td>
-                   <td><i><a href="reports/loans"><i class="fa fa-eye"></a></i></td>
+                  
                   
                 </tr>
 
 
                 <tr>
-                   <td>Member</td>
+                   <td><a href="reports/loans_month">Loan  in month</a></td>
                    <td>Table</td>
-                   <td>Member</td>
-                   <td><i><a href="reports/members"><i class="fa fa-eye"></a></i></td>
+                   <td>Loan</td>
+                   <td></td>
                   
                 </tr>
+
+                <tr>
+                   <td><a href="reports/expected_profit">Profit expected in time range</a></td>
+                   <td>Table</td>
+                   <td>Loan</td>
+                   <td></td>
+                  
+                </tr>
+
 
 
                 

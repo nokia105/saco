@@ -4,7 +4,7 @@
      <div class="col-md-12">
           <div class="box col-md-12">
             <div class="box-header">
-              <h3 class="box-title">Member Savings</h3>
+              <h3 class="box-title">Savings</h3>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
@@ -25,14 +25,7 @@
                 </tr>
                 </tbody>
 
-                   <tbody>
                 
-                <tr>
-                   <td>10</td>
-                   <td>20</td>
-                   <td>20</td>
-                </tr>
-                </tbody>
                
               </table>
             </div>

@@ -1,5 +1,11 @@
      @extends('layouts.master')
       @section('cover')
+           <style type="text/css">
+          .no-hover li  b{
+           color:#ffff;
+
+          }
+        </style>
         <input type="hidden" value="{{$id=Request::segment(2)}}" name=""> 
      <div class="row">
         <div class="col-md-2">
@@ -18,11 +24,14 @@
                 <li class="list-group-item">
                   <b>Number Loans</b> <a class="pull-right">{{$no_loans}}</a>
                 </li>
-                <li class="list-group-item">
-                  <b>Bad Loans</b> <a class="pull-right">543</a>
+                 <li class="list-group-item">
+                  <b>Submitted Loans</b> <a class="pull-right">{{$submitted_loans}}</a>
                 </li>
                 <li class="list-group-item">
-                  <b>Othes</b> <a class="pull-right">13,287</a>
+                  <b>rejected Loans</b> <a class="pull-right">{{$rejected_loans}}</a>
+                </li>
+                <li class="list-group-item">
+                  <b>Pending</b> <a class="pull-right">{{$pending_loans}}</a>
                 </li>
               </ul>
 
@@ -43,55 +52,65 @@
                           <!-- <span class="line-height-1 bigger-170"> 55 </span>
 
                           <br /> -->
-                          <a href="{{URL::to('profile/'.$id.'/membersavings')}}" class="btn btn-info btn-block"><b>Savings</b></a>
+
+                           <li class="{{ Request::is('profile/'.$id.'/membersavings') ? 'active' : '' }} btn btn-info btn-block">
+                             <a href="{{url ('profile/'.$id.'/membersavings')}}"><b>Savings</b></a>
+                           </li>
+                          
                         </span>
                         <span class="btn  btn-sm  no-hover">
                           <!-- <span class="line-height-1 bigger-170"> 55 </span>
 
                           <br /> -->
-                          <a href="{{URL::to('profile/'.$id.'/membershares')}}" class="btn btn-info btn-block"><b>Shares</b></a>
+                          <li class="{{Request::is('profile/'.$id.'/membershares') ? 'active' : '' }} btn btn-info btn-block">
+                            
+                             <a href="{{url ('profile/'.$id.'/membershares')}}"><b>Shares</b></a>
+                          </li>
+                         
                         </span>
                         <span class="btn  btn-sm btn-light no-hover">
                           <!-- <span class="line-height-1 bigger-170 blue"> 1,411 </span>
 
                           <br /> -->
                            
-                          <a href="{{URL::to('profile/'.$id.'/newloan')}}" class="btn btn-info btn-block"><b>New Loan</b></a>
+                         <li class="{{Request::is('profile/'.$id.'/newloan') ? 'active' : '' }} btn btn-info btn-block">
+                            <a href="{{url ('profile/'.$id.'/newloan')}}"><b>New Loan</b></a>
+                         </li>
                         </span>
                         <span class="btn  btn-sm btn-light no-hover">
                           <!-- <span class="line-height-1 bigger-170 blue"> 1,411 </span>
 
                           <br /> -->
-                           
-                          <a href="{{URL::to('profile/'.$id.'/loanlist')}}" class="btn btn-info btn-block"><b>Loans</b></a>
+                            <li class="{{Request::is('profile/'.$id.'/loanlist') ? 'active' : '' }} btn btn-info btn-block">
+                               <a href="{{url ('profile/'.$id.'/loanlist')}}"><b>Loans</b></a>
+                            </li>  
+                         
                         </span>
 
-                        <span class="btn  btn-sm  no-hover">
-                          
-                         <a href="#" class="btn btn-info btn-block"><b>Deposts</b></a>
-                        </span>
+                       <!--  <span class="btn  btn-sm  no-hover">
+                         
+                        <a href="#" class="btn btn-info btn-block"><b>Deposts</b></a>
+                       </span> -->
 
                         <span class="btn  btn-sm  no-hover">
                           <!-- <span class="line-height-1 bigger-170"> 4 </span>
 
                           <br /> -->
-                          <a href="{{URL::to('profile/'.$id.'/payment')}}" class="btn btn-info btn-block"><b>Payments</b></a>
+                          <li class="{{Request::is('profile/'.$id.'/payment') ? 'active' : '' }} btn btn-info btn-block">
+                            <a href="{{url('profile/'.$id.'/payment')}}"><b>Payments</b></a>
+                          </li>
                           
                         </span>
 
                         <span class="btn  btn-sm  no-hover">
                           <!-- <span class="line-height-1 bigger-170"> 23 </span>
-
                           <br /> -->
-                          <a href="{{URL::to('profile/'.$id.'/collateral')}}" class="btn btn-info btn-block"><b>Coleratels</b></a>
+                         <li class="{{Request::is('profile/'.$id.'/collateral') ? 'active' : '' }} btn btn-info btn-block">
+                            <a href="{{url ('profile/'.$id.'/collateral')}}" ><b>Collaterals</b></a>
+                         </li>
                         </span>
 
-                        <span class="btn  btn-sm  no-hover">
-                          <!-- <span class="line-height-1 bigger-170"> 7 </span>
-
-                          <br /> -->
-                          <a href="#" class="btn btn-info btn-block"><b>General Ledger</b></a>
-                        </span>
+                       
 
                         
                   </div>

@@ -18,20 +18,24 @@
                     </div>
                 @endif
         </div>
+
+        
       
       <form method="post" action="/payment">
             {{csrf_field()}}
             <input type="hidden" value="{{$id=request()->route('id')}}" name="member">
          <div class="box col-md-12 box-danger">
             <div class="box-header">
-              <h3 class="box-title">REPAYMENT FORM</h3>
+              <h3 class="box-title">Add Payment</h3>
             </div>
             <!-- /.box-header -->
          <div class="box-body">
           <div class="row">
+               <label for="">Select Payment</label>
                <div class="form-group{{ $errors->has('payment_type') ? ' has-error' : '' }}">
+
                     <div class="col-sm-6">
-                      <select class="form-control select2 "  name="payment_type" style="width: 100%;">
+                      <select class="form-control select2 "  name="payment_type">
                         <option value="">-----select Payment------</option>
                         <option value="loan">loan</option>
                          <option value="saving">savings</option>
@@ -48,7 +52,7 @@
              <!--  <div class="box box-body box-primary"> -->
             
               <div class="form-group{{ $errors->has('payment') ? ' has-error' : '' }}">
-                  <label for="exampleInputEmail1">Loan Requestor</label>
+                  <label for="exampleInputEmail1">Amount</label>
                   <input type="float" class="form-control"  name="payment" value="{{old('period')}}">
                    <small class="text-danger">{{ $errors->first('payment') }}</small>
               </div>
