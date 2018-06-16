@@ -35,6 +35,7 @@
               <table id="example1" class="table table-bordered table-striped">
                 <thead>
                 <tr>
+                  <th>Code</th>
                   <th>Month</th>
                    <th>Loan Principle(Tsh)</th>
                    <th>Loan Interest(Tsh)</th>
@@ -47,7 +48,8 @@
                 </thead>
                 <tbody>
                     @foreach($appended_loans as $loan)
-                 <tr>   
+                 <tr>  
+                 <td><a href="/newloan_receive/{{$loan->id}}">#{{$code+$loan->id+$loan->member_id}}</a></td> 
                 <td>{{ \Carbon\Carbon::parse($loan->loanInssue_date)->format('F') }}</td>
                 <td>{{$loan->principle}}</td>
                 <td>{{($loan->mounthlyrepayment_interest)*$loan->duration}}</td>
@@ -61,10 +63,10 @@
         </button>
         <ul class="dropdown-menu dropdown-default pull-right" role="menu">
         <li><a  onclick="showAjaxModal('/approve/{{$loan->id}}')" >
-        <i class="fa fa-check-circle-o" style="color:green; font-size:15px;"></i>approve </a> </li>
+        <i class="fa fa-check-circle-o" style="color:green; font-size:15px;"></i>Approve </a> </li>
 
          <li><a  onclick="showAjaxModal('/reject/{{$loan->id}}')" >
-        <i class="fa fa-ban" style="color:red; font-size:15px;"></i>reject</a> </li>
+        <i class="fa fa-ban" style="color:red; font-size:15px;"></i>Reject</a> </li>
 
        
                                
@@ -110,83 +112,11 @@
 
 
          
-     
+      @include('modal.popup_lib')
 
       @endsection
 
-       
-       @section('js')
-
-                      
-    
-      <!-- Select2 -->
-
- 
-    <script type="text/javascript">
-    
-    function showAjaxModal(url)
-    {
-        // SHOWING AJAX PRELOADER IMAGE
-        jQuery('#modal_ajax .modal-body').html('<div style="text-align:center;margin-top:200px;"></div>');
-        
-        // LOADING THE AJAX MODAL
-        jQuery('#modal_ajax').modal('show', {backdrop: 'false'});
-    
-        
-        // SHOW AJAX RESPONSE ON REQUEST SUCCESS
-        $.ajax({
-            url: url,
-            success: function(response)
-            {
-            
-            
-                jQuery('#modal_ajax .modal-body').html(response);
-                closeOnEscape: false;
-            
-            dialogClass: "noclose";
-            }
-        });
-    }
-</script>
-
-    
-    <!-- (Ajax Modal)-->
-         
-    
-    <script type="text/javascript">
-    function confirm_modal(delete_url)
-    {
-        jQuery('#modal-4').modal('show', {backdrop: 'static'});
-        document.getElementById('delete_link').setAttribute('href' , delete_url);
-    }
-    </script>
-    
-    <!-- (Normal Modal)-->
-    <div class="modal fade" id="modal-4">
-        <div class="modal-dialog" >
-            <div class="modal-content" style="margin-top:100px;">
-                
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title" style="text-align:center;">Are you sure to delete this information ?</h4>
-                </div>
-                
-                
-                <div class="modal-footer" style="margin:0px; border-top:0px; text-align:center;">
-                    <a href="#" class="btn btn-danger" id="delete_link"><?php echo 'delete';?></a>
-                    <!--<button type="button" class="btn btn-info" data-dismiss="modal"><?php echo 'cancel';?></button>-->
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-
-       @endsection
-
-
-
-
+     
 
           
 

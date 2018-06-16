@@ -190,10 +190,10 @@ class LoansController extends Controller
     public function approved_loans()
     {
 
-    
+     $code=Code::where('name','=','loan')->first()->code_number;
     $approved_loans=Loan::orderBy('loanInssue_date')->where('loan_status','=','approved')->get();
 
-    return view('loans.approved_loans',compact('approved_loans'));
+    return view('loans.approved_loans',compact('approved_loans','code'));
 
     }
 
@@ -201,19 +201,19 @@ class LoansController extends Controller
 
     public function rejected_loans()
     {
-   
+     $code=Code::where('name','=','loan')->first()->code_number;
        $rejected_loans=Loan::orderBy('loanInssue_date')->where('loan_status','=','rejected')->get();
 
-    return view('loans.rejected_loans',compact('rejected_loans'));
+    return view('loans.rejected_loans',compact('rejected_loans','code'));
 
 
     }
     public function appended_loans()
     {
-
+        $code=Code::where('name','=','loan')->first()->code_number;
         $appended_loans=Loan::orderBy('loanInssue_date')->where('loan_status','=','pending')->get();
 
-    return view('loans.appended_loans',compact('appended_loans'));
+    return view('loans.pending_loans',compact('appended_loans','code'));
  
     }
        

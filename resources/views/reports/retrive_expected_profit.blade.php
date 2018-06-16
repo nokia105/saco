@@ -12,9 +12,8 @@
               <h3 class="box-title">Loan Report</h3>
                          <br>
                          <br>
-                 <h3 class="box-title">Start Date <strong>{{$startDate}}</strong></h3> 
-                       <br>
-                  <h3 class="box-title">End Date <strong>{{$endDate}}</strong></h3> 
+                 <h3 class="box-title">From <strong>{{$startDate}}</strong> To <strong>{{$endDate}}</strong></h3> 
+                      
                    
                         
             </div>

@@ -4,7 +4,7 @@
     <div class=" col-md-9 center">
      <div class="box">
           <div class="box-header">
-            <h3 class="box-title"><stong>Tasaf<span> Codes</span></stong></h3>
+            <h3 class="box-title"><stong>Codes</span></stong></h3>
         </div>
         <div class=" center-1 box-body">
             <table id="codes" class="table display  table-bordered table-striped" cellspacing="0" width="100%">

@@ -37,13 +37,14 @@
                 <thead>
                 <tr>
                   <th>Loan No:</th>
-                  <th>Month</th>
+                  <th>Member</th>
+                  <th>Submission Date</th>
                  
                    <th>Loan Principle(Tsh)</th>
                    <th>Loan Interest(Tsh)</th>
                    
-                   <th>Duration</th>
-                   <th>Requesting Date</th>
+                   <th>Duration(month)</th>
+                   
                    <th>Action</th>
                  
                 
@@ -52,14 +53,15 @@
                 <tbody>
                     @foreach($receivedloans as $loan)
                  <tr>
-                 <td><a href="/newloan_receive/{{$loan->id}}">#{{$code+$loan->id+$loan->member_id}}</a></td>   
-                <td>{{ \Carbon\Carbon::parse($loan->loanInssue_date)->format('F') }}</td>
+                 <td><a href="/newloan_receive/{{$loan->id}}">#{{$code+$loan->id+$loan->member_id}}</a></td>  
+                 <td>{{ucfirst($loan->member->first_name)}} {{ucfirst($loan->member->last_name)}}</td> 
+                <td>{{ \Carbon\Carbon::parse($loan->loanInssue_date)->format('d/m/y') }}</td>
 
                 <td>{{$loan->principle}}</td>
                 <td>{{($loan->mounthlyrepayment_interest)*$loan->duration}}</td>
               
                 <td>{{$loan->duration}}</td>
-                <td>{{$loan->loanInssue_date}}</td>
+                
                 <td class="center">
                                 
     <div class="btn-group">
@@ -68,13 +70,13 @@
         </button>
         <ul class="dropdown-menu dropdown-default pull-right" role="menu">
         <li><a  onclick="showAjaxModal('/approve/{{$loan->id}}')" >
-        <i class="fa fa-check-circle-o" style="color:green; font-size:15px;"></i>approve </a> </li>
+        <i class="fa fa-check-circle-o" style="color:green; font-size:15px;"></i>Approve </a> </li>
 
          <li><a  onclick="showAjaxModal('/reject/{{$loan->id}}')" >
-        <i class="fa fa-ban" style="color:red; font-size:15px;"></i>reject</a> </li>
+        <i class="fa fa-ban" style="color:red; font-size:15px;"></i>Reject</a> </li>
 
          <li><a  onclick="showAjaxModal('/pending/{{$loan->id}}')" >
-        <i class="fa fa-clock-o" style="color:red; font-size:15px;"></i>pending </a> </li>
+        <i class="fa fa-clock-o" style="color:red; font-size:15px;"></i>Pending </a> </li>
                                
          </ul>
          </div>
@@ -107,9 +109,9 @@
         <div class="modal-dialog" style="width:500px; text-align: ;">
             <div class="modal-content" ">
                 
-                <div class="modal-header" style="text-align:center;">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title"></h4>
+                <div class="modal-header modal-header-primary">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color:#FFF; z-index:1000;">X</button>
+                    <h1></h1>
                 </div>
                 
                 <div class="modal-body" style="margin:0px;"  >
@@ -125,80 +127,11 @@
     </div>
 
          
-     
+     @include('modal.popup_lib')
 
       @endsection
 
-       
-       @section('js')
-
-                      
-    
-      <!-- Select2 -->
-
- 
-    <script type="text/javascript">
-    
-    function showAjaxModal(url)
-    {
-        // SHOWING AJAX PRELOADER IMAGE
-        jQuery('#modal_ajax .modal-body').html('<div style="text-align:center;margin-top:200px;"></div>');
-        
-        // LOADING THE AJAX MODAL
-        jQuery('#modal_ajax').modal('show', {backdrop: 'false'});
-    
-        
-        // SHOW AJAX RESPONSE ON REQUEST SUCCESS
-        $.ajax({
-            url: url,
-            success: function(response)
-            {
-            
-                jQuery('#modal_ajax .modal-body').html(response);
-                closeOnEscape: false;
-            
-            dialogClass: "noclose";
-            }
-        });
-    }
-</script>
-
-    
-    <!-- (Ajax Modal)-->
-          
      
-          
-    
-    <script type="text/javascript">
-    function confirm_modal(delete_url)
-    {
-        jQuery('#modal-4').modal('show', {backdrop: 'static'});
-        document.getElementById('delete_link').setAttribute('href' , delete_url);
-    }
-    </script>
-    
-    <!-- (Normal Modal)-->
-    <div class="modal fade" id="modal-4">
-        <div class="modal-dialog" >
-            <div class="modal-content" style="margin-top:100px;">
-                
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title" style="text-align:center;">Are you sure to delete this information ?</h4>
-                </div>
-                
-                
-                <div class="modal-footer" style="margin:0px; border-top:0px; text-align:center;">
-                    <a href="#" class="btn btn-danger" id="delete_link"><?php echo 'delete';?></a>
-                    <!--<button type="button" class="btn btn-info" data-dismiss="modal"><?php echo 'cancel';?></button>-->
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-
-       @endsection
 
 
 
