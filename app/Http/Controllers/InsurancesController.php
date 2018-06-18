@@ -21,11 +21,17 @@ class InsurancesController extends Controller
 {
     //
 
+    
+     function __construct(){
+
+       return $this->middleware('auth:member');
+     }
+
 
      public function index(){
 
 
- $user_id=Auth::user()->id;
+   $user_id=Auth::guard('member')->user()->id;
 $sql_details = array(
     "type" => "Mysql",  // Database type: "Mysql", "Postgres", "Sqlite" or "Sqlserver"
     "user" => "root",       // Database user name

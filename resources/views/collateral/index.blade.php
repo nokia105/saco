@@ -90,26 +90,7 @@
     $('#collateral').dataTable( {
    
      
-  /*  'initComplete': function (settings, json){
-        this.api().columns('.sum').every(function(){
-            var column = this;
-
-            var sum = column
-                .data()
-                .reduce(function (a, b) { 
-                   a = parseInt(a, 10);
-                   if(isNaN(a)){ a = 0; }                   
-
-                   b = parseInt(b, 10);
-                   if(isNaN(b)){ b = 0; }
-
-                   return a + b;
-                });
-
-            $(column.footer()).html('Sum: ' + sum);
-        });
-    },*/
-
+  
         dom: "Bfrtip",
 
         ajax : {
@@ -143,12 +124,18 @@
 
     } );
 
-
-
- 
-
-
 } );
+
+
+         $(document).ready(function() {
+  @role('Loan Officer','member')
+  $('.buttons-create,.buttons-edit,.buttons-remove').show();
+
+  @else
+     $('.buttons-create,.buttons-edit,.buttons-remove').hide();
+    @endrole
+
+});
  
 
 

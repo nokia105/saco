@@ -362,6 +362,7 @@ _fieldTypes.radiobutton =  {
         ],
         select: true,
         severSide:true,
+
         buttons: [
             { extend: "create", editor: editor },
             { extend: "edit",   editor: editor },

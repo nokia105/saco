@@ -89,7 +89,7 @@
           <li class="dropdown user user-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               <img src="{{ asset('adminlte/dist/img/user2-160x160.jpg') }}" class="user-image" alt="User Image">
-              <span class="hidden-xs">{{Auth::user()->name}}</span>
+              <span class="hidden-xs">{{Auth::guard('member')->user()->first_name}}</span>
             </a>
             <ul class="dropdown-menu">
               <!-- User image -->
@@ -115,7 +115,7 @@
                   <a href="#" class="btn btn-default btn-flat">Profile</a>
                 </div>
                 <div class="pull-right">
-                  <a href="/logout" class="btn btn-default btn-flat">Sign out</a>
+                  <a href="{{route('logout')}}" class="btn btn-default btn-flat">Sign out</a>
                 </div>
               </li>
             </ul>
@@ -414,7 +414,7 @@
 <script src="{{ asset('adminlte/bower_components/jquery-slimscroll/jquery.slimscroll.min.js') }}"></script>
 <!-- FastClick -->
 <script src="{{ asset('adminlte/bower_components/fastclick/lib/fastclick.js') }}"></script>
-<script src="//cdn.datatables.net/buttons/1.2.1/js/buttons.print.min.js"></script>
+
 <!-- AdminLTE App -->
 <script src="{{ asset('adminlte/dist/js/adminlte.min.js') }}"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
@@ -438,7 +438,9 @@
     <script type="text/javascript" language="javascript" src="{{asset('Editor/examples/resources/editor-demo.js')}}">
     </script>
       <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.2.0/js/dataTables.buttons.min.js">
+
     </script>
+    <script src="//cdn.datatables.net/buttons/1.2.1/js/buttons.print.min.js"></script>
     <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/select/1.2.0/js/dataTables.select.min.js">
     </script>
 
@@ -454,8 +456,10 @@
 } );
       $('.datepicker').datepicker();
     </script>
+         
    
     
     @yield('js')
+   
 
 </html>

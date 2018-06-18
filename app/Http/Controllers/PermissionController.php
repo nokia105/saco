@@ -18,7 +18,16 @@ class PermissionController extends Controller
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
+
+
      */
+
+
+     function __construct(){
+
+       return $this->middleware('auth:member');
+     }
+     
     public function index()
     {
         //

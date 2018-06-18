@@ -38,9 +38,16 @@ class SavingsController extends Controller
     //
 
 
+  
+     function __construct(){
+
+       return $this->middleware('auth:member');
+     }
+
+
       public function index(){
 
-     $user_id=Auth::user()->id;
+     $user_id=Auth::guard('member')->user()->member_id;
 
 
      
@@ -101,7 +108,8 @@ Editor::inst($db,'savings','saving_id')
 
       {
 
-       $user_id=Auth::user()->id;
+         $user_id=Auth::guard('member')->user()->member_id;
+
        $id=request()->segment(2);
 
           $sql_details = array(

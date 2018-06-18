@@ -119,7 +119,7 @@ $(document).ready(function(){
     <div class="modal-dialog modal-login">
         <div class="modal-content">
             <div class="modal-header">              
-                <h4 class="modal-title"><span style="color:#800000;">TASAF Login</span></h4>
+                <h4 class="modal-title"><span style="color:#800000;">SACOSS Login</span></h4>
                 <!-- <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button> -->
             </div>
             <div class="modal-body">
@@ -130,7 +130,7 @@ $(document).ready(function(){
                         <div class="form-group">
                             <i class="fa fa-user"></i>
 
-                                <input id="email" type="email" class="form-control{{$errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" required autofocus   autocomplete="off">
+                                <input id="email" type="email" class="form-control{{$errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" required autofocus >
 
                                 @if ($errors->has('email'))
                                     <span class="invalid-feedback">

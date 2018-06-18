@@ -20,6 +20,14 @@ class LoansController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+
+
+     function __construct(){
+
+       return $this->middleware('auth:member');
+     }
+     
     public function newloans_received()
     {
         //

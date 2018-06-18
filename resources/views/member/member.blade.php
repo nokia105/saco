@@ -63,20 +63,21 @@
 
       @section('js')
 
-       <script type="text/javascript">
-           
-                 $(document).ready(function(){
+   
+        <script type="text/javascript">
+   
+$(document).ready(function() {
+  @role('Loan Officer','member')
+  $('.buttons-create,.buttons-edit,.buttons-remove').show();
 
-                   /*$(self._dom.background).click( function (e) {
-                     self._dte.close('background');
-                       } );
-*/
-                 });
+  @else
+     $('.buttons-create,.buttons-edit,.buttons-remove').hide();
+    @endrole
 
+});
        </script>
 
       @endsection
 
 
 
-    

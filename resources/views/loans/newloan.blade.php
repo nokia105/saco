@@ -62,7 +62,7 @@
              <!--  <div class="box box-body box-primary"> -->
             <div class="form-group">
                   <label for="">Loan Officer</label>
-                  <input type="text" class="form-control" id="loanOfficer" value="{{$username}}"  name="loanOfficer"  placeholder="Enter name" readonly="true">
+                  <input type="text" class="form-control" id="loanOfficer" value="{{$username->first_name}} {{$username->middle_name}} {{$username->last_name}}"  name="loanOfficer"  placeholder="Enter name" readonly="true">
               </div>
               <div class="form-group">
                   <label for="exampleInputEmail1">Loan Requestor</label>
@@ -354,6 +354,7 @@
     
 
       <!--submit row-->
+      @role('Loan Officer','member')
       <div class="box col-md-12 box-primary">
         <!-- /.box-header -->
          <div class="box-body">
@@ -362,7 +363,7 @@
               
               <div class="form-group">
                   <label for=""></label>
-                  <input type="submit"  value="Save"   name="submit"  class="form-control btn btn-info pull-left" placeholder="100000">
+                  <input type="submit"  value="Submit & Save"   name="submit"  class="form-control btn btn-success pull-left">
               </div>
             </div>
 
@@ -370,22 +371,19 @@
               
               <div class="form-group">
                   <label for=""></label>
-                  <input type="submit"  value="draft"  name="submit" class="form-control btn btn-info pull-left" placeholder="100000">
+                  <input type="submit"  value="draft"  name="draft" class="form-control btn btn-info pull-left" >
               </div>
             </div>
             <!-- /.col -->
-            <div class="col-md-2">
-              <div class="form-group">
-                  <label for=""></label>
-                  <input type="submit"  value="Cancel"  class="form-control btn btn-danger pull-right"  placeholder="100000">
-              </div>
-            </div>
+         
             <!-- /.col -->
           </div>
           <!-- /.row -->
         </div>
         <!-- /.box-body -->
       </div>
+
+       @endrole
 
      <!--/end submit -->
 

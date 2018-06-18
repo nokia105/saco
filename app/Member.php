@@ -16,14 +16,16 @@ class Member extends Authenticatable
 
     use HasRoles;
 
+        
+     protected $table='members';
      protected $primaryKey = 'member_id';
-
      protected $dates = ['joining_date'];
 
      protected $guard = 'member';
 
      protected $fillable = [
-        'name', 'email', 'password',
+      'registration_no' ,'last_name' ,'middle_name','first_name','email', 'password',
+      
     ];
 
     /**
@@ -70,7 +72,11 @@ class Member extends Authenticatable
          return $this->hasMany(Membersaving::class,'member_id');
        }
 
+       
+         public function member(){
 
+            return Member::class;
+         }
 
 
 }

@@ -19,9 +19,11 @@ use
 
 class LoancategoriesController extends Controller
 {
-     public function __construct()
-    {   
-    }
+    
+     function __construct(){
+
+       return $this->middleware('auth:member');
+     }
 
  public function index(){
     $sql_details = array(

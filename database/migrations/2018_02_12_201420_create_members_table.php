@@ -18,8 +18,8 @@ class CreateMembersTable extends Migration
             $table->char('first_name',30);
             $table->char('middle_name',30);
             $table->char('last_name',30);
-            $table->string('password',30);
-            $table->string('email',100);
+            $table->string('password',300);
+            $table->string('email',100)->unique();
             $table->string('phone',30)->nullable();
             $table->string('bank_name',30)->nullable();
             $table->string('account_number',30)->nullable();
@@ -35,6 +35,7 @@ class CreateMembersTable extends Migration
             $table->char('box_number')->nullable();
             $table->char('street_name')->nullable();
             $table->char('house_no')->nullable();
+            $table->rememberToken();
             $table->timestamps(); 
           
 

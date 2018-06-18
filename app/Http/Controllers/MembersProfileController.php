@@ -25,6 +25,13 @@ class MembersProfileController extends Controller
 {
     // 
 
+
+     function __construct(){
+
+       return $this->middleware('auth:member');
+     }
+
+
   public function cover($mprofileid){
 
     
@@ -42,7 +49,7 @@ class MembersProfileController extends Controller
 
                 
 
-            $username=Auth::user()->name;
+            $username=Auth::guard('member')->user();
 
             $member=Member::find($id);
          
