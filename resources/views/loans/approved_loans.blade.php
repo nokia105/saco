@@ -36,7 +36,7 @@
               <table id="example1" class="table table-bordered table-striped">
                 <thead>
                 <tr>
-                    
+                    <th>Code</th>
                     <th>Month</th>
                    <th>Loan Principle(Tsh)</th>
                    <th>Loan Interest(Tsh)</th>
@@ -51,7 +51,8 @@
                 </thead>
                 <tbody>
                     @foreach($approved_loans as $loan)
-                 <tr>   
+                 <tr>
+                 <td><a href="/newloan_receive/{{$loan->id}}">#{{$code+$loan->id+$loan->member_id}}</a></td>    
                 <td>{{ \Carbon\Carbon::parse($loan->loanInssue_date)->format('F') }}</td>
                 <td>{{$loan->principle}}</td>
                 <td>{{($loan->mounthlyrepayment_interest)*$loan->duration}}</td>

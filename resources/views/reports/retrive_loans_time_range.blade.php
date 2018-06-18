@@ -9,12 +9,12 @@
 
           <div class="box">
             <div class="box-header">
-              <h3 class="box-title">All Loans</h3>
+              <h3 class="box-title">Loan in Time Range</h3>
                          <br>
                          <br>
-                 <h3 class="box-title">Start Date <strong>{{$startDate}}</strong></h3> 
+                 <h3 class="box-title">From  <strong>{{$startDate}}</strong> To  <strong>{{$endDate}}</strong></h3> 
                        <br>
-                  <h3 class="box-title">End Date <strong>{{$endDate}}</strong></h3> 
+                  
                    
                         
             </div>

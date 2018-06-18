@@ -2,26 +2,38 @@
       @section('content')
       
 
-       <div class="row">
-       <div class="col-xs-12">
+<div class="row">
+
+<div class="col-xs-12">
+  <div class="col-xs-12" style="background-color: #FFF;">
+    <h3>LOAN:<span style="color:orange;">#{{$code+$loan->id+$loan->member->member_id}}</span>/<span style="color:green;">{{strtoupper($loan->loan_status) }}</span></h3>
+    <br/>
+
+  </div>
 
 
-         <ul class="nav nav-tabs">
-  <li class="active col-md-2"><a data-toggle="tab" href="#general">General</a></li>
-  <li class="col-md-3"><a data-toggle="tab" href="#collateral">Collaterals</a></li>
-  <li class="col-md-2"><a data-toggle="tab" href="#guarantor">Gurantor</a></li>
-  <li class="col-md-3"><a data-toggle="tab" href="#insurance">Insurance</a></li>
-   <li class="col-md-2"><a data-toggle="tab" href="#charges">Charges</a></li>
-</ul>
+<div class="panel with-nav-tabs panel-primary">
+
+ <div class="panel-heading">
+    <ul class="nav nav-tabs">
+         <li class="active"><a data-toggle="tab" href="#general">General</a></li>
+        <li class=""><a data-toggle="tab" href="#collateral">Collaterals</a></li>
+        <li class=""><a data-toggle="tab" href="#guarantor">Gurantor</a></li>
+        <li class=""><a data-toggle="tab" href="#insurance">Insurance</a></li>
+         <li class=""><a data-toggle="tab" href="#charges">Charges</a></li>
+            
+   </ul>
+ </div>
+
+
+
 
 <div class="tab-content">
   <div id="general" class="tab-pane fade in active">
              <div class="box">
             <div class="box-header">
-              <h3 class="box-title">General</h3>
-                <br>
-                <br>
-                 <h3 class="box-title">loan no: #{{$code+$loan->id+$loan->member->member_id}}</h3>
+              <h3 class="box-title">Basic info</h3>
+               
             </div>
             <!-- /.box-header -->
             <div class="box-body">
@@ -61,10 +73,9 @@
   <div id="collateral" class="tab-pane fade">
      <div class="box">
             <div class="box-header">
-              <h3 class="box-title">Shares</h3>
+              <h3 class="box-title">Collerateral(s)</h3>
                 <br>
-                <br>
-                 <h3 class="box-title">loan no: #{{$code+$loan->id+$loan->member->member_id}}</h3>
+                
             </div>
             <!-- /.box-header -->
             <div class="box-body">
@@ -105,10 +116,9 @@
   <div id="guarantor" class="tab-pane fade">
    <div class="box">
             <div class="box-header">
-              <h3 class="box-title">Guarantors</h3>
+              <h3 class="box-title">Guarantor(s)</h3>
                 <br>
-                <br>
-                 <h3 class="box-title">loan no: #{{$code+$loan->id+$loan->member->member_id}}</h3>
+               
             </div>
             <!-- /.box-header -->
             <div class="box-body">
@@ -146,10 +156,9 @@
      <div id="insurance" class="tab-pane fade">
      <div class="box">
             <div class="box-header">
-              <h3 class="box-title">Insurance</h3>
+              <h3 class="box-title">Insurance(s)</h3>
                 <br>
-                <br>
-                 <h3 class="box-title">loan no: #{{$code+$loan->id+$loan->member->member_id}}</h3>
+          
             </div>
             <!-- /.box-header -->
             <div class="box-body">
@@ -189,20 +198,19 @@
    <div id="charges" class="tab-pane fade">
      <div class="box">
             <div class="box-header">
-              <h3 class="box-title">Charges</h3>
+              <h3 class="box-title">Charge(s)</h3>
                 <br>
-                <br>
-                 <h3 class="box-title">loan no: #{{$code+$loan->id+$loan->member->member_id}}</h3>
+               
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-              <table id="example2" class="table table-bordered table-striped">
+              <table id="example2" class="table table-bordered table-striped col-md-6" style="width=40%;">
                 <thead>
                 <tr>
                 
                  
-                   <th>Fee Name</th>
-                   <th>Fee Value</th>
+                   <th>Fee </th>
+                   <th>Value</th>
                    
                    
                 </tr>

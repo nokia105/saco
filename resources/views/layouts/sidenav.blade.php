@@ -1,6 +1,6 @@
 <ul class="sidebar-menu" data-widget="tree">
         <li class="header">MAIN NAVIGATION</li>
-        <li class="active treeview">
+        <li class="treeview">
           <a href="#">
             <i class="fa fa-dashboard"></i> <span>Dashboard</span>
             <span class="pull-right-container">
@@ -12,7 +12,7 @@
 
        
         <li class="">
-          <a href="{{route('members')}}">
+          <a href="/members">
             <i class="fa fa-user-circle-o"></i> <span>Members</span>
             <span class="pull-right-container">
               <i class="fa  pull-right"></i>

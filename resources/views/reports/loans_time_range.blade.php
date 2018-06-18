@@ -19,13 +19,16 @@
                 @endif
         </div>
 
+
        <form action="/reports/loans_time_range" method="post">
 
          {{csrf_field()}}
         <div class="box col-md-8 box-danger">
             <div class="box-header">
-              <h3 class="box-title">Select Time Range</h3>
+              <h3 class="box-title">Loan Report on Time Range</h3>
+              <br/><br/>
             </div>
+            
             <!-- /.box-header -->
          <div class="box-body">
           <div class="row">
