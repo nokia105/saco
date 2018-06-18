@@ -102,7 +102,15 @@ $(document).ready(function() {
 } );
 
 
+      $(document).ready(function() {
+  @role('Loan Officer','member')
+  $('.buttons-create,.buttons-edit,.buttons-remove').show();
 
+  @else
+     $('.buttons-create,.buttons-edit,.buttons-remove').hide();
+    @endrole
+
+});
 
   
  

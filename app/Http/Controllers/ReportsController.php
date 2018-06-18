@@ -24,6 +24,12 @@ class ReportsController extends Controller
 {
     //
 
+     
+     function __construct(){
+
+       return $this->middleware('auth:member');
+     }
+
      public function loans_month(){
                  
         /* $months=Loanschedule::get()->groupBy(function($d){

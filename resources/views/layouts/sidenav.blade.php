@@ -87,7 +87,51 @@
           </ul>
         </li>
 
+              @role('Admin','member')
+            <li class="treeview">
+          <a href="#">
+            <i class="fa fa-gears"></i>
+            <span>Admin</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+             <li class="">
+          <a href="/Admin_member">
+            <i class="fa fa-users"></i> <span>Users</span>
+            <span class="pull-right-container">
+              <i class="fa  pull-right"></i>
+            </span>
+          </a>
+       
+        </li>
 
+
+         <li class="">
+          <a href="/roles">
+            <i class="fa fa-briefcase"></i> <span>Roles</span>
+            <span class="pull-right-container">
+              <i class="fa  pull-right"></i>
+            </span>
+          </a>
+       
+        </li>
+
+        <li class="">
+          <a href="/permissions">
+            <i class="fa fa-briefcase"></i> <span>Permissions</span>
+            <span class="pull-right-container">
+              <i class="fa  pull-right"></i>
+            </span>
+          </a>
+       
+        </li>
+     </ul>
+   </li>
+
+
+          
          <li class="treeview">
           <a href="#">
             <i class="fa fa-gears"></i>
@@ -182,7 +226,8 @@
           </ul>
         </li>
    
-  
+            @endrole
+
       </ul>
     </section>
     <!-- /.sidebar -->

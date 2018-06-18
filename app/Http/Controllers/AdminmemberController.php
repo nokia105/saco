@@ -22,6 +22,13 @@ class AdminmemberController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+
+      public function __construct()
+{
+    $this->middleware(['auth:member','role:Admin']);
+}
+
     public function index()
     {
         //
@@ -63,13 +70,15 @@ class AdminmemberController extends Controller
              'registration_no'=>'required'
          ]);
 
+               //dd($request->registration_no);
+
              $member=Member::create([
               'first_name'=>$request->first_name,
                'middle_name'=>$request->middle_name,
                 'last_name'=>$request->last_name,
                 'email'=>$request->email,
                 'registration_no'=>$request->registration_no,
-                'password'=>'password'
+                'password'=>bcrypt('password')
 
              ]);
 

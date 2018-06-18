@@ -7,6 +7,11 @@
           }
         </style>
         <input type="hidden" value="{{$id=Request::segment(2)}}" name=""> 
+
+        @php
+           $user=\App\Member::find($id);
+
+        @endphp
      <div class="row">
         <div class="col-md-2">
             
@@ -64,19 +69,29 @@
                           <br /> -->
                           <li class="{{Request::is('profile/'.$id.'/membershares') ? 'active' : '' }} btn btn-info btn-block">
                             
-                             <a href="{{url ('profile/'.$id.'/membershares')}}"><b>Shares</b></a>
+                             <a href="{{url ('profile/'.$id.'/membershares')}}"><b>Shares </b></a>
                           </li>
                          
                         </span>
+                        
+                                     
+                          @role('Loan Officer','member')
+
                         <span class="btn  btn-sm btn-light no-hover">
                           <!-- <span class="line-height-1 bigger-170 blue"> 1,411 </span>
 
                           <br /> -->
+
+                            
                            
                          <li class="{{Request::is('profile/'.$id.'/newloan') ? 'active' : '' }} btn btn-info btn-block">
                             <a href="{{url ('profile/'.$id.'/newloan')}}"><b>New Loan</b></a>
                          </li>
                         </span>
+                          @endrole
+                      
+  
+                        
                         <span class="btn  btn-sm btn-light no-hover">
                           <!-- <span class="line-height-1 bigger-170 blue"> 1,411 </span>
 
@@ -91,7 +106,7 @@
                          
                         <a href="#" class="btn btn-info btn-block"><b>Deposts</b></a>
                        </span> -->
-
+                          @role('Cashier','member')
                         <span class="btn  btn-sm  no-hover">
                           <!-- <span class="line-height-1 bigger-170"> 4 </span>
 
@@ -101,6 +116,8 @@
                           </li>
                           
                         </span>
+
+                          @endrole
 
                         <span class="btn  btn-sm  no-hover">
                           <!-- <span class="line-height-1 bigger-170"> 23 </span>

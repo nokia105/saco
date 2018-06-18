@@ -18,6 +18,12 @@ class RoleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+       
+     function __construct(){
+
+       return $this->middleware('auth:member');
+     }
     public function index()
     {
         //

@@ -18,6 +18,14 @@ class CollateralsController extends Controller
 {
     //
 
+
+
+     function __construct(){
+
+       return $this->middleware('auth:member');
+     }
+     
+
     public function index(){
 
        $id=request()->segment(2);

@@ -34,9 +34,16 @@ class SharesController extends Controller
     //
 
 
+      
+     function __construct(){
+
+       return $this->middleware('auth:member');
+     }
+
+
       public function index(){
 
-     $user_id=Auth::user()->id;
+       $user_id=Auth::guard('member')->user()->member_id;
 
     
      
@@ -83,7 +90,7 @@ $nn=Editor::inst($db,'shares','share_id')
         
     
            $id=request()->segment(2);
-           $user_id=Auth::user()->id;
+            $user_id=Auth::guard('member')->user()->member_id;
 
            $share=Share::select('share_value')->first();
 

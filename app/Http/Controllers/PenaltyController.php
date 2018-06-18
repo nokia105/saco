@@ -22,6 +22,13 @@ class PenaltyController extends Controller
 {
     //
 
+
+     
+     function __construct(){
+
+       return $this->middleware('auth:member');
+     }
+
    public function index(){
 
 

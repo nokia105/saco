@@ -33,9 +33,21 @@ class MembersController extends Controller
     //
 
 
+      /*unction __construct(){
+
+      	 return $this->middleware('Auth:member','role:Loan Officer');
+      }*/
+
+        
+     function __construct(){
+
+       return $this->middleware('auth:member');
+     }
+
+
       public function index(){
 
-     $user_id=Auth::user()->id;
+     $user_id=Auth::guard('member')->user()->member_id;
 
 
 
