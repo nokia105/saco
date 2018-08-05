@@ -28,6 +28,7 @@ class Kernel extends ConsoleKernel
     {
        $schedule->command('ApplyMonthPenaty:monthpenalty')
                ->everyMinute();
+                  //it has to run once every day
     }
 
     /**

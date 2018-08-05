@@ -25,8 +25,10 @@ class LoancategoriesController extends Controller
        return $this->middleware('auth:member');
      }
 
- public function index(){
-    $sql_details = array(
+public function db(){
+
+// DataTables PHP library
+$sql_details = array(
     "type" => "Mysql",  // Database type: "Mysql", "Postgres", "Sqlite" or "Sqlserver"
     "user" => "root",       // Database user name
     "pass" => "",       // Database password
@@ -34,11 +36,14 @@ class LoancategoriesController extends Controller
     "port" => "",       // Database connection port (can be left empty for default)
     "db"   => "saccoss"     // Database name
     //"dsn"  => "charset=utf8"        // PHP DSN extra information. Set as `charset=utf8` if you are using MySQL
-
 );
-        $db = new \DataTables\Database( $sql_details );
+return $db = new \DataTables\Database( $sql_details );
+  }
 
-$mm=Editor::inst($db,'Loancategories','id')
+
+ public function index(){
+
+$mm=Editor::inst($this->db(),'Loancategories','id')
     ->fields(
         Field::inst( 'category_name' )->validator( 'Validate::notEmpty' ),
         Field::inst( 'interest_rate' )->validator( 'Validate::notEmpty' ),
@@ -61,19 +66,8 @@ $mm=Editor::inst($db,'Loancategories','id')
 
 
     public function fee_category(){
-        $sql_details = array(
-    "type" => "Mysql",  // Database type: "Mysql", "Postgres", "Sqlite" or "Sqlserver"
-    "user" => "root",       // Database user name
-    "pass" => "",       // Database password
-    "host" => "localhost",       // Database host
-    "port" => "",       // Database connection port (can be left empty for default)
-    "db"   => "saccoss"     // Database name
-    //"dsn"  => "charset=utf8"        // PHP DSN extra information. Set as `charset=utf8` if you are using MySQL
 
-);
-        $db = new \DataTables\Database( $sql_details );
-
-$mm=Editor::inst($db,'feescategories','id')
+$mm=Editor::inst($this->db(),'feescategories','id')
     ->fields(
         Field::inst( 'fee_name' )->validator( 'Validate::notEmpty' ),
         Field::inst( 'fee_code' )->validator( 'Validate::notEmpty' ),

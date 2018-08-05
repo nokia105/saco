@@ -30,8 +30,6 @@
                 <td>{{$member->first_name}} {{$member->middle_name}} {{$member->last_name}}</td>
                 <th>{{$member->email}}</th>
                 <th>{{  $member->roles()->pluck('name')->implode(' , ') }}</th>
-
-             
                 <td>
                                 
     <div class="btn-group">

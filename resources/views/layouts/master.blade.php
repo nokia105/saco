@@ -3,13 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>SACCOS | Dashboard</title>
+
+    <title>@yield('title')</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <link href="{{ asset('fonts/Rokkitt.css') }}" rel="stylesheet">
-       <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.2.0/css/buttons.dataTables.min.css">
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.2.0/css/select.dataTables.min.css">
+       <link rel="stylesheet" type="text/css" href="{{asset('css/jquery.dataTables.min.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('css/buttons.dataTables.min.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('css/select.dataTables.min.css')}}">
     <link rel="stylesheet" type="text/css" href="{{asset('Editor/css/editor.dataTables.min.css')}}">
     <link rel="stylesheet" type="text/css" href="{{asset('Editor/examples/resources/syntax/shCore.css')}}">
     <!-- <link rel="stylesheet" type="text/css" href="Editor/examples/resources/demo.css"> -->
@@ -88,8 +89,15 @@
           <!-- User Account: style can be found in dropdown.less -->
           <li class="dropdown user user-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              <img src="{{ asset('adminlte/dist/img/user2-160x160.jpg') }}" class="user-image" alt="User Image">
-              <span class="hidden-xs">{{Auth::guard('member')->user()->first_name}}</span>
+              <img src="{{ asset('images/nav-img.png') }}" class="user-image" alt="User Image">
+              <span class="hidden-xs">{{Auth::guard('member')->user()->last_name}} @hasrole('Admin|Loan Officer|Accountant|Cashier|Chair') - @php $useroles=Auth::guard('member')->user()->getRoleNames();   @endphp
+                   
+                    @php
+                 foreach($useroles as $userole){
+                   echo $userole;
+                 }
+                   @endphp
+               @endrole</span>
             </a>
             <ul class="dropdown-menu">
               <!-- User image -->
@@ -97,12 +105,8 @@
               <!-- Menu Body -->
               <li class="user-body">
                 <div class="row">
-                  <div class="col-xs-4 text-center">
-                    <a href="#">Followers</a>
-                  </div>
-                  <div class="col-xs-4 text-center">
-                    <a href="#">Sales</a>
-                  </div>
+              
+                  
                   <div class="col-xs-4 text-center">
                     <a href="#">Friends</a>
                   </div>
@@ -427,7 +431,7 @@
 <script src="{{ asset('adminlte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
 
    
-    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js">
+    <script type="text/javascript" language="javascript" src="{{asset('js/jquery.dataTables.min.js')}}">
     </script>
        <script type="text/javascript" language="javascript" src="{{asset('Editor/js/dataTables.editor.min.js')}}">
     </script>
@@ -437,19 +441,15 @@
     </script>
     <script type="text/javascript" language="javascript" src="{{asset('Editor/examples/resources/editor-demo.js')}}">
     </script>
-      <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.2.0/js/dataTables.buttons.min.js">
+      <script type="text/javascript" language="javascript" src="{{asset('js/dataTables.buttons.min.js')}}">
 
     </script>
-    <script src="//cdn.datatables.net/buttons/1.2.1/js/buttons.print.min.js"></script>
+    <script src="{{asset('js/buttons.print.min.js')}}"></script>
     <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/select/1.2.0/js/dataTables.select.min.js">
     </script>
-
-
-     <script src="{{ asset('js/custom_script.js') }}"></script> 
-    <script src="{{ asset('js/savings_script.js') }}"></script>
-    <script src="{{ asset('js/shares_script.js') }}"></script>
+ 
+   
     <script src="{{ asset('js/newloan_script.js') }}"></script>
-    <script src="{{ asset('js/loancategory_script.js') }}"></script>
     <script type="text/javascript">
       $(document).ready(function() {
     $('#example1').DataTable();
@@ -457,7 +457,17 @@
       $('.datepicker').datepicker();
       $('nav a').parents('li,ul').removeClass('active');
       $('a[href="' + this.location.pathname + '"]').parents('li,ul').addClass('active');
-    </scrip
+
+            $(document).ready(function() {
+
+          SetTimeout(function(){
+              
+
+             $('#flash').remove();
+          },5000);
+
+        });
+    </script>
    
     
     @yield('js')

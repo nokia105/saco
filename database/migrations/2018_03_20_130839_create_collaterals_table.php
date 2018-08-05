@@ -20,7 +20,9 @@ class CreateCollateralsTable extends Migration
             $table->float('colateral_value',20);
             $table->date('colateralevalution_date');
             $table->integer('member_id');
-            $table->timestamps();
+            $table->integer('user_id');
+            $table->date('date_created');
+           
           
         });
     }

@@ -49,7 +49,7 @@
                 <tbody>
                     @foreach($appended_loans as $loan)
                  <tr>  
-                 <td><a href="/newloan_receive/{{$loan->id}}">#{{$code+$loan->id+$loan->member_id}}</a></td> 
+                 <td><a href="/loan_info/{{$loan->id}}">#{{$code+$loan->id+$loan->member_id}}</a></td> 
                 <td>{{ \Carbon\Carbon::parse($loan->loanInssue_date)->format('F') }}</td>
                 <td>{{$loan->principle}}</td>
                 <td>{{($loan->mounthlyrepayment_interest)*$loan->duration}}</td>
@@ -62,13 +62,11 @@
             Action <span class="caret"></span>
         </button>
         <ul class="dropdown-menu dropdown-default pull-right" role="menu">
-        <li><a  onclick="showAjaxModal('/approve/{{$loan->id}}')" >
+        <li><a  onclick="showAjaxModal('/agree/{{$loan->id}}')" >
         <i class="fa fa-check-circle-o" style="color:green; font-size:15px;"></i>Approve </a> </li>
 
          <li><a  onclick="showAjaxModal('/reject/{{$loan->id}}')" >
         <i class="fa fa-ban" style="color:red; font-size:15px;"></i>Reject</a> </li>
-
-       
                                
          </ul>
          </div>
@@ -87,13 +85,11 @@
         <!-- /.col -->
       </div>
 
-
-
             <div class="modal fade" id="modal_ajax">
         <div class="modal-dialog" style="width:500px; text-align: ;">
             <div class="modal-content" ">
                 
-                <div class="modal-header" style="text-align:center;">
+                <div class="modal-header modal-header-primary" style="text-align:center;">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h4 class="modal-title"></h4>
                 </div>
@@ -109,8 +105,6 @@
             </div>
         </div>
     </div>
-
-
          
       @include('modal.popup_lib')
 

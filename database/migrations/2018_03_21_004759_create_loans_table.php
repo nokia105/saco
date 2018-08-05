@@ -29,11 +29,18 @@ class CreateLoansTable extends Migration
             $table->float('mounthlyrepayment_amount',30);
             $table->float('mounthlyrepayment_principle',30);
             $table->float('mounthlyrepayment_interest',30);
-            $table->string('action_status')->nullable();
-            $table->string('action_reason')->nullable();
-            $table->date('action_date')->nullable();
-            $table->date('action_workingdate')->nullable();
-            $table->integer('action_person')->nullable();
+            $table->string('board_status')->nullable();  //newloan
+            $table->string('board_reason')->nullable();  //newloan
+            $table->date('board_date')->nullable();      //newloan
+            $table->integer('board_person')->nullable();   //newloan
+            $table->string('firstprocessed_status')->nullable(); //changed->firstprocessed_reason
+            $table->string('firstprocessed_reason')->nullable();  
+            $table->date('firstprocessed_date')->nullable();
+            $table->integer('firstprocessed_person')->nullable();
+            $table->string('chair_status')->nullable();
+            $table->string('chair_reason')->nullable();
+            $table->date('chair_date')->nullable();
+            $table->integer('chair_person')->nullable();
             $table->integer('insurance_id'); //manually added
 
         });

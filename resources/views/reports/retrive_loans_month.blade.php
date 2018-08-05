@@ -31,6 +31,7 @@
                 <tbody>
 
                     @php
+                    
                     $sumtotal=0;
                      $sumprinciple=0;
                      $suminterest=0;

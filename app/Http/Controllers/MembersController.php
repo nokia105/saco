@@ -3,130 +3,286 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-include(app_path()."\datatable\Editor\php\DataTables.php" );
-include(app_path()."\datatable\Editor\php\config.php" );
-include(app_path()."\datatable\Editor\php\Bootstrap.php" );
-/*
-include(app_path()."\datatable\Editor\php\Editor\Editor.php" );
-include(app_path()."\datatable\Editor\php\Editor\Field.php" );
-include(app_path()."\datatable\Editor\php\Editor\Format.php" );
-include(app_path()."\datatable\Editor\php\Editor\Join.php" );
-include(app_path()."\datatable\Editor\php\Editor\Mjoin.php" );
-include(app_path()."\datatable\Editor\php\Editor\Upload.php" );
-include(app_path()."\datatable\Editor\php\Editor\Validate.php" );*/
-
-
-// Alias Editor classes so they are easy to use
-use
-	DataTables\Editor,
-	DataTables\Editor\Field,
-	DataTables\Editor\Format,
-	DataTables\Editor\Mjoin,
-	DataTables\Editor\Upload,
-	DataTables\Editor\Validate;
-	use Auth;
-	//DataTables\Database\Database;
+Use App\Member;
+use Auth;
+use App\Memberaccount;
+use App\Glaccount;
+use App\Categoryaccount;
+use Illuminate\Validation\Rule;
+use App\Regfee; 
+use App\Feescategory;
 
 
 class MembersController extends Controller
 {
-    //
-
-
-      /*unction __construct(){
-
-      	 return $this->middleware('Auth:member','role:Loan Officer');
-      }*/
-
+   
         
      function __construct(){
 
        return $this->middleware('auth:member');
-     }
+     }  
+
+         public function index(){
+
+            $members=Member::all();
+
+           return view('member.member',compact('members'));
+         }
 
 
-      public function index(){
+  public function registerform(){
 
-     $user_id=Auth::guard('member')->user()->member_id;
+               $memberlastid=Member::all()->last()->member_id+1;
+               if (strlen($memberlastid)==1 ) $regno='000'.$memberlastid.'';
+               else if (strlen($memberlastid)==2 ) $regno='00'.$memberlastid.'';
+               else if (strlen($memberlastid)==3 ) $regno='0'.$memberlastid.'';
+               else if (strlen($memberlastid)>3 ) $regno=$memberlastid.'';
+
+                $reg='TS/MR/'.$regno;
+
+  	   return view('member.registerform',compact('reg'));
+  }
 
 
 
+   public function saveregister(Request $request, Member $member){
+
+             // dd($request->all());
+   	
+   	      $validator=$this->validate(request(),[
+              'firstname'=>'required',
+              'middlename'=>'required',
+              'lastname'=>'required',
+              'reg_no'=>'required',
+               'phone'=> [
+        'required',
+        'min:10',
+        'max:13',
+        Rule::unique('members')->ignore($member->id,'member_id'),
+    ],
+               'email' => [
+        'required',
+        Rule::unique('members')->ignore($member->id,'member_id'),
+    ],
+               'bank'=>'required',
+               'account'=>'required',
+               'kin_name'=>'required',
+               'kin_relashioship'=>'required',
+               'gender'=>'required',
+               'box'=>'required',
+               'street'=>'required',
+               'house'=>'required',
+               'b_date'=>'required',
+               'status'=>'required'       
+           ]);
+
+   	  $member=Member::create([
+        'first_name'=>$request->firstname,
+        'middle_name'=>$request->middlename,
+        'last_name'=>$request->lastname,
+         'registration_no'=>$request->reg_no,
+         'status'=>'inactive',
+         'user_id'=>Auth::guard('member')->user()->member_id,
+         'phone'=>$request->phone,
+         'password'=>bcrypt('password'),
+         'email'=>$request->email,
+         'bank_name'=>$request->bank,
+         'account_number'=>$request->account,
+         'nextkin_name'=>$request->kin_name,
+         'nextkin_relationship'=>$request->kin_relashioship,
+         'marital_status'=>$request->status,
+         'couple_names'=>$request->couple,
+         'gender'=>$request->gender,
+         'box_number'=>$request->box,
+         'street_name'=>$request->street,
+         'house_no'=>$request->house,
+         'birth_date'=>$request->b_date,
+         'joining_date'=>date('Y-m-d')
+   	  ]);
+
+               //  rondom account number
+
+   	         //loan account
+
+           $loanfee=Feescategory::where('name','=','Registration fee')->first();
+
+         Regfee::create([
+          'amount'=>$loanfee->fee_value,
+          'member_id'=>$member->member_id,
+          'status'=>'unpaid'
+         ]); 
+
+
+   	        $liability=Categoryaccount::where('name','=','Liability')->first();
+            $asset=Categoryaccount::where('name','=','Asset')->first();
+            $capital=Categoryaccount::where('name','=','Capital')->first();
+
+             $saving=Mainaccount::where('name','=','Saving Account')->first();
+             $share=Mainaccount::where('name','=','Share Account')->first();
+             $loan=Mainaccount::where('name','=','Loan Account')->first();
+             $interest=Mainaccount::where('name','=','Interest Account')->first();
+             $penaty=Mainaccount::where('name','=','Penaty Account')->first();
+             $registration=Mainaccount::where('name','=','Registration Fee')->first();
+            
+
+               //dd($asset);
+
+   	        $memberloan=Memberaccount::create([
+      
+                     'member_id'=>$member->member_id,
+                      
+                      'categoryaccount_id'=>$liability->id,
+                      'name'=>'Loan Account',
+                      'account_no'=>$loan->id.'M'.($member->member_id),
+                      'date'=>date('Y-m-d')
+   	      ]);
+
+              
+   	     
+   	         $membersaving=Memberaccount::create([
+                      'member_id'=>$member->member_id,
+                      'account_no'=>$saving->account_no.'M'.($member->member_id),
+                      'categoryaccount_id'=>$asset->id,
+                      'name'=>'Saving Account',
+                      'date'=>date('Y-m-d')
+   	        ]);
+
+   	      //share account 
+           
+   	          $membershare=Memberaccount::create([
+                      'member_id'=>$member->member_id,
+                      'account_no'=>$share->account_no.'M'.($member->member_id),
+                      'categoryaccount_id'=>$asset->id,
+                      'name'=>'Share Account',
+                      'date'=>date('Y-m-d')
+   	        ]);
+
+   	     //interest account
+   	          
+   	      $memberinterest=Memberaccount::create([
+                      'member_id'=>$member->member_id,
+                      'account_no'=>$interest->account_no.'M'.($member->member_id),
+                      'categoryaccount_id'=>$liability->id,
+                      'name'=>'Interest Account',
+                      'date'=>date('Y-m-d')
+   	        ]); 
+
+   	     //penalty account
+            
+   	        $memberpenaty=Memberaccount::create([
+                      'member_id'=>$member->member_id,
+                      'account_no'=>$penaty->account_no.'M'.($member->member_id),
+                      'categoryaccount_id'=>$liability->id,
+                      'name'=>'Penaty Account',
+                      'date'=>date('Y-m-d')
+   	        ]);
+
+   	     //charges account
+            
+   	     //insurance account
+             
+   	           /* $memberinsurance=Memberaccount::create([
+                      'member_id'=>$member->member_id,
+                      'account_no'=>$capital->code.(6000+$member->member_id),
+                      'categoryaccount_id'=>$capital->id,
+                      'name'=>'Insurance Account',
+                      'date'=>date('Y-m-d')
+   	        ]);*/
+
+                                 //registration
+                   $memberregistration=Memberaccount::create([
+                      'member_id'=>$member->member_id,
+                      'account_no'=>$registration.'M'.($member->member_id),
+                      'categoryaccount_id'=>$capital->id,
+                      'name'=>'Registration Fee',
+                      'date'=>date('Y-m-d')
+            ]);
+
+   	             return back()->with('status','Registered Sucessfully');
+
+   }
+
+
+       public function edit($id){
+
+           $member=Member::findorfail($id);
+
+           return view('member.edit',compact('member'));
+       }
+     
+        public function update(Member $member, $id, Request $request){
+    $validator=$this->validate(request(),[
+              'firstname'=>'required',
+              'middlename'=>'required',
+              'lastname'=>'required',
+              'reg_no'=>'required',
+               'phone'=>'required',
+               'email' =>'required|email',
+               'bank'=>'required',
+               'account'=>'required',
+               'kin_name'=>'required',
+               'kin_relashioship'=>'required',
+               'gender'=>'required',
+               'box'=>'required',
+               'street'=>'required',
+               'house'=>'required',
+               'b_date'=>'required',
+               'status'=>'required'       
+           ]);
+
+              
+
+
+             //$memberData=$request->all();
+
+              $member=Member::find($id)->update([
+
+         'first_name'=>$request->firstname,
+         'middle_name'=>$request->middlename,
+         'last_name'=>$request->lastname,
+         'registration_no'=>$request->reg_no,
+         'user_id'=>Auth::guard('member')->user()->member_id,
+         'phone'=>$request->phone,
+         'email'=>$request->email,
+         'bank_name'=>$request->bank,
+         'account_number'=>$request->account,
+         'nextkin_name'=>$request->kin_name,
+         'nextkin_relationship'=>$request->kin_relashioship,
+         'marital_status'=>$request->status,
+         'couple_names'=>$request->couple,
+         'gender'=>$request->gender,
+         'box_number'=>$request->box,
+         'street_name'=>$request->street,
+         'house_no'=>$request->house,
+         'birth_date'=>$request->b_date,
+              ]);
+
+
+
+
+
+                       
+             return redirect()->route('members')->with('status','Successfully Updated');
+        }
 
      
-      	
+         public function delete($id){
+
+               $member=Member::find($id);
+
+               $member->memberaccount()->delete();
+
+               $member->delete();
 
 
 
-// Build our Editor instance and process the data coming from _POST
-
-/*
- * Example PHP implementation used for the index.html example
- */
-
-// DataTables PHP library
-$sql_details = array(
-	"type" => "Mysql",  // Database type: "Mysql", "Postgres", "Sqlite" or "Sqlserver"
-	"user" => "root",       // Database user name
-	"pass" => "",       // Database password
-	"host" => "localhost",       // Database host
-	"port" => "",       // Database connection port (can be left empty for default)
-	"db"   => "saccoss"     // Database name
-	//"dsn"  => "charset=utf8"        // PHP DSN extra information. Set as `charset=utf8` if you are using MySQL
-);
-$db = new \DataTables\Database( $sql_details );
-
-  
 
 
-// Build our Editor instance and process the data coming from _POST
-$mm=Editor::inst($db,'members','member_id')
-	->fields(
-		Field::inst('member_id')->set(false),
-		Field::inst( 'first_name' )->validator( 'Validate::notEmpty' ),
-		Field::inst( 'middle_name' )->validator( 'Validate::notEmpty' ),
-		Field::inst( 'last_name' )->validator( 'Validate::notEmpty' ),
-		Field::inst( 'registration_no' )->validator( 'Validate::notEmpty' ),
-		Field::inst( 'status' )->setValue('1'),
-		Field::inst( 'user_id' )->setValue($user_id),
-		Field::inst( 'phone' )->validator( 'Validate::notEmpty' ),
-		Field::inst( 'password' )->setValue(bcrypt('password')),
-		Field::inst( 'email' )->validator('Validate::notEmpty' ),
-	    Field::inst( 'bank_name' )->validator( 'Validate::notEmpty' ),
-		Field::inst( 'account_number' )->validator( 'Validate::notEmpty' ),
-		Field::inst( 'nextkin_name' )->validator( 'Validate::notEmpty' ),
-		Field::inst( 'nextkin_relationship' )->validator( 'Validate::notEmpty' ),
-	    Field::inst( 'marital_status' )->validator( 'Validate::notEmpty' ),
-		Field::inst( 'couple_names' ),
-		Field::inst( 'gender' )->validator( 'Validate::notEmpty' ),
-        Field::inst( 'box_number' )->validator( 'Validate::notEmpty' ),
-        Field::inst( 'street_name' )->validator( 'Validate::notEmpty' ),
-        Field::inst( 'house_no' )->validator( 'Validate::notEmpty' ),
-		Field::inst( 'birth_date' )->validator( 'Validate::notEmpty' )
-			->validator( 'Validate::dateFormat', array(
-				"format"  => Format::DATE_ISO_8601,
-				"message" => "Please enter a date in the format yyyy-mm-dd"
-			) )
-			->getFormatter( 'Format::date_sql_to_format', Format::DATE_ISO_8601 )
-			->setFormatter( 'Format::date_format_to_sql', Format::DATE_ISO_8601 ),
-           
+                //delete all member account
 
-       Field::inst( 'joining_date' )->validator( 'Validate::notEmpty' )
-			->validator( 'Validate::dateFormat', array(
-				"format"  => Format::DATE_ISO_8601,
-				"message" => "Please enter a date in the format yyyy-mm-dd"
-			) )
-			->getFormatter( 'Format::date_sql_to_format', Format::DATE_ISO_8601 )
-			->setFormatter( 'Format::date_format_to_sql', Format::DATE_ISO_8601 )
-
-	)
-		
-	->process( $_GET )
-	->json();
-
-
-      	
-      }
-
+               return redirect()->route('members')->with('status','Successfully Deleted');
+         }
+      
 
       
 }

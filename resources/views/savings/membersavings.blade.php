@@ -12,16 +12,15 @@
                 <thead>
                 <tr>
                   <th>Savings Amount</th>
-                
-                  <th>Saving Code</th>
 
-                  <th>Savings Date</th>
+                  <th>Last Date</th>
                 </tr>
                 </thead>
                 <tbody>
                 
                 <tr>
-                  
+                  <td><a href="{{route('member_allsavings',$member->member_id)}}">{{number_format($member->savingamount->sum('amount'),2)}}</a></td>
+                  <td>{{\Carbon\carbon::parse($member->savingamount->last()->saving_date)->format('d/m/y')}}</td>
                 </tr>
                 </tbody>
 
@@ -34,75 +33,9 @@
           <!-- /.box -->
         </div>
 
-        @section('js')
-          <script>
-            
-             var editor; // use a global for the submit and return data rendering in the examples
+    <script type="text/javascript">
 
-$(document).ready(function() {
-
-    editor = new $.fn.dataTable.Editor( {
-        ajax : {
-        url     : "/membersavings/{{$id}}",
-        contentType: "application/json; charset=utf-8", 
-        type: "GET" 
-    },
- 
-        table: "#memberSaving",
-        fields: [ {
-                label: "Savings Amount:",
-                name: "membersavings.amount"
-            }, {
-                label: "Savings Code:",
-                name: "membersavings.saving_code"
-            }, {
-                label: "Savings Date:",
-                name: "membersavings.saving_date",
-                type:"datetime"
-            }
-
-        ]
-    } );
-
-    $('#memberSaving').dataTable( {
-        
-            
-
-        dom: "Bfrtip",
-
-        ajax : {
-        url:   "/membersavings/{{$id}}", 
-        dataType: "json",
-        contentType: "application/json; charset=utf-8", 
-        type: "GET"
-        }, 
-
-        
-        columns: [
-          
-            { data: "membersavings.amount" },   
-            { data: "membersavings.saving_code" },
-            { data: "membersavings.saving_date",
-             "render": function (data) {
-                var date = new Date(data);
-                var month = date.getMonth() + 1;
-                return (month.length > 1 ? month : "0" + month) + "/" + date.getDate() + "/" + date.getFullYear();
-                 }
-           }
-        ],
-        select: true,
-        severSide:true,
-        buttons: [
-            { extend: "create", editor: editor },
-            { extend: "edit",   editor: editor },
-            { extend: "remove", editor: editor }
-        ]
-    } );
-
-} );
-
-
-      $(document).ready(function() {
+/*      $(document).ready(function() {
   @role('Loan Officer','member')
   $('.buttons-create,.buttons-edit,.buttons-remove').show();
 
@@ -110,12 +43,12 @@ $(document).ready(function() {
      $('.buttons-create,.buttons-edit,.buttons-remove').hide();
     @endrole
 
-});
+});*/
 
   
  
 
 
           </script>
-        @endsection
+       
     @endsection

@@ -28,10 +28,9 @@ class InsurancesController extends Controller
      }
 
 
-     public function index(){
+       public function db(){
 
-
-   $user_id=Auth::guard('member')->user()->id;
+// DataTables PHP library
 $sql_details = array(
     "type" => "Mysql",  // Database type: "Mysql", "Postgres", "Sqlite" or "Sqlserver"
     "user" => "root",       // Database user name
@@ -41,13 +40,18 @@ $sql_details = array(
     "db"   => "saccoss"     // Database name
     //"dsn"  => "charset=utf8"        // PHP DSN extra information. Set as `charset=utf8` if you are using MySQL
 );
-$db = new \DataTables\Database( $sql_details );
+return $db = new \DataTables\Database( $sql_details );
+  }
 
+
+     public function index(){
+
+
+   $user_id=Auth::guard('member')->user()->member_id;
   
 
-
 // Build our Editor instance and process the data coming from _POST
-Editor::inst($db,'insurances','id')
+Editor::inst($this->db(),'insurances','id')
     ->fields(
         Field::inst( 'insurance_date' )->validator( 'Validate::notEmpty' )
             ->validator('Validate::dateFormat', array(

@@ -59,7 +59,7 @@
                 
                 <div class="modal-footer" style="margin:0px; border-top:0px; text-align:center;">
                     <a href="#" class="btn btn-danger" id="delete_link"><?php echo 'delete';?></a>
-                    <!--<button type="button" class="btn btn-info" data-dismiss="modal"><?php echo 'cancel';?></button>-->
+                    <button type="button" class="btn btn-info" data-dismiss="modal"><?php echo 'cancel';?></button>
                 </div>
             </div>
         </div>

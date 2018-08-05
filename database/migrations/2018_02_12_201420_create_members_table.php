@@ -26,7 +26,7 @@ class CreateMembersTable extends Migration
             $table->string('nextkin_name',30)->nullable();
             $table->string('nextkin_relationship',30);
             $table->date('joining_date',30);
-            $table->integer('status')->nullable();
+            $table->string('status')->nullable();
             $table->integer('user_id')->nullable();
             $table->date('birth_date')->nullable();
             $table->string('gender')->nullable();

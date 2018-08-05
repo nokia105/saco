@@ -20,6 +20,7 @@ class CreateSharesTable extends Migration
             $table->integer('max_shares');
             $table->string('status');
             $table->integer('user_id');
+            $table->date('date');
        
         });
     }

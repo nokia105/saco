@@ -21,6 +21,7 @@ class AddRegistrationNoMembers extends Migration
          Schema::table('members', function($table) {
         $table->string('registration_no')->nullable();
     });
+         
     }
 
     /**

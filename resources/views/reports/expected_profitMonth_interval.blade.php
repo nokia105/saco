@@ -19,7 +19,7 @@
                 @endif
         </div>
 
-       <form action="/reports/retrive_expected_profit" method="post">
+       <form action="{{url('/reports/retrive_expected_profit')}}" method="post">
 
          {{csrf_field()}}
         <div class="box col-md-8 box-danger">

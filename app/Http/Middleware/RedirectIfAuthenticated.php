@@ -21,13 +21,23 @@ class RedirectIfAuthenticated
         case 'member':
           if (Auth::guard($guard)->check()) {
                  
-                   $user=Auth::guard('member')->user();
+             $user=Auth::guard('member')->user();
 
-                 if($user->hasRole('Admin')){
-        return redirect('/roles');
-    }else{
-        return redirect('/');
-    }
+                          if($user->hasRole('Admin')){
+        return redirect()->intended('roles');
+    }elseif($user->hasRole('Chair')){
+        return redirect()->intended('/');
+    }elseif($user->hasRole('Accountant')){
+        return redirect()->intended('/');
+    }elseif($user->hasRole('Loan Officer')){
+           return redirect()->intended('/');
+         }elseif($user->hasRole('Cashier')){
+             
+            return redirect()->intended('/'); 
+         }else{
+             $id=Auth::guard('member')->user()->member_id;
+             return redirect()->intended('/member/'.$id);
+         }
 
           }
           break;

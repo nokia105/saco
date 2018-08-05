@@ -23,9 +23,8 @@ class Member extends Authenticatable
 
      protected $guard = 'member';
 
-     protected $fillable = [
-      'registration_no' ,'last_name' ,'middle_name','first_name','email', 'password',
-      
+     protected $guarded = [
+
     ];
 
     /**
@@ -48,6 +47,7 @@ class Member extends Authenticatable
 
 
        	  return $this->hasMany(Collateral::class,'member_id');
+          
        }
 
 
@@ -72,11 +72,32 @@ class Member extends Authenticatable
          return $this->hasMany(Membersaving::class,'member_id');
        }
 
-       
-         public function member(){
 
-            return Member::class;
-         }
+         static function numeric($length){
+         
+            $chars = "1234567890";
+            $clen   = strlen( $chars )-1;
+            $id  = '';
+
+            for ($i = 0; $i < $length; $i++) {
+                  $id .= $chars[mt_rand(0,$clen)];
+          }
+
+           return ($id);
+
+      }
+
+
+      public function memberaccount(){
+
+          return $this->hasMany(Memberaccount::class,'member_id');
+      }
+
+
+      public function regfee(){
+
+         return $this->hasOne(Regfee::class,'member_id');
+      }  
 
 
 }

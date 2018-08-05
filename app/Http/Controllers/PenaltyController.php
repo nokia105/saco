@@ -29,9 +29,8 @@ class PenaltyController extends Controller
        return $this->middleware('auth:member');
      }
 
-   public function index(){
 
-
+       public function db(){
 
 // DataTables PHP library
 $sql_details = array(
@@ -43,13 +42,13 @@ $sql_details = array(
     "db"   => "saccoss"     // Database name
     //"dsn"  => "charset=utf8"        // PHP DSN extra information. Set as `charset=utf8` if you are using MySQL
 );
-$db = new \DataTables\Database( $sql_details );
-
+return $db = new \DataTables\Database( $sql_details );
+  }
   
+   public function index(){
 
 
-
-Editor::inst($db,'penalties','id')
+Editor::inst($this->db(),'penalties','id')
     ->fields(      
         Field::inst( 'percentage_penalty' )->validator( 'Validate::notEmpty' ),
         Field::inst( 'retirement_period' )->validator( 'Validate::notEmpty' ) 

@@ -37,14 +37,17 @@
                 <thead>
                 <tr>
                     <th>Code</th>
-                    <th>Month</th>
-                   <th>Loan Principle(Tsh)</th>
-                   <th>Loan Interest(Tsh)</th>
+                   
+                   <th>Principle(Tsh)</th>
+                   <th>Interest(Tsh)</th>
                    <th>Duration</th>
-                   <th>Requesting Date</th>
+                    <th>Status</th>
+                   <th>Requesting Date</th>            
                    <th>Approved Date</th>
-                   <th>Loan startdate</th>
-                   <th>Action</th>
+                   <th>startdate</th>      
+                    @role('Accountant','member')
+                   <th>Voucher</th>
+                    @endrole
                  
                 
                 </tr>
@@ -52,31 +55,30 @@
                 <tbody>
                     @foreach($approved_loans as $loan)
                  <tr>
-                 <td><a href="/newloan_receive/{{$loan->id}}">#{{$code+$loan->id+$loan->member_id}}</a></td>    
-                <td>{{ \Carbon\Carbon::parse($loan->loanInssue_date)->format('F') }}</td>
-                <td>{{$loan->principle}}</td>
-                <td>{{($loan->mounthlyrepayment_interest)*$loan->duration}}</td>
-                <td>{{$loan->duration}}</td>
+                 <td><a href="{{route('loan_info',$loan->id)}}">#{{$code+$loan->id+$loan->member_id}}</a></td>    
+                <td>{{number_format($loan->principle,2)}}</td>
+                <td>{{number_format(($loan->mounthlyrepayment_interest)*$loan->duration,2)}}</td>
+                <td>{{number_format($loan->duration,2)}}</td>
+                <td>{{strtoupper($loan->loan_status)}}</td>
                 <td>{{$loan->loanInssue_date}}</td>
-                 <td>{{$loan->action_date}}</td>
-                 <td>{{$loan->action_workingdate}}</td>
-
-                <td class="center">
-                                
-    <div class="btn-group">
+                 <td>{{\Carbon\Carbon::parse($loan->chair_date)->format('d/m/y')}}</td>
+                 <td>{{\Carbon\Carbon::parse($loan->chair_date)->format('d/m/y')}}</td>
+                            
+         @role('Accountant','member')
+        <td class="center">
+             
+              <div class="btn-group">
         <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
             Action <span class="caret"></span>
         </button>
         <ul class="dropdown-menu dropdown-default pull-right" role="menu">
-         <li><a  onclick="showAjaxModal('/reject/{{$loan->id}}')" >
-        <i class="fa fa-ban" style="color:red; font-size:15px;"></i>reject</a> </li>
-
-         <li><a  onclick="showAjaxModal('/pending/{{$loan->id}}')" >
-        <i class="fa fa-clock-o" style="color:red; font-size:15px;"></i>pending </a> </li>
+        <li><a  onclick="showAjaxModal('{{route('voucher',$loan->id)}}')" >
+        <i class="fa fa-check-circle-o" style="color:green; font-size:15px;"></i>generate</a> </li>
                                
          </ul>
          </div>
-</td>
+        </td>
+        @endrole
                 </tr>
                 @endforeach
                
@@ -100,7 +102,7 @@
         <div class="modal-dialog" style="width:500px; text-align: ;">
             <div class="modal-content" ">
                 
-                <div class="modal-header" style="text-align:center;">
+                <div class="modal-header modal-header-primary" style="text-align:center;">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h4 class="modal-title"></h4>
                 </div>
@@ -118,81 +120,14 @@
         </div>
     </div>
           
-         
-     
 
       @endsection
+
+         @include('modal.popup_lib')
 
        
        @section('js')
 
-                      
-    
-      <!-- Select2 -->
-
- 
-    <script type="text/javascript">
-    
-    function showAjaxModal(url)
-    {
-        // SHOWING AJAX PRELOADER IMAGE
-        jQuery('#modal_ajax .modal-body').html('<div style="text-align:center;margin-top:200px;"></div>');
-        
-        // LOADING THE AJAX MODAL
-        jQuery('#modal_ajax').modal('show', {backdrop: 'false'});
-    
-        
-        // SHOW AJAX RESPONSE ON REQUEST SUCCESS
-        $.ajax({
-            url: url,
-            success: function(response)
-            {
-            
-                
-                jQuery('#modal_ajax .modal-body').html(response);
-                closeOnEscape: false;
-            
-            dialogClass: "noclose";
-            }
-        });
-    }
-</script>
-
-    
-    <!-- (Ajax Modal)-->
-
-     
-    
-    <script type="text/javascript">
-    function confirm_modal(delete_url)
-    {
-        jQuery('#modal-4').modal('show', {backdrop: 'static'});
-        document.getElementById('delete_link').setAttribute('href' , delete_url);
-    }
-    </script>
-    
-    <!-- (Normal Modal)-->
-    <div class="modal fade" id="modal-4">
-        <div class="modal-dialog" >
-            <div class="modal-content" style="margin-top:100px;">
-                
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title" style="text-align:center;">Are you sure to delete this information ?</h4>
-                </div>
-                
-                
-                <div class="modal-footer" style="margin:0px; border-top:0px; text-align:center;">
-                    <a href="#" class="btn btn-danger" id="delete_link"><?php echo 'delete';?></a>
-                    <!--<button type="button" class="btn btn-info" data-dismiss="modal"><?php echo 'cancel';?></button>-->
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-
-       @endsection
 
 
 

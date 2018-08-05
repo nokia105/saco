@@ -1,6 +1,8 @@
     <!-- Main content -->
 
      @extends('loans.template')
+
+       @section('title','Payment')
       @section('memberworkspace')
 
         <div class="error" style="padding-top:50px; text-align:center;">
@@ -21,52 +23,121 @@
 
         
       
-      <form method="post" action="/payment">
+      <form method="post" action="{{url('/payment')}}">
             {{csrf_field()}}
             <input type="hidden" value="{{$id=request()->route('id')}}" name="member">
+            <input type="hidden" class="form-control" id="memberaccount_id" name="memberaccount_id" >
+            <input type="hidden" class="form-control" id="mainaccount_id" name="mainaccount_id" >
          <div class="box col-md-12 box-danger">
             <div class="box-header">
-              <h3 class="box-title">Add Payment</h3>
+              <h3 class="box-title">Receive Payment</h3>
             </div>
             <!-- /.box-header -->
          <div class="box-body">
           <div class="row">
+            <div class="form-group  col-md-5">
                <label for="">Select Payment</label>
                <div class="form-group{{ $errors->has('payment_type') ? ' has-error' : '' }}">
-
-                    <div class="col-sm-6">
-                      <select class="form-control select2 "  name="payment_type">
+                      <select class="form-control select2 "  id="payment_type" name="payment_type" required>
                         <option value="">-----select Payment------</option>
-                        <option value="loan">loan</option>
-                         <option value="saving">savings</option>
-                         <option value="share">share</option>
+                        <option value="loan">Loan</option>
+                         <option value="saving">Savings</option>
+                         <option value="share">Shares</option>
+                         <option value="reg_fee">Registration Fee</option>
                            
                       </select>
-                      
-                       
-                    </div>
+                   
                      <small class="text-danger">{{ $errors->first('payment_type') }}</small>
-              </div><br/><br/>
-            
-            <div class="col-md-6">
-             <!--  <div class="box box-body box-primary"> -->
-            
+              </div>
+               </div>
+                <div class="form-group  col-md-5">
+               <label for=""> Payment Method</label>
+               <div class="form-group{{ $errors->has('payment_method') ? ' has-error' : '' }}">
+                      <select class="form-control select2"  id="payment_method" name="payment_method"
+                      required>
+                        <option value="">-----select Payment method------</option>
+                         <option value="salary">Salary</option>
+                          <option value="cash">Cash</option>       
+                      </select>
+                   
+                     <small class="text-danger">{{ $errors->first('payment_method') }}</small>
+              </div>
+               </div>
+            </div>
+
+            <div class="row">
+            <div class="form-group  col-md-5">
               <div class="form-group{{ $errors->has('payment') ? ' has-error' : '' }}">
-                  <label for="exampleInputEmail1">Amount</label>
-                  <input type="float" class="form-control"  name="payment" value="{{old('period')}}">
+                  <label for="exampleInputEmail1">Total Amount</label>
+                  <input type="float" class="form-control"  id="payment" name="payment" value="{{old('payment')}}" required>
                    <small class="text-danger">{{ $errors->first('payment') }}</small>
               </div>
-            <!-- </div> -->
+          
+           
+            
+             
             </div>
-          <!-- /.row -->
+
+            <div class="form-group  col-md-5">
+   
+             <div class="form-group{{ $errors->has('narration') ? ' has-error' : '' }}">
+           <label for="reason">Narration:</label>
+            <textarea class="form-control" rows="3"  name="narration" id="reason" value="{{old('narration')}}"  required="true"  autocomplete="off"></textarea>
+         <small class="text-danger">{{ $errors->first('narration') }}</small>
+        </div>
+       
+            
+          
+            </div>
+          </div>
+
+           <div class="row">
+            <div class="form-group  col-md-5">  
+             <div class="form-group{{ $errors->has('cr_account') ? ' has-error' : '' }}">
+                  <label for="exampleInputEmail1"> Credted Account</label>
+                  <input type="float" class="form-control"  id="cr_account" name="cr_account" value="{{old('cr_account')}}"  readonly="true">
+                   <small class="text-danger">{{ $errors->first('cr_account') }}</small>
+              </div>
+          
+            </div>
+
+            <div class="form-group  col-md-5">
+            
+              <div class="form-group{{ $errors->has('cr_amount') ? ' has-error' : '' }}">
+                  <label for="exampleInputEmail1"> Cr Amount</label>
+                  <input type="float" class="form-control"  id="cr_amount" name="cr_amount" value="{{old('cr_amount')}}" readonly="true" >
+                   <small class="text-danger">{{ $errors->first('cr_amount') }}</small>
+              </div>
+          
+            </div>
+          </div>
+
+           <div class="row">
+               <div class="col-md-5">
+            <div class="form-group{{ $errors->has('dr_account') ? ' has-error' : '' }}">
+                  <label for="">Debited Account </label>
+                  <input type="float" class="form-control" id="dr_account" name="dr_account" value="{{old('dr_account')}}" readonly="true">
+                  
+                   <small class="text-danger">{{ $errors->first('dr_account') }}</small>
+              </div>
+
+            </div>
+               <div class="col-md-5">
+              <div class="form-group{{ $errors->has('dr_amount') ? ' has-error' : '' }}">
+                  <label for="exampleInputEmail1"> Dr Amount</label>
+                  <input type="float" class="form-control"  id="dr_amount" name="dr_amount" value="{{old('dr_amount')}}" readonly="true" >
+                   <small class="text-danger">{{ $errors->first('dr_amount') }}</small>
+              </div>
+             </div>
+        
         </div>
 
         <div class="row">
            <div class="col-md-2">
               
               <div class="form-group">
-                  <label for=""></label>
-                  <input type="submit"  value="Save" class="form-control btn btn-info pull-left" placeholder="100000">
+                 
+                  <input type="submit"  value="Save" class="form-control btn btn-info pull-left" >
               </div>
             </div>
         </div>
@@ -84,6 +155,68 @@
        
         
            
+    @endsection
+
+    @section('js')
+     <script type="text/javascript">
+
+
+       $(document).ready(function(){
+
+      $("#payment").keyup(function(){
+       
+      $("#dr_amount").val($(this).val());
+       $("#cr_amount").val($(this).val());
+
+   });
+ });
+       
+    $(document).ready(function () {
+// code to get all records from table via select box
+$('#payment_type').change(function()
+{ 
+
+var payment_typeid = $(this).find(":selected").val();
+        // alert(pcategoryid);
+    
+var dataString = 'payment_type='+ payment_typeid;
+   
+    // alert(dataString);
+
+      if(payment_typeid==""){
+
+        alert('select category');
+
+      }else{
+
+
+  $.ajax
+({
+         
+url:'{{route('ajaxreceivepayment',$id)}}',
+type:"GET",
+dataType: 'json',
+data: dataString,
+cache: true,
+success: function(data)
+{
+    
+$("#cr_account").val(data.member_account);
+$("#dr_account").val(data.main_account);
+$("#memberaccount_id").val(data.memberaccount_id);
+$("#mainaccount_id").val(data.mainaccount_id);
+
+}
+
+});
+
+      }
+   
+});
+ 
+});
+                    
+     </script>
     @endsection
 
       

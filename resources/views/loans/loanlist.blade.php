@@ -25,7 +25,7 @@
 
                   <th>Payment Startdate</th>
                   <th>End Date</th>
-                  <th>Edit</th>
+                <!--   <th>Edit</th> -->
                  
                 </tr>
                 </thead>
@@ -46,7 +46,7 @@
                     echo $effectiveDate = date('Y-m-d', strtotime($loanlist->duration.' month', strtotime($loanlist->repayment_date)));
                 @endphp
                   </td>
-                  <td><i><a href="{{ URL::to('profile/'.$id.'/editloan/' . $loanlist->id) }}"><i class="fa fa-edit"></a></i></td>
+                 <!--  <td><i><a href="{{ URL::to('profile/'.$id.'/editloan/' . $loanlist->id) }}"><i class="fa fa-edit"></a></i></td> -->
                   
                 </tr>
                 @endforeach

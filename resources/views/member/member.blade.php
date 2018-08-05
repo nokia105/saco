@@ -1,83 +1,71 @@
+ @extends('layouts.master')
 
- 
-     @extends('layouts.master')
+       @section('title', '| Members')
 
       @section('content')
-      
+
+       
 <div class="row">
-    <div class="col-xs-12">
-     <div class="box">
-          <div class="box-header">
-            <h3 class="box-title">Members</h3>
-        </div>
-        <div class="box-body">
-            <table id="example" class="table display  table-bordered table-striped" cellspacing="0" width="100%">
+       <div class="col-xs-12">
+
+          <div class="box">
+            <div class="box-header">
+              <h3 class="box-title">Members</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <table id="example1" class="table table-bordered table-striped">
                 <thead>
-                    <tr>
-                        <th style="width:20%;">Name</th>
+                <tr>
+                <th style="width:20%;">Name</th>
                         <th>Reg No:#</th>
-                        <th>Gender</th>
-                        <th>D.O.B</th>
-                        <th>Martial status</th>
-                        <th>Couple</th>
                          <th>Mobile</th>
                         <th>Email</th>
-                        
-                         <th>Street</th>
-                         <th>House No:</th>
                         <th>Bank</th>
                         <th>A/C No</th>
-                        <th>Next of Kin</th>
-                        <th>Kin  Relashioship</th>
                         <th>Joining Date</th>
-
-                    </tr>
+                        <th>Status</th>
+                        <th>update</th>
+                        <th>delete</th>
+                </tr>
                 </thead>
                 <tbody>
 
+                 
+                 @foreach($members as $member)
+                  
+                <tr>
+                   <td><a href="{{route('loanlist',$member->member_id)}}">{{Ucfirst($member->first_name)}} {{Ucfirst($member->last_name)}}</a></td>
+                   <td>{{$member->registration_no}}</td>
+                   <td>{{$member->phone}}</td>
+                  <td>{{$member->email}}</td>
+                   <td>{{$member->bank_name}}</td>
+                   <td>{{$member->account_number}}</td>
+                  <td>{{\Carbon\carbon::parse($member->joining_date)->format('d/m/y')}}</td>
+                  <th>{{$member->status}}</th>
+                  <td><span class="label label-sm label-info"><a href="{{route('member.edit',$member->member_id)}}" style="color:#ffff">Edit</a></span></td>
+                  <td><span class="label label-sm label-danger"><a style="color:#ffff; cursor:pointer;"  onclick="confirm_modal('{{route('member.delete',$member->member_id)}}')">Delete</a></span></td>   
+                </tr>
+                 @endforeach
+                 
+                 
+
+
+
+
+                
+                
                 </tbody>
-            </table>
+               
+              </table>
+            </div>
+            <!-- /.box-body -->
+          </div>
+          <!-- /.box -->
         </div>
-    </div>
- </div>
-</div>
-    <style type="text/css">
-        
-    #example{
-        width:100%;
-        background-color: #fff;
-    }
-    th {
-        font-size: 12px;
-    }
+        <!-- /.col -->
+      </div>
 
-
-     div.DTE_Field_Type_radio.DTE_Field_Name_{myFieldName} div.DTE_Field_InputControl > div > div {
-  float: left;
-  width: 100%; 
-  /* change as needed */
-}
-    </style>
+         @include('modal.popup_lib')
 
       @endsection
-
-      @section('js')
-
-   
-        <script type="text/javascript">
-   
-$(document).ready(function() {
-  @role('Loan Officer','member')
-  $('.buttons-create,.buttons-edit,.buttons-remove').show();
-
-  @else
-     $('.buttons-create,.buttons-edit,.buttons-remove').hide();
-    @endrole
-
-});
-       </script>
-
-      @endsection
-
-
-

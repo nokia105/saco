@@ -1,16 +1,17 @@
     <!-- Main content -->
 
-     @extends('loans.template')
-      @section('memberworkspace')
+     @extends('layouts.master')
+      @section('content')
+
+      <div class="container-fluid">
       
-      <form method="post" action="/updateloan">
+      <form method="post" action="{{route('drafted.update',$loan->id)}}">
 
        
           
           {{csrf_field()}}
-          <input type="hidden" value="{{Request::segment(4)}}" name="loanid"> 
-          <input type="hidden" value="{{$id=request()->route('id')}}" name="memberloan"> 
-     <div class="col-md-12">
+           
+        <div class="col-md-12">
           <div class="box col-md-12 box-info">
             <div class="box-header">
               <h3 class="box-title">Edit Loan</h3>
@@ -22,14 +23,14 @@
               <div class="box-header">
               <h3 class="box-title">Basic Details</h3>
             </div>
-    @foreach($loans as $loankey )
+   
               <div class="form-group">
                 <label>Product Category</label>
                 <select class="form-control select2 {{ $errors->has('pcategory') ? ' has-error' : '' }}" style="width: 100%;" id="pcategory" name="pcategory">
                     <option value="">--Select Category--</option>
                   @foreach($loancategories as $loancategory)
                 
-                    <option value="{{ $loancategory->id }}" @php  if ($loankey->loancategory_id==$loancategory->id) echo 'selected'   @endphp>{{$loancategory->category_name}}</option>
+                    <option value="{{ $loancategory->id }}" @php  if ($loan->loancategory_id==$loancategory->id) echo 'selected'   @endphp>{{$loancategory->category_name}}</option>
                    @endforeach
 
                 </select>
@@ -43,13 +44,13 @@
             <div class="col-md-6">
              <!--  <div class="box box-body box-primary"> -->
             <div class="form-group">
-                  <label for="">Loan Officer</label>
-                  <input type="text" class="form-control" value="{{$username}}"  name="loanOfficer"  placeholder="Enter name" readonly="true">
+                  <label for="">Officer</label>
+                  <input type="text" class="form-control" value="{{\Auth::guard('member')->user()->first_name}} {{\Auth::guard('member')->user()->last_name}}"  name="loanOfficer"  placeholder="Enter name" readonly="true">
               </div>
               <div class="form-group">
                   <label for="exampleInputEmail1">Loan Requestor</label>
-                  <input type="text" class="form-control"  value="{{$member->first_name}} {{$member->middle_name}} {{$member->last_name}}" readonly="true">
-              </div>
+                  <input type="text" class="form-control"  value="{{$member->first_name}} {{$member->last_name}}" readonly="true">
+              </div> 
             <!-- </div> -->
             </div>
             <!-- /.col -->
@@ -72,17 +73,17 @@
               
               <div class="form-group">
                   <label for="">Principle</label>
-                  <input type="text" class="form-control" id="principle" value="{{$loankey->principle}}" name="principle" placeholder="100000">
+                  <input type="text" class="form-control" id="principle" value="{{$loan->principle}}" name="principle" placeholder="100000">
                 </div>
                 <div class="form-group">
                   <label for="">Interest</label>
-                  <input type="text"  class="form-control" value="{{$loankey->interest}}" name="interest" id="interest">
+                  <input type="text"  class="form-control" value="{{$loan->interest}}" name="interest" id="interest">
                 </div>
                 <div class="form-group">
                 <label>Interest Method</label>
                 <select class="form-control select2"   name="Imethod" style="width: 100%;">
-                  <option value="flat" @php if ($loankey->interest_method=='flat') echo 'selected' @endphp>Flat</option>
-                  <option value="decline" @php if ($loankey->interest_method=='decline') echo 'selected' @endphp>Declining Balance</option>
+                  <option value="flat" @php if ($loan->interest_method=='flat') echo 'selected' @endphp>Flat</option>
+                  <option value="decline" @php if ($loan->interest_method=='decline') echo 'selected' @endphp>Declining Balance</option>
                 </select>
               </div>
          
@@ -93,7 +94,7 @@
                   <label for="" class="col-md-12">Loan Period</label>
                 
                     <div class="col-sm-8">
-                        <input type="text" class="form-control"  name="period" value="{{$loankey->duration}}" id="period">
+                        <input type="text" class="form-control"  name="period" value="{{$loan->duration}}" id="period">
                     </div>
                     <div class="col-sm-4">
                         <select class="col-md-4 form-control"  name="loanwm" style="width: 100%;">
@@ -107,7 +108,7 @@
                 <div class="col-sm-12">
                    <br/>
                   <label for="exampleInputEmail1">First Payment on</label>
-                  <input type="date" data-date-format="yyyy-mm-dd" class="form-control" value="{{$loankey->repayment_date}}" name="startpayment" placeholder="10">
+                  <input type="date" data-date-format="yyyy-mm-dd" class="form-control" value="{{$loan->repayment_date}}" name="startpayment" placeholder="10">
                 </div>
               </div>
               <div class="form-group">
@@ -125,6 +126,9 @@
 
      <!--/end terms-->
           <!--Colleratels row-->
+
+          @if(count($member->collateral))
+
      <div class="box col-md-12 box-danger">
             <div class="box-header">
               <h3 class="box-title">Colletarals</h3>
@@ -162,7 +166,7 @@
                                 @php
                                  if(empty(old('collate'))){
                                 @endphp
-                                @foreach($loankey->collaterals as $col)
+                                @foreach($loan->collaterals as $col)
                                 <tr>
 
                                   <td >{{$col->colateral_name}} <input type="hidden" name="collate[]" value="{{$col->id}}" class="collate_check" /> </td>
@@ -203,6 +207,8 @@
           </div>
           <!-- /.row -->
         </div>
+
+        @endif
             <!-- /.box-body -->
       </div>
 
@@ -248,7 +254,7 @@
                                  @php
                                    if(empty(old('guarantor'))){
                                  @endphp
-                                @foreach($loankey->guarantor as $grantors)
+                                @foreach($loan->guarantor as $grantors)
                                 <tr>
 
                                   <td >{{$grantors->first_name}} <input type="hidden"  class="guarator_check" name="guarantor[]" value="{{$grantors->member_id}}"  /> </td>
@@ -313,7 +319,7 @@
                                  @php
                                 if(empty(old('charges'))){
                                 @endphp
-                               @foreach($loankey->loan_fees as $fee)
+                               @foreach($loan->loan_fees as $fee)
                                 <tr>
 
                                   <td >{{$fee->fee_name}} <input type="hidden" name="charges[]" value="{{$fee->id}}" / class="charge_check"> </td>
@@ -357,7 +363,6 @@
         </div>
             <!-- /.box-body -->
       </div>
-@endforeach  
 
       <!--submit row-->
       <div class="box col-md-12 box-primary">
@@ -368,16 +373,10 @@
               
               <div class="form-group">
                   <label for=""></label>
-                  <input type="submit"  value="Save" class="form-control btn btn-info pull-left" placeholder="100000">
+                  <input type="submit"  value="Update" class="form-control btn btn-info pull-left" placeholder="100000">
               </div>
             </div>
-            <!-- /.col -->
-            <div class="col-md-2">
-              <div class="form-group">
-                  <label for=""></label>
-                  <input type="submit"  value="Cancel" class="form-control btn btn-danger pull-right"  placeholder="100000">
-              </div>
-            </div>
+          
             <!-- /.col -->
           </div>
           <!-- /.row -->
@@ -389,6 +388,7 @@
 
           <!-- /.box -->
         </div>
+
       </form>
 
 

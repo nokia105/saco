@@ -24,15 +24,12 @@ class CollateralsController extends Controller
 
        return $this->middleware('auth:member');
      }
-     
 
-    public function index(){
 
-       $id=request()->segment(2);
+       public function db(){
 
-      
-
-    $sql_details = array(
+// DataTables PHP library
+$sql_details = array(
     "type" => "Mysql",  // Database type: "Mysql", "Postgres", "Sqlite" or "Sqlserver"
     "user" => "root",       // Database user name
     "pass" => "",       // Database password
@@ -40,11 +37,19 @@ class CollateralsController extends Controller
     "port" => "",       // Database connection port (can be left empty for default)
     "db"   => "saccoss"     // Database name
     //"dsn"  => "charset=utf8"        // PHP DSN extra information. Set as `charset=utf8` if you are using MySQL
-);
+);     // Database name
+    //"dsn"  => "charset=utf8"        // PHP DSN extra information. Set as `charset=utf8` if you are using MySQL
 
-$db = new \DataTables\Database( $sql_details );
+return $db = new \DataTables\Database( $sql_details );
+  }
+     
 
-$mm=Editor::inst($db,'collaterals','id')
+    public function index(){
+
+       $id=request()->segment(2);
+
+
+$mm=Editor::inst($this->db(),'collaterals','id')
     ->fields(
         Field::inst('collaterals.colateral_name')->validator( 'Validate::notEmpty' ),
         Field::inst('collaterals.colateral_type')->validator( 'Validate::notEmpty' ),

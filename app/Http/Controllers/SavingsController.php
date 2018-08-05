@@ -27,6 +27,8 @@ use
     DataTables\Editor\Mjoin,
     DataTables\Editor\Upload,
     DataTables\Editor\Validate;
+    use App\Membersaving;
+    use App\Member;
 
 
     
@@ -45,21 +47,7 @@ class SavingsController extends Controller
      }
 
 
-      public function index(){
-
-     $user_id=Auth::guard('member')->user()->member_id;
-
-
-     
-        
-
-
-
-// Build our Editor instance and process the data coming from _POST
-
-/*
- * Example PHP implementation used for the index.html example
- */
+       public function db(){
 
 // DataTables PHP library
 $sql_details = array(
@@ -71,13 +59,17 @@ $sql_details = array(
     "db"   => "saccoss"     // Database name
     //"dsn"  => "charset=utf8"        // PHP DSN extra information. Set as `charset=utf8` if you are using MySQL
 );
-$db = new \DataTables\Database( $sql_details );
+return $db = new \DataTables\Database( $sql_details );
+  }
 
-  
+
+      public function index(){
+
+     $user_id=Auth::guard('member')->user()->member_id;
 
 
 // Build our Editor instance and process the data coming from _POST
-Editor::inst($db,'savings','saving_id')
+Editor::inst($this->db(),'savings','saving_id')
     ->fields(
         Field::inst( 'savings.saving_date' )->validator( 'Validate::notEmpty' )
             ->validator( 'Validate::dateFormat', array(
@@ -104,47 +96,19 @@ Editor::inst($db,'savings','saving_id')
 
 
 
-      public function membersavings()
+      public function membersavings($id)
 
       {
 
-         $user_id=Auth::guard('member')->user()->member_id;
+           $member=Member::findorfail($id);
 
-       $id=request()->segment(2);
+           return view('savings.membersavings',compact('member'));
+      }
 
-          $sql_details = array(
-    "type" => "Mysql",  // Database type: "Mysql", "Postgres", "Sqlite" or "Sqlserver"
-    "user" => "root",       // Database user name
-    "pass" => "",       // Database password
-    "host" => "localhost",       // Database host
-    "port" => "",       // Database connection port (can be left empty for default)
-    "db"   => "saccoss"     // Database name
-    //"dsn"  => "charset=utf8"        // PHP DSN extra information. Set as `charset=utf8` if you are using MySQL
-);
-$db = new \DataTables\Database( $sql_details );
+      public function member_allsavings($id){
 
+           $allmembersavings=Member::findorfail($id)->savingamount;
 
-
-         Editor::inst($db,'membersavings','id')
-    ->fields(
-        Field::inst( 'membersavings.saving_date' )->validator('Validate::notEmpty')
-            ->validator( 'Validate::dateFormat', array(
-                "format"  => Format::DATE_ISO_8601,
-                "message" => "Please enter a date in the format yyyy-mm-dd"
-            ) )
-            ->getFormatter( 'Format::date_sql_to_format', Format::DATE_ISO_8601 )
-            ->setFormatter( 'Format::date_format_to_sql', Format::DATE_ISO_8601 ),    
-        Field::inst( 'membersavings.amount')->validator( 'Validate::notEmpty' ),
-        Field::inst( 'membersavings.member_id' )->setValue( $id),
-        Field::inst( 'membersavings.user_id' )->setValue( $user_id),   
-          Field::inst( 'membersavings.saving_code' )->validator( 'Validate::notEmpty' )    
-        )
-
-    ->leftJoin('members','members.member_id','=','membersavings.member_id')
-    ->where('members.member_id',$id)
-    ->process( $_GET )
-    ->json();
-
-
+          return view('savings.member_allsavings',compact('allmembersavings'));
       }
 }

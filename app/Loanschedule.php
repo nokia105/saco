@@ -24,6 +24,12 @@ class Loanschedule extends Model
 
             return $this->belongsTo(Loan::class);
           }
+
+
+          public function monthpenaty(){
+
+             return $this->hasOne(Monthpenaty::class);
+          }
 }
 
 

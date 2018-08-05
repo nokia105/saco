@@ -25,7 +25,7 @@
                 
                 <tr>
                  
-                   <td><a href="reports/loans_time_range">Loan time range</a></td>
+                   <td><a href="{{url('/reports/loans_time_range')}}">Loan time range</a></td>
                    <td>Table</td>
                    <td>Loan</td>
                   
@@ -34,7 +34,7 @@
 
 
                 <tr>
-                   <td><a href="reports/loans_month">Loan  in month</a></td>
+                   <td><a href="{{url('/reports/loans_month')}}">Loan  in month</a></td>
                    <td>Table</td>
                    <td>Loan</td>
                    <td></td>
@@ -42,7 +42,7 @@
                 </tr>
 
                 <tr>
-                   <td><a href="reports/expected_profit">Profit expected in time range</a></td>
+                   <td><a href="{{url('/reports/expected_profit')}}">Profit expected in time range</a></td>
                    <td>Table</td>
                    <td>Loan</td>
                    <td></td>

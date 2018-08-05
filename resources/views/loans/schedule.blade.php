@@ -46,8 +46,8 @@
                    <th>Total Amount(Tsh)</th>
                   <th>Month Principle(Tsh)</th>
                   <th>Month Interest(Tsh)</th>
-                  <th>Amount Payed(Tsh)</th>
-                  
+                  <th>Amount Paid(Tsh)</th>
+                  <th>Amount unpaid</th>
                   <th>Due Date</th>
                   <th>Status</th>
                 
@@ -60,13 +60,38 @@
                     @endphp
                    {{ date("F", mktime(0, 0, 0, $month, 1)) }}
          </td>
-                  <td>{{ ($loan_schedule->monthprinciple)+($loan_schedule->monthinterest)}} </td>
-                   <td>{{ $loan_schedule->monthprinciple}} </td>
-                  <td>{{$loan_schedule->monthinterest }} </td>
-                  <td>{{$loan_schedule->monthrepayment->sum('amountpayed')}}</td>
-                  
-                  <td>{{$loan_schedule->duedate}}</td>
-                   <td>{{$loan_schedule->status}}</td>
+                  <td>{{ number_format(($loan_schedule->monthprinciple)+($loan_schedule->monthinterest),2)}} </td>
+                   <td>{{ number_format($loan_schedule->monthprinciple,2)}} </td>
+                  <td>{{number_format($loan_schedule->monthinterest,2) }} </td>
+                  <td>{{number_format($loan_schedule->monthrepayment->sum('amountpayed'),2)}}</td>
+                    @if(!$loan_schedule->status=='')
+                        @if($loan_schedule->status=='incomplete')
+                         <td>{{number_format((($loan_schedule->monthprinciple)+($loan_schedule->monthinterest))-$loan_schedule->monthrepayment->sum('amountpayed'),2)}}</td>
+                          @else
+                           <td>-</td>
+                          @endif 
+                      @else
+                          @if(date('Y-m-d')<=$loan_schedule->duedate)
+                              <td >0.00</td>
+                            @else
+                               <td >{{number_format(($loan_schedule->monthprinciple)+($loan_schedule->monthinterest),2)}}</td>
+                               @endif
+                        @endif
+                  <td>{{\Carbon\carbon::parse($loan_schedule->duedate)->format('d/m/y')}}</td>
+
+                     @if(!$loan_schedule->status=='')
+                        @if($loan_schedule->status=='incomplete')
+                         <td><span class="label label-sm label-warning">{{strtoupper($loan_schedule->status)}}</span></td>
+                          @else
+                           <td><span class="label label-sm label-success">{{strtoupper($loan_schedule->status)}}</span></td>
+                          @endif 
+                      @else
+                          @if(date('Y-m-d')<=$loan_schedule->duedate)
+                             <td><span class="label label-sm label-default"></td>
+                            @else
+                               <td><span class="label label-sm label-danger">UNPAID</span></td>
+                               @endif
+                        @endif
                   
                 </tr>
                 @endforeach
@@ -88,7 +113,7 @@
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-              <table id="example2" class="table table-bordered table-striped">
+              <table id="example4" class="table table-bordered table-striped">
                 <thead>
                 <tr>
                 
@@ -108,7 +133,7 @@
                    
                   <td>{{$collateral->colateral_name}}</td>
                   <td> {{$collateral->colateral_type}}</td>
-                  <td> {{$collateral->colateral_value}}</td>
+                  <td> {{number_format($collateral->colateral_value,2)}}</td>
                   
 
                 </tr>
@@ -191,9 +216,9 @@
                 
                   <td>{{$loan->principle}}</td>
                   <td> {{$insurance->name}}</td>
-                  <td> {{$insurance->percentage_insurance}}</td>
+                  <td> {{number_format($insurance->percentage_insurance,2)}}</td>
                               
-                  <td>{{$loan->principle*($insurance->percentage_insurance/100)}}</td>
+                  <td>{{number_format($loan->principle*($insurance->percentage_insurance/100),2)}}</td>
                                    
                 </tr>
               
@@ -232,7 +257,7 @@
                  <tr> 
                    
                   <td>{{$loanfee->fee_name}}</td>
-                  <td> {{$loanfee->fee_value}}</td>
+                  <td> {{number_format($loanfee->fee_value,2)}}</td>
                  
                 
                                    
@@ -256,7 +281,6 @@
       </div>
       <!-- /.row -->
       @endsection
-
      
      @section('js')
           
@@ -267,8 +291,6 @@
 
             $(document).ready(function(){
 
-   $(function () {
-    $('#example').DataTable()
     $('#example4').DataTable({
       'paging'      : true,
       'lengthChange': false,
@@ -276,12 +298,7 @@
       'ordering'    : false,
       'info'        : true,
       'autoWidth'   : false
-    })
-  });
-            
-
-
-
+    });      
             });
 
       </script>

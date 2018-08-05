@@ -10,6 +10,8 @@ use App\Loanschedule;
 use App\Repayment;
 use App\Penalty;
 use App\Monthpenaty;
+use App\Journalentry;
+use App\Mainaccount;
 
 class ApplyMonthPenaty extends Command
 {
@@ -46,12 +48,18 @@ class ApplyMonthPenaty extends Command
     {
     
         //check  if that month is marks paid
-                  $schedules=LoanSchedule::where([['status','!=','paid'],['duedate','=',date('Y-m-d')],])->get();
+                  $schedules=LoanSchedule::where('status','!=','paid')->
+                  where('duedate','=',date('Y-m-d'))->get();
+
+              
                      
-                  $penalty=Penalty::first()->percentage_penalty;                               
+                  $penalty=Penalty::first()->percentage_penalty; 
+
+                   $mainpenaty_account=Mainaccount::where('glaccount_id','=',5)->first();                              
                  
               foreach($schedules as $schedule){
 
+                            $member_penatyaccount=$schedule->loan->member->memberaccount->where('glaccount_id','=',5)->first();
                             $month_pay_amount=$schedule->monthprinciple+$schedule->monthinterest;
                               if($schedule->status=='incomplete'){
                               
@@ -59,6 +67,33 @@ class ApplyMonthPenaty extends Command
                                              //if exist method for schedule id in peyment table
 
                                          $penalty_amount=($penalty/100)*($month_pay_amount-$amount_paid);
+
+
+                                               //penaty to the jornal
+
+                                                 //dr main penaty account 
+
+                                                        Journalentry::create(
+                                                  [
+                               
+                                             'dr'=>$penalty_amount, 
+                                             'mainaccount_id'=>$mainpenaty_account->id,
+                                              'date'=>date('Y-m-d'),
+                                              'service_type'=>'penaty']
+                                   
+                                                  ); 
+                                                  //cr penaty account member
+
+                                                           Journalentry::create(
+                                                  [
+                               
+                                             'cr'=>$penalty_amount, 
+                                             'memberaccount_id'=>$member_penatyaccount->id,
+                                              'date'=>date('Y-m-d'),
+                                              'service_type'=>'penaty']
+                                   
+                                                  );       
+
                                          Monthpenaty::create(
                                               [
                                                  'loanschedule_id'=>$schedule->id,
@@ -66,9 +101,38 @@ class ApplyMonthPenaty extends Command
                                                    'status'=>'unpaid',  
                                            ]);
 
+                                           
+
                                 }else{
+
+
+
           
                                          $penalty_amount=($penalty/100)*$month_pay_amount;
+                                         //penaty to the jornal
+
+                                                 //dr main penaty account 
+
+                                                        Journalentry::create(
+                                                  [
+                               
+                                             'dr'=>$penalty_amount, 
+                                             'mainaccount_id'=>$mainpenaty_account->id,
+                                              'date'=>date('Y-m-d'),
+                                              'service_type'=>'penaty']
+                                   
+                                                  ); 
+                                                  //cr penaty account member
+
+                                                           Journalentry::create(
+                                                  [
+                               
+                                             'cr'=>$penalty_amount, 
+                                             'memberaccount_id'=>$member_penatyaccount->id,
+                                              'date'=>date('Y-m-d'),
+                                              'service_type'=>'penaty']
+                                   
+                                                  ); 
                                          Monthpenaty::create(
                                               [
                                                  'loanschedule_id'=>$schedule->id,
@@ -77,10 +141,7 @@ class ApplyMonthPenaty extends Command
                                            ]);
 
                                                  
-                                }
-
-
-                      
+                                }      
               }
 
     }

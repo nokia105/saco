@@ -19,7 +19,7 @@
                 @endif
         </div>
       
-      <form method="post" action="/memberloan">
+      <form method="post" action="{{url('/memberloan')}}">
 
           {{csrf_field()}}
 
@@ -91,7 +91,7 @@
               <div class="form-group{{ $errors->has('principle') ? ' has-error' : '' }}">
                   <label for="principle">Principle</label>
                   <input type="text" class="form-control" id="principle" name="principle" placeholder="100000" value="{{ old('principle')}}">
-                   <small class="text-danger">{{ $errors->first('principle') }}</small>
+                   <small class="text-danger">{{ $errors->first('principle')}}</small>
                 </div>
                 <div class="form-group{{ $errors->has('interest') ? ' has-error' : '' }}">
                   <label for="">Interest in percentage</label>
@@ -354,7 +354,7 @@
     
 
       <!--submit row-->
-      @role('Loan Officer','member')
+      @role('Cashier|Secretary','member')
       <div class="box col-md-12 box-primary">
         <!-- /.box-header -->
          <div class="box-body">
@@ -371,7 +371,7 @@
               
               <div class="form-group">
                   <label for=""></label>
-                  <input type="submit"  value="draft"  name="draft" class="form-control btn btn-info pull-left" >
+                  <input type="submit"  value="draft"  name="submit" class="form-control btn btn-info pull-left" >
               </div>
             </div>
             <!-- /.col -->
@@ -447,13 +447,88 @@
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-danger pull-left" data-dismiss="modal">close</button>
-                <button id="pdfview">Download PDF <i class="fa fa-file-pdf-o"></i></button>
+                <button id="button" onclick="printDiv('print')">Download PDF <i class="fa fa-file-pdf-o"></i></button>
               </div>
             </div>
             <!-- /.modal-content -->
           </div>
           <!-- /.modal-dialog -->
         </div>
+
+        <div id="print" style="display:none;">
+           <div class="container">
+
+
+   <div class="loaninfo">
+     <div class="company">
+  <label>TASAF SACOSS</label>
+  </div>
+
+      <div class="col-md-6">
+         
+           <label>Principle is <strong> Tsh</strong> </label>
+           
+                    <br>
+                    <br>
+         
+          <label>Interest is <strong> %</strong></label>
+        
+                
+             
+      </div>
+
+
+       <div class="col-md-6">
+
+         
+                <label>Date Created: <strong></strong></label>
+             
+                          <br>
+                          <br>
+      
+                <label>Loan Duration: <strong> Month(s)</strong></label>
+              
+      
+    </div>
+   </div>
+  
+      
+   <div id="table">
+
+  <table class="table table-striped table-bordered">
+  <thead>
+    <tr>
+      <th scope="col"> Month</th> 
+      <th scope="col">Date</th>
+      <th scope="col">Monthly Payment(Tsh)</th>
+      <th scope="col">Monthly Interest(Tsh)</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+     @for($i=0; $i<5; $i++)
+    <tr>
+      
+      <td scope="row"> </td>
+      <td> @php 
+                    echo  date('Y-m-d', strtotime($i.' month', strtotime(2018-05-06)));
+                @endphp</td>
+      <td> </td>
+      <td></td>
+      
+     
+      
+    </tr>
+     @endfor
+    
+  </tbody>
+</table>
+</div>
+</div>
+
+    <h4>Loan issued by <lable>{{Auth::guard('member')->user()->first_name}}</lable></h4>
+        </div>
+       
         
            
     @endsection
@@ -501,7 +576,7 @@ cache: true,
 success: function(data)
 {
 
-var dwn_url='<a href="/pdf_download/'+data.principle+'/'+data.interest+'/'+data.loanperiod+'/'+data.firstpayment+'">Download PDF <i class="fa fa-file-pdf-o"></i></a>'
+var dwn_url='<a href="{{url('/')}}/pdf_download/'+data.principle+'/'+data.interest+'/'+data.loanperiod+'/'+data.firstpayment+'">Download PDF <i class="fa fa-file-pdf-o"></i></a>'
            
 $("#lprinciple").html(data.principle);
 $("#Name").html(data.loanrequestor);
@@ -511,7 +586,7 @@ $("#frepayment").html(data.firstpayment);
 $("#lrepayment").html(data.lastpayment);
 $("#lofficer").html(data.loanOfficer);
 $("#lduration").html(data.loanperiod);
- $("#pdfview").html(dwn_url);
+// $("#pdfview").html(dwn_url);
 
 }
 
@@ -693,9 +768,17 @@ else  alert('Repeated collateral');
 
 
 
+   function printDiv(div){
+   
+     var restorepage=document.body.innerHTML;
+     var printContent=document.getElementById(div).innerHTML;
+     document.body.innerHTML=printContent;
+     window.print();
+     document.body.innerHTML=restorepage;
 
+      $(".modal").modal('toggle');
 
-
+   }
 
      //guarantor
 

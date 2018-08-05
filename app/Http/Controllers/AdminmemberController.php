@@ -24,10 +24,10 @@ class AdminmemberController extends Controller
      */
 
 
-      public function __construct()
+/*      public function __construct()
 {
     $this->middleware(['auth:member','role:Admin']);
-}
+}*/
 
     public function index()
     {

@@ -1,5 +1,7 @@
      @extends('layouts.master')
       @section('cover')
+
+       
            <style type="text/css">
           .no-hover li  b{
            color:#ffff;
@@ -59,7 +61,7 @@
                           <br /> -->
 
                            <li class="{{ Request::is('profile/'.$id.'/membersavings') ? 'active' : '' }} btn btn-info btn-block">
-                             <a href="{{url ('profile/'.$id.'/membersavings')}}"><b>Savings</b></a>
+                             <a href="{{route('membersavings',$id)}}"><b>Savings</b></a>
                            </li>
                           
                         </span>
@@ -69,23 +71,22 @@
                           <br /> -->
                           <li class="{{Request::is('profile/'.$id.'/membershares') ? 'active' : '' }} btn btn-info btn-block">
                             
-                             <a href="{{url ('profile/'.$id.'/membershares')}}"><b>Shares </b></a>
+                             <a href="{{route('memberShares',$id)}}"><b>Shares </b></a>
                           </li>
                          
                         </span>
                         
                                      
-                          @role('Loan Officer','member')
+                          @role('Cashier|Secretary','member')
 
                         <span class="btn  btn-sm btn-light no-hover">
                           <!-- <span class="line-height-1 bigger-170 blue"> 1,411 </span>
 
                           <br /> -->
-
-                            
-                           
+ 
                          <li class="{{Request::is('profile/'.$id.'/newloan') ? 'active' : '' }} btn btn-info btn-block">
                             <a href="{{url ('profile/'.$id.'/newloan')}}"><b>New Loan</b></a>
+                            
                          </li>
                         </span>
                           @endrole
@@ -148,3 +149,6 @@
 
      @endsection
 
+
+
+         

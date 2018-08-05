@@ -20,7 +20,7 @@
     
                 @endif
             
-            @if (session('status'))
+            @if(session('status'))
                     <div class="alert alert-success">
                         {{ session('status') }}
                     </div>
@@ -92,7 +92,7 @@
         <div class="modal-dialog" style="width:500px; text-align: ;">
             <div class="modal-content" ">
                 
-                <div class="modal-header" style="text-align:center;">
+                <div class="modal-header modal-header-primary" style="text-align:center;">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h4 class="modal-title"></h4>
                 </div>

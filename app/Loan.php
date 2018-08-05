@@ -69,6 +69,17 @@ class Loan extends Model
 
              return $this->hasMany(Member_share::class);
           }
+
+
+          public function loanpayment(){
+
+             return $this->hasOne(Loanpayment::class);
+          }
+
+          public function voucher(){
+
+            return $this->hasOne(Voucher::class);
+          }
          
 
 }

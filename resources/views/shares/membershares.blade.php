@@ -18,7 +18,9 @@
                 </tr>
                 </thead>
                 <tbody>
-                
+                 <td><a href="{{route('member_allshare',$member->member_id)}}">{{number_format($member->no_shares->sum('amount'),2)}}</a></td>
+                 <td>{{$member->no_shares->sum('No_shares')}}</td>
+                 <td>{{$member->no_shares->last()->share_date}}</td>
                
                 </tbody>
                
@@ -29,88 +31,14 @@
           <!-- /.box -->
         </div>
 
-        @section('js')
-          <script>
-            
-             var editor; // use a global for the submit and return data rendering in the examples
-
-$(document).ready(function() {
-
-    editor = new $.fn.dataTable.Editor( {
-        ajax : {
-        url     : "/memberShares/{{$id}}",
-        contentType: "application/json; charset=utf-8", 
-        type: "GET" 
-    },
- 
-        table: "#memberShare",
-        fields: [ {
-                label: "Amount:",
-                name: "member_share.amount"
-            }, {
-                label: "Share Date:",
-                name: "member_share.share_date",
-                type:"datetime"
-            },
-
-            
-        ]
-    } );
-
-    $('#memberShare').dataTable( {
-            
-            
-
-        dom: "Bfrtip",
-
-        ajax : {
-        url:   "/memberShares/{{$id}}", 
-        dataType: "json",
-        contentType: "application/json; charset=utf-8", 
-        type: "GET"
-        }, 
-   
-        columns: [
-            { data: "member_share.amount" }, 
-             { data: "member_share.No_shares" },  
-            { data: "member_share.share_date",
-             "render": function (data) {
-                var date = new Date(data);
-                var month = date.getMonth() + 1;
-                return (month.length > 1 ? month : "0" + month) + "/" + date.getDate() + "/" + date.getFullYear();
-                 }
-           }
-        ],
-        select: true,
-        severSide:true,
-        buttons: [
-           
-            { extend: "edit",   editor: editor },
-            { extend: "remove", editor: editor }
-        ]
-    } );
-
-} );
-
-
-
-    $(document).ready(function() {
-  @role('Loan Officer','member')
-  $('.buttons-create,.buttons-edit,.buttons-remove').show();
-
-  @else
-     $('.buttons-create,.buttons-edit,.buttons-remove').hide();
-    @endrole
-
-});
-
+       
 
   
  
 
 
           </script>
-        @endsection
+       
     @endsection
 
 

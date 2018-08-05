@@ -49,7 +49,7 @@
 $(document).ready(function() {
     editor = new $.fn.dataTable.Editor( {
         ajax : {
-        url     : "/insuarance",
+        url     : "{{route('insurance')}}",
         contentType: "application/json; charset=utf-8", 
         type: "GET" 
     },
@@ -77,7 +77,7 @@ $(document).ready(function() {
         dom: "Bfrtip",
 
         ajax : {
-        url:   "/insuarance", 
+        url:   "{{route('insurance')}}", 
         dataType: "json",
         contentType: "application/json; charset=utf-8", 
         type: "GET"

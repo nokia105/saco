@@ -57,7 +57,7 @@
 
     editor = new $.fn.dataTable.Editor( {
         ajax : {
-        url     : "/collat/{{$id}}",
+        url     : "{{route('collat',$id)}}",
         contentType: "application/json; charset=utf-8", 
         type: "GET" 
     },
@@ -94,7 +94,7 @@
         dom: "Bfrtip",
 
         ajax : {
-        url:   "/collat/{{$id}}", 
+        url:   "{{route('collat',$id)}}", 
         dataType: "json",
         contentType: "application/json; charset=utf-8", 
         type: "GET"
@@ -128,7 +128,7 @@
 
 
          $(document).ready(function() {
-  @role('Loan Officer','member')
+  @role('Cashier','member')
   $('.buttons-create,.buttons-edit,.buttons-remove').show();
 
   @else

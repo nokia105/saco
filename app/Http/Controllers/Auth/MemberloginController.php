@@ -40,6 +40,8 @@ class MemberloginController extends Controller
 
                   //dd($password=Hash::make($request->password));
 
+
+
         	 if(Auth::guard('member')->attempt([
 
                  'email'=>$request->email,
@@ -49,9 +51,19 @@ class MemberloginController extends Controller
 
                           if($user->hasRole('Admin')){
         return redirect()->intended('roles');
-    }else{
-        return redirect()->intended('/');
-    }
+    }elseif($user->hasRole('Chair')){
+        return redirect()->intended('processed_loans');
+    }elseif($user->hasRole('Accountant')){
+        return redirect()->intended('processed_loans');
+    }elseif($user->hasRole('Loan Officer')){
+           return redirect()->intended('processed_loans');
+         }elseif($user->hasRole('Cashier')){
+             
+            return redirect()->intended('ready_vouchers'); 
+         }else{
+             $id=Auth::guard('member')->user()->member_id;
+             return redirect()->intended('/member/'.$id );
+         }
         	 }else{
 
         	 	 return redirect()->back()->withInput($request->only('email','remember'));

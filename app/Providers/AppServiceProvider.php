@@ -17,15 +17,15 @@ class AppServiceProvider extends ServiceProvider
     {
 
 
-          view()->composer('loans.template',function($view){
+          view()->composer(['loans.template','member.member_template'],function($view){
 
          $id=request()->segment(2);
          $view->with('member',Member::find($id));
         $view->with('submitted_loans',Member::find($id)->loanlist->where('loan_status','=','submitted')->count());
-        $view->with('no_loans',Member::find($id)->loanlist->where('loan_status','=','approved')->count());
+        $view->with('no_loans',Member::find($id)->loanlist->where('loan_status','=','paid')->count());
          $view->with('rejected_loans',Member::find($id)->loanlist->where('loan_status','=','rejected')->count());
           $view->with('pending_loans',Member::find($id)->loanlist->where('loan_status','=','pending')->count());
-           $view->with('submitted_loans',Member::find($id)->loanlist->where('loan_status','=','submitted')->count());
+          
         });
 
 

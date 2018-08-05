@@ -20,7 +20,7 @@
         </div>
 
 
-       <form action="/reports/loans_time_range" method="post">
+       <form action="{{url('/reports/loans_time_range')}}" method="post">
 
          {{csrf_field()}}
         <div class="box col-md-8 box-danger">

@@ -39,13 +39,16 @@
                   <th>Loan No:</th>
                   <th>Member</th>
                   <th>Submission Date</th>
-                 
-                   <th>Loan Principle(Tsh)</th>
-                   <th>Loan Interest(Tsh)</th>
-                   
+                   <th>Principle(Tsh)</th>
+                   <th>Interest(Tsh)</th>
+                   <th>Charges</th>
+                   <th>Insurances</th> 
                    <th>Duration(month)</th>
+                   <th>Status</th>
                    
+                    @role('Accountant|Cashier','member')
                    <th>Action</th>
+                   @endrole
                  
                 
                 </tr>
@@ -53,15 +56,16 @@
                 <tbody>
                     @foreach($receivedloans as $loan)
                  <tr>
-                 <td><a href="/newloan_receive/{{$loan->id}}">#{{$code+$loan->id+$loan->member_id}}</a></td>  
+              <td><a href="{{route('loan_info',$loan->id)}}">#{{$code+$loan->id+$loan->member_id}}</a></td>  
                  <td>{{ucfirst($loan->member->first_name)}} {{ucfirst($loan->member->last_name)}}</td> 
                 <td>{{ \Carbon\Carbon::parse($loan->loanInssue_date)->format('d/m/y') }}</td>
-
-                <td>{{$loan->principle}}</td>
-                <td>{{($loan->mounthlyrepayment_interest)*$loan->duration}}</td>
-              
+                <td>{{number_format($loan->principle,2)}}</td>
+                <td>{{number_format(($loan->mounthlyrepayment_interest)*$loan->duration,2)}}</td>
+                <td>{{number_format($loan->loan_fees->sum('fee_value'),2)}}</td>
+                <td>{{number_format((($loan->insurances->percentage_insurance)/100)*$loan->principle,2)}}</td>
                 <td>{{$loan->duration}}</td>
-                
+                <td>{{strtoupper($loan->loan_status)}}</td>
+                   @role('Accountant|Cashier','member')
                 <td class="center">
                                 
     <div class="btn-group">
@@ -69,18 +73,19 @@
             Action <span class="caret"></span>
         </button>
         <ul class="dropdown-menu dropdown-default pull-right" role="menu">
-        <li><a  onclick="showAjaxModal('/approve/{{$loan->id}}')" >
-        <i class="fa fa-check-circle-o" style="color:green; font-size:15px;"></i>Approve </a> </li>
+        <li><a  onclick="showAjaxModal('{{route('agree',$loan->id)}}')" >
+        <i class="fa fa-check-circle-o" style="color:green; font-size:15px;"></i>Review</a> </li>
 
-         <li><a  onclick="showAjaxModal('/reject/{{$loan->id}}')" >
-        <i class="fa fa-ban" style="color:red; font-size:15px;"></i>Reject</a> </li>
+         <li><a  onclick="showAjaxModal('{{route('reject',$loan->id)}}')" >
+        <i class="fa fa-ban" style="color:red; font-size:15px;"></i>Denied</a> </li>
 
-         <li><a  onclick="showAjaxModal('/pending/{{$loan->id}}')" >
+         <li><a  onclick="showAjaxModal('{{route('pending',$loan->id)}}')" >
         <i class="fa fa-clock-o" style="color:red; font-size:15px;"></i>Pending </a> </li>
                                
          </ul>
          </div>
 </td>
+@endrole
                 </tr>
                 @endforeach
                

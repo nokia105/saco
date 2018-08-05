@@ -25,13 +25,10 @@ class CodeController extends Controller
      }
 
 
-      public function index(){
+   public function db(){
 
-       //$id=request()->segment(2);
-
-      
-
-    $sql_details = array(
+// DataTables PHP library
+$sql_details = array(
     "type" => "Mysql",  // Database type: "Mysql", "Postgres", "Sqlite" or "Sqlserver"
     "user" => "root",       // Database user name
     "pass" => "",       // Database password
@@ -39,11 +36,16 @@ class CodeController extends Controller
     "port" => "",       // Database connection port (can be left empty for default)
     "db"   => "saccoss"     // Database name
     //"dsn"  => "charset=utf8"        // PHP DSN extra information. Set as `charset=utf8` if you are using MySQL
-);
+);   // Database name
+    //"dsn"  => "charset=utf8"        // PHP DSN extra information. Set as `charset=utf8` if you are using MySQL
 
-$db = new \DataTables\Database( $sql_details );
+return $db = new \DataTables\Database( $sql_details );
+  }
 
-$mm=Editor::inst($db,'codes','id')
+      public function index(){
+
+
+$mm=Editor::inst($this->db(),'codes','id')
     ->fields(
         Field::inst('code_number')->validator( 'Validate::notEmpty' ),
         Field::inst('name')->validator( 'Validate::notEmpty' )

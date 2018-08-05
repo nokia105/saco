@@ -21,10 +21,17 @@ use App\Repayment;
 use App\Membersaving;
 use App\Insurance;
 use App\Code;
+use App\Mainaccount;
+use App\Penalty;
+use App\Payment;
+use App\Journalentry;
+use App\Payableaccount;
+use App\Bankaccount;
+use App\Loanaccount;
+use App\Receivableaccount;
 class MembersProfileController extends Controller
 {
     // 
-
 
      function __construct(){
 
@@ -58,7 +65,7 @@ class MembersProfileController extends Controller
             $loancategories=LoanCategory::select('id','category_name')->get();
 
             $guarantors=Member::all()->where('member_id','!=',$id);
-            $fees=Feescategory::all();
+            $fees=Feescategory::all()->where('fee_name','!=','Registration fee');
             $interestmethods=Interestmethod::all();
             return view('loans.newloan',compact('loancategories','username','member','collaterals','guarantors','fees','interestmethods'));
           }
@@ -67,6 +74,7 @@ class MembersProfileController extends Controller
       public function interest(Request $request){
 
          	 $pcategory_id=$request->pcategory;
+
               $interest=LoanCategory::select('id','default_duration','interest_rate')->find($pcategory_id);
                  echo json_encode([
                    'id'=>$interest->id,
@@ -159,6 +167,8 @@ class MembersProfileController extends Controller
             $charges=$request->charges;
 
                   /*dd(Member::check_registered_days($member_id));*/
+
+                  //we get priciple deducting charges and insuarances
                     
                 $validator=$this->validate(request(),[
                  'pcategory'=>'required',
@@ -185,9 +195,10 @@ class MembersProfileController extends Controller
                    // $newprinciple= $principle-$request->principle*$insurance/100;
 
                         //dd($newprinciple);
-                       
+                          
+                           
 
-                     if($differ_register_days<=90){
+                     if($differ_register_days>=90){
 
                                //testing purpose <=
                          if($no_shares==$max_shares){
@@ -199,8 +210,8 @@ class MembersProfileController extends Controller
                    if(/*$principle<=(80/100*$totalcollateral_value+$totalsaving ) ||*/ $principle<=80/100*$totalcollateral_value ){
                             
                              $loan=Loan::create([
-                            'loanInssue_date'=>date('Y-m-d H:i:s'),
-                            'inssued_by'=>Auth::user()->id,
+                            'loanInssue_date'=>date('Y-m-d'),
+                            'inssued_by'=>Auth::guard('member')->user()->member_id,
 
                             'loan_status'=>($request->submit=='draft') ? 'draft' :'submitted',
                             'loancategory_id'=>$pcategory_id,
@@ -240,8 +251,8 @@ class MembersProfileController extends Controller
 
                 $loan=Loan::create([
 
-                            'loanInssue_date'=>date('Y-m-d H:i:s'),
-                            'inssued_by'=>Auth::user()->id,
+                            'loanInssue_date'=>date('Y-m-d'),
+                            'inssued_by'=>Auth::guard('member')->user()->member_id,
                             'loan_status'=>($request->submit=='draft') ? 'draft' :'submitted',
                             'loancategory_id'=>$pcategory_id,
                             'member_id'=>$member_id,
@@ -265,19 +276,6 @@ class MembersProfileController extends Controller
               $loan->loan_fees()->attach($charges);
 
 
-                    /*           for($i=0; $i<$loanperiod; $i++){
-                            $duedate=date('Y-m-d', strtotime($i.' month', strtotime($startpayment)));
-                Loanschedule::create([
-                             
-                              'loan_id'=>$loan->id, 
-                               'monthprinciple'=>$principle/$loanperiod,
-                               'monthinterest'=>(($interest/100)*$principle)/$loanperiod,
-                               'duedate'=>$duedate,
-                               'month'=>date('m',strtotime($duedate))
-
-                           ]);
-
-                           }*/
 
                                      return back()->with('status','your loan is accepted');
 
@@ -309,7 +307,7 @@ class MembersProfileController extends Controller
       
         $code=Code::where('name','=','loan')->first()->code_number;
 
-       $loanlists=Member::find($id)->loanlist->where('loan_status','=','approved');
+       $loanlists=Member::find($id)->loanlist->where('loan_status','=','paid'); //approved
             
            
         
@@ -318,18 +316,7 @@ class MembersProfileController extends Controller
       return view('loans.loanlist' , compact('loanlists','id','code')); 
     }
 
-  public function editloan($id){
-            $loan_id=request()->segment(4);
-            $username=Auth::user()->name;
-            $member=Member::find($id);
-            $collaterals=Member::find($id)->collateral;       
-            $loancategories=LoanCategory::select('id','category_name')->get();
-            $guarantors=Member::all()->where('member_id','!=',$id);
-            $fees=Feescategory::all();
-            $loans=Loan::all()->where('id','=',$loan_id);
-            $member_id=$id;
-            return view('loans.editloan',compact('loancategories','username','member','collaterals','guarantors','fees','loans','member_id'));
-          }
+  
 public function updateloan(Request $request)
  
  {  
@@ -344,122 +331,6 @@ public function updateloan(Request $request)
 
                 ]);*/
           
-
-           $loanperiod=$request->period;
-           $principle=$request->principle;
-            $interest=$request->interest;
-           $member_id=$request->memberloan;
-            $loan_id=$request->loanid; 
-            $collate_id=$request->collate;
-            $guarator_id=$request->guarantor;
-            $charges=$request->charges;
-           $loan=Loan::find($loan_id);
-
-
-
-                  if($request->has('collate')){
-                      
-                  $totalcollateral_value=Collateral::find($collate_id)->sum('colateral_value');
-
-                   if($principle<=80/100*$totalcollateral_value){
-
-                  
-                   DB::table('loans')
-            ->where('id', $loan_id)
-            ->update([
-                  'loancategory_id'=>$request->pcategory,
-                  'duration'=>$loanperiod,
-                  'interest'=>$request->interest,
-                  'principle'=>$request->principle,
-                  'repayment_date'=>$request->startpayment,
-                  'no_of_installments'=>$loanperiod,
-                  'mounthlyrepayment_amount'=>($principle/$loanperiod)+(($interest/100)*$principle)/$loanperiod,
-                  'mounthlyrepayment_principle'=>$principle/$loanperiod,
-                 'mounthlyrepayment_interest'=>(($interest/100)*$principle)/$loanperiod,
-                 'user_id'=>Auth::user()->id //to be deleted
-               ]);
-                Loaninsuarance::create([
-                     'loan_id'=>$loan_id,
-                     'insuarance_pacentage'=>234.678
-                 ]);        
-              $loan->collaterals()->sync($collate_id);
-              $loan->guarantor()->sync( $guarator_id);
-              $loan->loan_fees()->sync($charges);
-
-                Loanschedule::where('loan_id','=',$loan_id)->delete();
-
-                         for($i=0; $i<$loanperiod; $i++){
-                Loanschedule::create([
-                             
-                                'loan_id'=>$loan_id,
-                               'month'=>date('m',strtotime($request->startpayment))+$i,
-                               'monthprinciple'=>$principle/$loanperiod,
-                               'monthinterest'=>(($interest/100)*$principle)/$loanperiod,
-                               'duedate'=>date('Y-m-d', strtotime($i+1 .' month', strtotime($request->startpayment))),
-
-                           ]);
-
-                           }
-
-                     return back()->with('status','your loan is accepted');   
-
-                      
-
-                   }
-
-                    return back()->with('error','your loan must be 80% of your collaterals')->withInput();
-
-
-                   }else{
-
-                     $totalsaving=Member::find($member_id)->savingamount->sum('amount');
-
-                if($principle<=3*$totalsaving){
-            DB::table('loans')
-            ->where('id', $loan_id)
-            ->update([
-                  'loancategory_id'=>$request->pcategory,
-                  'duration'=>$loanperiod,
-                  'interest'=>$request->interest,
-                  'principle'=>$principle,
-                  'repayment_date'=>$request->startpayment,
-                  'no_of_installments'=>$loanperiod,
-                  'mounthlyrepayment_amount'=>($principle/$loanperiod)+(($interest/100)*$principle)/$loanperiod,
-                  'mounthlyrepayment_principle'=>$principle/$loanperiod,
-                 'mounthlyrepayment_interest'=>(($interest/100)*$principle)/$loanperiod,
-                 'user_id'=>Auth::user()->id
-               ]);
-
-     
-                
-              $loan->guarantor()->sync( $guarator_id);
-              $loan->loan_fees()->sync($charges);
-
-                Loanschedule::where('loan_id','=',$loan_id)->delete();
-
-
-                         for($i=0; $i<$loanperiod; $i++){
-                $loanschedule=Loanschedule::create([
-                             
-                                'loan_id'=>$loan_id,
-                               'month'=>date('m',strtotime($request->startpayment))+$i,
-                               'monthprinciple'=>$principle/$loanperiod,
-                               'monthinterest'=>(($interest/100)*$principle)/$loanperiod,
-                               'duedate'=>date('Y-m-d', strtotime($i+1 .' month', strtotime($request->startpayment))),
-
-                           ]);
-
-                           }
-
-                    
-
-            
-  return redirect()->route('loanlist',['id'=>$member_id]) ; 
-
-  }
-   return back()->with('error','You asked for a loan which is more than your savings'); 
- }
-
 
 }
         //download pdf
@@ -477,8 +348,6 @@ public function updateloan(Request $request)
 
                 $pdf = PDF::loadView('loans.loanrepaymentpdf',compact('principle','interest','period','firstpayment','monthlyrepayment','montlyinterest'));
             return $pdf->download('pdfview.pdf');
-             
-        // return view('loans.loanrepaymentpdf',compact('principle','interest','period','firstpayment','monthlyrepayment','montlyinterest'));
     }
 
 
@@ -490,13 +359,13 @@ public function updateloan(Request $request)
 
            $loan=Loan::find($loan_id);
 
-            $loancollaterals=Loan::find( $loan_id)->collaterals;
+            $loancollaterals=Loan::find($loan_id)->collaterals;
                
                $loanguarantors=Loan::find($loan_id)->guarantor;
 
                $insurance=Insurance::first();
 
-               $loanfees=Loan::find( $loan_id)->loan_fees;
+               $loanfees=Loan::find($loan_id)->loan_fees;
          
 
           $code=Code::where('name','=','loan')->first()->code_number;
@@ -510,52 +379,149 @@ public function updateloan(Request $request)
       }
 
 
-
+              //repayment
       public function payment(){
 
         return view('loans.payment');
       }
 
+
+        public function ajaxreceivepayment(Request $request,$id){
+
+                     $member=Member::find($id);
+
+                if($request->payment_type=='loan'){
+
+                   
+                    $main_account=Mainaccount::where('name','=','Loan Account')->first();
+
+                   echo json_encode([
+                    'member_account'=>$member->memberaccount->where('name','=','Loan Account')->first()->account_no .': ' .strtoupper($member->first_name .' '.$member->last_name),
+                    'main_account'=>$main_account->account_no . strtoupper(' : Loan'),
+                    'memberaccount_id'=>$member->memberaccount->where('name','=','Loan Account')->first()->id,
+                    'mainaccount_id'=>$main_account->id
+
+                   ]);
+                }elseif($request->payment_type=='share'){
+                  $main_account=Mainaccount::where('name','=','Share Account')->first();
+                 echo json_encode([
+                    'member_account'=>$member->memberaccount->where('name','=','Share Account')->first()->account_no .': ' .strtoupper($member->first_name .' '.$member->last_name),
+                    'main_account'=>$main_account->account_no. strtoupper(' : Share'),
+                    'memberaccount_id'=>$member->memberaccount->where('name','=','Share Account')->first()->id ,
+                    'mainaccount_id'=>$main_account->id
+
+                   ]);
+                }elseif($request->payment_type=='saving'){
+                    $main_account=Mainaccount::where('name','=','Saving Account')->first();
+                 echo json_encode([
+                    'member_account'=>$member->memberaccount->where('name','=','Saving Account')->first()->account_no .': ' .strtoupper($member->first_name .' '.$member->last_name),
+                    'main_account'=>$main_account->account_no. strtoupper(' : Saving'),
+                    'memberaccount_id'=>$member->memberaccount->where('name','=','Saving Account')->first()->id,
+                    'mainaccount_id'=>$main_account->id
+
+                   ]);
+
+                }elseif($request->payment_type=='reg_fee'){
+
+                  $main_account=Mainaccount::where('name','=','Registration Fee')->first();
+
+                  echo json_encode([
+                    'member_account'=>$member->memberaccount->where('name','=','Registration Fee')->first()->account_no .': ' .strtoupper($member->first_name .' '.$member->last_name),
+                    'main_account'=>$main_account->account_no. strtoupper(' : Registration Fee'),
+                    'memberaccount_id'=>$member->memberaccount->where('name','=','Registration Fee')->first()->id,
+                    'mainaccount_id'=>$main_account->id
+
+                   ]);
+                   
+
+                }else{
+                 echo json_encode([
+                    'member_account'=>"none",
+                    'main_account'=>"none"
+                     ]);
+
+                }
+        }
+           //repayment
        public function storepayments(Request $request){
 
+           //dd($request->all());
+
+                           $member=Member::find($request->member);
+                            $amountinput=$request->payment;
+                             $getpaymenttype=$request->payment_type;
+
+                          
 
                       $this->validate(request(),[
                             'payment_type'=>'required',
                             'payment'=>'required|numeric'
                       ]);
-                  $amountinput=$request->payment;
+                  
 
                   $newamount=0;
+
+                   $bankaccount=Mainaccount::where('name','=','Bank Account')
+                                            ->first();
+
                       
                 if($request->payment_type=='loan'){
-                    $member_loans=Member::find($request->member)->loanlist->where('loan_status','=','active');
+                    $member_loans=Member::find($request->member)->loanlist->where('loan_status','=','paid');
+                      //orderby date
                                   
-
+                           
                        foreach($member_loans as $loan){
                            
                           foreach($loan->loanschedule  as $loan_schedule){
-                             
-                               $month_paid_interest=$loan_schedule->monthrepayment->sum('interestpayed');
-                                $month_paid_principle=$loan_schedule->monthrepayment->sum('principlepayed');
-                                $month_paid_amount=$month_paid_interest+$month_paid_principle;
-                                      
-                                         
 
+
+                                          
                                            // dd($loan_schedule);
                                  if($loan_schedule->status!='paid') {
                                                       //get first row in table
-                                          $totalmonthpay=($loan_schedule->monthprinciple+$loan_schedule->monthinterest)-$month_paid_amount;
 
 
-                                              
+                                   $payment=Payment::create([
+                                     'loan_id'=>$loan_schedule->loan->id,
+                                      'amount'=>$request->payment,
+                                      'narration'=>$request->narration,
+                                      'paid_by'=>Auth::guard('member')->user()->member_id,  //loan payment verificat
+                                      'payment_type'=>$request->payment_method,
+                                      'state'=>'in',
+                                      'date'=>date('Y-m-d')
+                                         ]);
 
+                  $member_interestaccount=$member->memberaccount->where('name','=','Interest Account')->first();
+                      $main_interestaccount=Mainaccount::where('name','=','Interest Account')->first();
+                       $main_loanaccount=Mainaccount::where('name','=','Loan Account')->first();
+                      $month_paid_interest=$loan_schedule->monthrepayment->sum('interestpayed');
+                      $month_paid_principle=$loan_schedule->monthrepayment->sum('principlepayed');
+
+
+                                        if(is_null($loan_schedule->monthpenaty)){
+                                                  
+                                                    //dd($loan_schedule->monthpenaty);
+                                            //amount he  has paid
+                                
+                                $month_paid_amount=$month_paid_interest+$month_paid_principle;
+
+                               $totalmonthpay=($loan_schedule->monthprinciple+$loan_schedule->monthinterest)-$month_paid_amount;
+
+                    
                                             $interest_to_pay=$loan_schedule->monthinterest-$month_paid_interest;
 
 
                                                 $principle_to_pay=$loan_schedule->monthprinciple-$month_paid_principle;
 
                                                          $total_to_pay=($principle_to_pay+$interest_to_pay);
-                                                          
+                                                     
+                                              
+
+
+                                                //store in payment table
+
+                                                      
+                                                           
                                                           if($amountinput==$totalmonthpay){         
                                                                
                                                              $repayment=Repayment::create([
@@ -564,29 +530,129 @@ public function updateloan(Request $request)
                                                                   'interestpayed'=>$interest_to_pay,
                                                                   'amountpayed'=>$total_to_pay,
                                                                   'paymentdate'=>date('Y-m-d H:i:s'),
-                                                                  'user_id'=>Auth::user()->id
+                                                                  'user_id'=>Auth::guard('member')->user()->member_id
 
                                                              ]);  
 
                                                           //$newamount=0;
                                                            
-                                                           $repayment->monthrepayment()->attach($loan_schedule->id);
-                                                            $loan_schedule->status='paid';
-                                                            $loan_schedule->save();
+                                                       $repayment->monthrepayment()->attach($loan_schedule->id);
+                                                       $loan_schedule->status='paid';
+                                                       $loan_schedule->save();
 
                                                                          
                                                       /*if($loan->loanrepayment->sum('amountpayed')==($loan_schedule->sum('monthprinciple')+$loan_schedule->sum('monthinterest'))){
 
                                                      $loan->loan_status='inactive';
                                                       $loan->save();*/
-                                                              return back()->with('status','Loan deposited'); 
-                                                              break; 
+
+
+                                                //cr loan account in bank
+                                           
+                                   Bankaccount::create([
+
+                                  'memberaccount_id'=>$request->memberaccount_id,
+                                  'mainaccount_id'=>$request->mainaccount_id,
+                                  'dr'=>$principle_to_pay,
+                                  'description'=>'loan',
+                                  'date'=>date('Y-m-d')
+                                      ]); 
+
+                                     // dr bankaccount
+
+                                       Loanaccount::create([
+                                       'memberaccount_id'=>$request->memberaccount_id,
+                                       'mainaccount_id'=>$bankaccount->id,
+                                       'dr'=>$principle_to_pay,
+                                       'description'=>'loan',
+                                       'date'=>date('Y-m-d')
+                                    ]);
+
+                                          //interest account
+
+                                       Bankaccount::create([
+
+                                  'mainaccount_id'=>$main_interestaccount->id,
+                                  'memberaccount_id'=>$member_interestaccount->id,
+                                  'dr'=>$interest_to_pay,
+                                  'description'=>'interest',
+                                  'date'=>date('Y-m-d')
+                                      ]);
+
+                                       //loan  account receivable 
+
+                                      Receivableaccount::create([
+                                     'cr'=>$principle_to_pay,
+                                     'mainaccount_id'=>$bankaccount->id,
+                                     'memberaccount_id'=>$request->memberaccount_id,
+                                      'description'=>'loan',
+                                       'date'=>date('Y-m-d')
+                                   ]);
+
+                                              //interest in receivable
+
+                                       Receivableaccount::create([
+                                     'cr'=>$interest_to_pay,
+                                     'memberaccount_id'=>$member_interestaccount->id,
+                                      'mainaccount_id'=>$bankaccount->id,
+                                      'description'=>'interest',
+                                       'date'=>date('Y-m-d')
+                                   ]);
+
+
+                                            
+                                                  
+                                   
+                                                //store in jornal table 
+
+
+                                                            //principle main
+                                                Journalentry::create(
+                                               [
+                               
+                                             'dr'=>$principle_to_pay, 
+                                             'mainaccount_id'=>$bankaccount->id,
+                                              'payment_id'=>$payment->id,
+                                              'date'=>date('Y-m-d'),
+                                              'service_type'=>'loan']
+                                   
+                                                  ); 
+
+                                                  //principle member
+
+                                             Journalentry::create( [
+                                             'cr'=>$principle_to_pay, 
+                                             'memberaccount_id'=>$request->memberaccount_id,
+                                             'payment_id'=>$payment->id,
+                                             'date'=>date('Y-m-d'),
+                                             'service_type'=>'loan']); 
+
+                                                      //interst main
+                                                  Journalentry::create([
+                                             'dr'=>$interest_to_pay, 
+                                             'mainaccount_id'=>$bankaccount->id,//$main_interestaccount->id,
+                                             'payment_id'=>$payment->id,
+                                             'date'=>date('Y-m-d'),
+                                             'service_type'=>'interest']); 
+
+                                                   // interest member
+
+                                                   Journalentry::create([
+                                             'cr'=>$interest_to_pay, 
+                                             'memberaccount_id'=>$member_interestaccount->id,
+                                             'payment_id'=>$payment->id,
+                                             'date'=>date('Y-m-d'),
+                                             'service_type'=>'interest']);
+
+                                          return view('loans.receipt.repayment',compact('amountinput','getpaymenttype','member'));
+                                                             
+                                                        break; 
 
                                                         
 
                                                }
                                                else if($amountinput>$totalmonthpay){
-
+                                                     //to br followed
                                                            
                                                            $repayment=Repayment::create([
 
@@ -595,22 +661,114 @@ public function updateloan(Request $request)
                                                                   'interestpayed'=>$interest_to_pay,
                                                                   'amountpayed'=>$total_to_pay,
                                                                   'paymentdate'=>date('Y-m-d H:i:s'),
-                                                                  'user_id'=>Auth::user()->id
+                                                                  'user_id'=>Auth::guard('member')->user()->member_id
 
                                                  ]);  
 
-                                                                    $newamount=$amountinput-$totalmonthpay;
+                                                                   $newamount=$amountinput-$totalmonthpay;   
                                                                    
                                                                     $repayment->monthrepayment()->attach($loan_schedule->id);
                                                                     $loan_schedule->status='paid';
                                                                     $loan_schedule->save();
-                                                                    
 
-                                                  
+                                                         
+                                               
+                                     Bankaccount::create([
+
+                                  'mainaccount_id'=>$request->mainaccount_id,
+                                  'memberaccount_id'=>$request->memberaccount_id,
+                                  'dr'=>$principle_to_pay,
+                                  'description'=>'loan',
+                                  'date'=>date('Y-m-d')
+                                      ]); 
+
+                                     // dr bankaccount
+
+                                       Loanaccount::create([
+                                       'memberaccount_id'=>$request->memberaccount_id,
+                                       'mainaccount_id'=>$bankaccount->id,
+                                       'dr'=>$principle_to_pay,
+                                       'description'=>'loan',
+                                       'date'=>date('Y-m-d')
+                                    ]);
+
+                                          //interest account
+
+                                       Bankaccount::create([
+
+                                  'mainaccount_id'=>$main_interestaccount->id,
+                                  'memberaccount_id'=>$member_interestaccount->id,
+                                  'dr'=>$interest_to_pay,
+                                  'description'=>'interest',
+                                  'date'=>date('Y-m-d')
+                                      ]);
+
+                                       //loan  account receivable 
+
+                                      Receivableaccount::create([
+                                     'cr'=>$principle_to_pay,
+                                     'mainaccount_id'=>$bankaccount->id,
+                                     'memberaccount_id'=>$request->memberaccount_id,
+                                      'description'=>'loan',
+                                       'date'=>date('Y-m-d')
+                                  ]);
+
+                                              //interest in receivable
+
+                                       Receivableaccount::create([
+                                     'cr'=>$interest_to_pay,
+                                     'memberaccount_id'=>$member_interestaccount->id,
+                                      'mainaccount_id'=>$bankaccount->id,
+                                      'description'=>'interest',
+                                       'date'=>date('Y-m-d')
+                                   ]);
+
+
+
+ 
+                                                //store in jornal table 
+
+                                                           
+                                                            //principle main
+                                                Journalentry::create(
+                                               [
+                               
+                                             'dr'=>$principle_to_pay, 
+                                             'mainaccount_id'=>$bankaccount->id,
+                                              'payment_id'=>$payment->id,
+                                              'date'=>date('Y-m-d'),
+                                              'service_type'=>'loan']
+                                   
+                                                  ); 
+
+                                                  //principle member
+
+                                             Journalentry::create( [
+                                             'cr'=>$principle_to_pay, 
+                                             'memberaccount_id'=>$request->memberaccount_id,
+                                             'payment_id'=>$payment->id,
+                                             'date'=>date('Y-m-d'),
+                                             'service_type'=>'loan']); 
+
+                                                      //interst main
+                                                  Journalentry::create([
+                                             'dr'=>$interest_to_pay, 
+                                             'mainaccount_id'=>$bankaccount->id,//$main_interestaccount->id,
+                                             'payment_id'=>$payment->id,
+                                             'date'=>date('Y-m-d'),
+                                             'service_type'=>'interest']); 
+
+                                                   // interest member
+
+                                                   Journalentry::create([
+                                             'cr'=>$interest_to_pay, 
+                                             'memberaccount_id'=>$member_interestaccount->id,
+                                             'payment_id'=>$payment->id,
+                                             'date'=>date('Y-m-d'),
+                                             'service_type'=>'interest']);
+                                                                              
                                                               //return back()->with('status','Loan deposited'); 
-                                                                            
-
-                                                
+                                                                               
 
                                                }
                                                else if($amountinput<$totalmonthpay){
@@ -628,7 +786,7 @@ public function updateloan(Request $request)
                                                                   'interestpayed'=>$interest_to_pay,
                                                                   'amountpayed'=>$interest_to_pay,
                                                                   'paymentdate'=>date('Y-m-d H:i:s'),
-                                                                  'user_id'=>Auth::user()->id
+                                                                  'user_id'=>Auth::guard('member')->user()->member_id
 
                                                  ]);  
 
@@ -638,17 +796,61 @@ public function updateloan(Request $request)
                                                                     $loan_schedule->status='incomplete';
                                                                     $loan_schedule->save();
 
-                                                  
-                                                              return back()->with('status','Loan repaid'); 
+
+                             
+
+
+
+
+                                                     //interest account
+
+                                       Bankaccount::create([
+
+                                  'mainaccount_id'=>$main_interestaccount->id,
+                                  'memberaccount_id'=>$member_interestaccount->id,
+                                  'dr'=>$interest_to_pay,
+                                  'description'=>'interest',
+                                  'date'=>date('Y-m-d')
+                                      ]);
+
+
+                                              //interest in receivable
+
+                                       Receivableaccount::create([
+                                     'cr'=>$interest_to_pay,
+                                     'memberaccount_id'=>$member_interestaccount->id,
+                                      'mainaccount_id'=>$bankaccount->id,
+                                      'description'=>'interest',
+                                       'date'=>date('Y-m-d')
+                                   ]);                      
+
+                                                //store in jornal table 
+                                     
+                                                      //interst main
+                                                Journalentry::create([
+                                             'dr'=>$interest_to_pay, 
+                                             'mainaccount_id'=>$bankaccount->id,//$main_interestaccount->id,
+                                             'payment_id'=>$payment->id,
+                                             'date'=>date('Y-m-d'),
+                                             'service_type'=>'interest']); 
+
+                                                   // interest member
+
+                                                   Journalentry::create([
+                                             'cr'=>$interest_to_pay, 
+                                             'memberaccount_id'=>$member_interestaccount->id,
+                                             'payment_id'=>$payment->id,
+                                             'date'=>date('Y-m-d'),
+                                             'service_type'=>'interest']);
+     
+                                                return view('loans.receipt.repayment',compact('amountinput','getpaymenttype','member'));
                                                              
-                                                              break;
+                                                           break;
                                                               
 
-                                                        }else if($amountinput>=$interest_to_pay){
-
-
-                                                                        
-
+                                         }else if($amountinput>=$interest_to_pay){
+                                                                     
+                                                        //start inserting in principle
 
                                                                    $repayment=Repayment::create([
 
@@ -657,27 +859,121 @@ public function updateloan(Request $request)
                                                                   'interestpayed'=>$interest_to_pay,
                                                                   'amountpayed'=>$amountinput,
                                                                   'paymentdate'=>date('Y-m-d H:i:s'),
-                                                                  'user_id'=>Auth::user()->id
+                                                                  'user_id'=>Auth::guard('member')->user()->member_id
 
                                                  ]);  
 
                                                                     $newamount=0;
                                                                    
-                                                                    $repayment->monthrepayment()->attach($loan_schedule->id);
-                                                                    $loan_schedule->status='incomplete';
-                                                                    $loan_schedule->save();
+                                                                 $repayment->monthrepayment()->attach($loan_schedule->id);
+                                                                  $loan_schedule->status='incomplete';
+                                                                  $loan_schedule->save();
+
+
+
+
+
+                               Bankaccount::create([
+
+                                  'mainaccount_id'=>$request->mainaccount_id,
+                                  'memberaccount_id'=>$request->memberaccount_id,
+                                  'dr'=>($amountinput-$interest_to_pay),
+                                  'description'=>'loan',
+                                  'date'=>date('Y-m-d')
+                                      ]); 
+
+                                     // dr bankaccount
+
+                                       Loanaccount::create([
+                                       'memberaccount_id'=>$request->memberaccount_id,
+                                       'mainaccount_id'=>$bankaccount->id,
+                                       'dr'=>($amountinput-$interest_to_pay),
+                                       'description'=>'loan',
+                                       'date'=>date('Y-m-d')
+                                    ]);
+
+
+                                             //receivable account
+                                         Receivableaccount::create([
+                                     'cr'=>($amountinput-$interest_to_pay),
+                                     'mainaccount_id'=>$bankaccount->id,
+                                     'memberaccount_id'=>$request->memberaccount_id,
+                                      'description'=>'loan',
+                                       'date'=>date('Y-m-d')
+                                   ]);
+                                                    
+                                                              //interest account
+
+                                       Bankaccount::create([
+
+                                  'mainaccount_id'=>$main_interestaccount->id,
+                                  'memberaccount_id'=>$member_interestaccount->id,
+                                  'dr'=>$interest_to_pay,
+                                  'description'=>'interest',
+                                  'date'=>date('Y-m-d')
+                                      ]);
+
+
+                                              //interest in receivable
+
+                                       Receivableaccount::create([
+                                     'cr'=>$interest_to_pay,
+                                     'memberaccount_id'=>$member_interestaccount->id,
+                                      'mainaccount_id'=>$bankaccount->id,
+                                      'description'=>'interest',
+                                       'date'=>date('Y-m-d')
+                                   ]);  
+
+
+                                                //store in jornal table 
+
+
+                                                            //principle main
+                                                      Journalentry::create(
+                                                  [
+                               
+                                             'dr'=>($amountinput-$interest_to_pay), 
+                                             'mainaccount_id'=>$bankaccount->id,
+                                              'payment_id'=>$payment->id,
+                                              'date'=>date('Y-m-d'),
+                                              'service_type'=>'loan']
+                                   
+                                                  ); 
+
+                                                  //principle member
+
+                                             Journalentry::create( [
+                                             'cr'=>($amountinput-$interest_to_pay), 
+                                             'memberaccount_id'=>$request->memberaccount_id,
+                                             'payment_id'=>$payment->id,
+                                             'date'=>date('Y-m-d'),
+                                             'service_type'=>'loan']); 
+
+                                                      //interst main
+                                                  Journalentry::create([
+                                             'dr'=>$interest_to_pay, 
+                                             'mainaccount_id'=>$bankaccount->id,//$main_interestaccount->id,
+                                             'payment_id'=>$payment->id,
+                                             'date'=>date('Y-m-d'),
+                                             'service_type'=>'interest']); 
+
+                                                   // interest member
+
+                                                   Journalentry::create([
+                                             'cr'=>$interest_to_pay, 
+                                             'memberaccount_id'=>$member_interestaccount->id,
+                                             'payment_id'=>$payment->id,
+                                             'date'=>date('Y-m-d'),
+                                             'service_type'=>'interest']);
+                                                                    
 
                                                   
-                                                              return back()->with('status','Loan deposited'); 
+                                              return view('loans.receipt.repayment',compact('amountinput','getpaymenttype','member'));
                                                              
                                                               break;
 
 
                                                         } 
-
-
-                                                   
-                                                       
 
                                                }
 
@@ -688,9 +984,736 @@ public function updateloan(Request $request)
 
                                                            $amountinput=$newamount;
                                                         } 
-                                                else return back()->with('status','Loan repaid');
+                                                else return view('loans.receipt.repayment',compact('amountinput','getpaymenttype','member'));
 
-                                              }//loan status               
+
+                                        }else{
+
+                                                // dd($request->all());
+                                                 $penalty=Penalty::first()->percentage_penalty;
+                                                 $month_paid_penaty=$loan_schedule->monthpenaty->sum('amount_paid'); 
+                                                          // actual all penalty
+                                                  $monthpenalty=($penalty/100)*($loan_schedule->monthprinciple+$loan_schedule->monthinterest);
+
+                                                 $month_paid_amount=$month_paid_interest+$month_paid_principle+$month_paid_penaty;
+
+                                                $totalmonthpay=($loan_schedule->monthprinciple+$loan_schedule->monthinterest+$monthpenalty)-$month_paid_amount;
+
+                                                $interest_to_pay=$loan_schedule->monthinterest-$month_paid_interest;
+
+
+                                                $principle_to_pay=$loan_schedule->monthprinciple-$month_paid_principle;
+
+                                                $penaty_to_pay=$monthpenalty-$month_paid_penaty;
+
+                                                  $total_to_pay=($principle_to_pay+$interest_to_pay+$penaty_to_pay);
+                                             
+
+                  $member_penatyaccount=$member->memberaccount->where('name','=','Penaty Account')->first();
+                      $main_penatyaccount=Mainaccount::where('name','=','Penaty Account')->first();
+
+
+                             if($amountinput==$totalmonthpay){
+                                                           
+                                                       $repayment=Repayment::create([
+                                                                  'loanschedule_id'=>$loan_schedule->id,
+                                                                  'principlepayed'=> $principle_to_pay,
+                                                                  'interestpayed'=>$interest_to_pay,
+                                                                  'amountpayed'=>$total_to_pay,
+                                                                  'paymentdate'=>date('Y-m-d H:i:s'),
+                                                                  'user_id'=>Auth::guard('member')->user()->member_id
+
+                                                             ]);  
+
+                                                          //$newamount=0;
+                                                           
+                                                           $repayment->monthrepayment()->attach($loan_schedule->id);
+                                                            $loan_schedule->status='paid';
+                                                            $loan_schedule->save();
+
+                                                           //payment
+
+
+
+                                   Bankaccount::create([
+
+                                  'mainaccount_id'=>$main_penatyaccount->id,
+                                  'memberaccount_id'=>$member_penatytaccount->id,
+                                  'dr'=>$penaty_to_pay,
+                                  'description'=>'penaty',
+                                  'date'=>date('Y-m-d')
+                                      ]);
+
+                                       //penaty account receivable 
+
+                                      Receivableaccount::create([
+                                     'cr'=>$penaty_to_pay,
+                                     'mainaccount_id'=>$bankaccount->id,
+                                     'memberaccount_id'=>$member_penatyaccount->id,
+                                     'description'=>'penaty',
+                                      'date'=>date('Y-m-d')
+                                   ]);
+
+
+
+                                                              //interest account
+
+                                       Bankaccount::create([
+
+                                  'mainaccount_id'=>$main_interestaccount->id,
+                                  'memberaccount_id'=>$member_interestaccount->id,
+                                  'dr'=>$interest_to_pay,
+                                  'description'=>'interest',
+                                  'date'=>date('Y-m-d')
+                                      ]);
+
+
+                                              //interest in receivable
+
+                                       Receivableaccount::create([
+                                     'cr'=>$interest_to_pay,
+                                     'memberaccount_id'=>$member_interestaccount->id,
+                                      'mainaccount_id'=>$bankaccount->id,
+                                      'description'=>'interest',
+                                       'date'=>date('Y-m-d')
+                                   ]); 
+
+
+                                      Bankaccount::create([
+
+                                  'memberaccount_id'=>$request->memberaccount_id,
+                                  'mainaccount_id'=>$request->mainaccount_id,
+                                  'dr'=>$principle_to_pay,
+                                  'description'=>'loan',
+                                  'date'=>date('Y-m-d')
+                                      ]); 
+
+                                     // dr bankaccount
+
+                                       Loanaccount::create([
+                                       'memberaccount_id'=>$request->memberaccount_id,
+                                       'mainaccount_id'=>$bankaccount->id,
+                                       'dr'=>$principle_to_pay,
+                                       'description'=>'loan',
+                                       'date'=>date('Y-m-d')
+                                    ]); 
+
+                                              //loan receivable
+                                        Receivableaccount::create([
+                                     'cr'=>$principle_to_pay,
+                                     'mainaccount_id'=>$bankaccount->id,
+                                     'memberaccount_id'=>$request->memberaccount_id,
+                                      'description'=>'loan',
+                                       'date'=>date('Y-m-d')
+                                   ]);
+                                        
+
+
+
+
+                                                          //penalty main account 
+
+                                                 Journalentry::create(
+                                                  [
+                               
+                                             'dr'=>$penaty_to_pay, 
+                                             'mainaccount_id'=>$bankaccount->id, //from penalty account
+                                              'payment_id'=>$payment->id,
+                                              'date'=>date('Y-m-d'),
+                                              'service_type'=>'penaty']
+                                   
+                                                  ); 
+                                                              //penalty member account
+
+                                             Journalentry::create( [
+                                             'cr'=>$penaty_to_pay, 
+                                             'memberaccount_id'=>$member_penatyaccount->id,//$request->memberaccount_id, //from penalty account
+                                             'payment_id'=>$payment->id,
+                                             'date'=>date('Y-m-d'),
+                                             'service_type'=>'penaty']); 
+
+
+                                                        //principle main  
+
+                                                 Journalentry::create(
+                                                  [
+                               
+                                             'dr'=>$principle_to_pay, 
+                                             'mainaccount_id'=>$bankaccount->id,
+                                              'payment_id'=>$payment->id,
+                                              'date'=>date('Y-m-d'),
+                                              'service_type'=>'loan']
+                                   
+                                                  ); 
+
+                                                  //principle member
+
+                                             Journalentry::create( [
+                                             'cr'=>$principle_to_pay, 
+                                             'memberaccount_id'=>$request->memberaccount_id,
+                                             'payment_id'=>$payment->id,
+                                             'date'=>date('Y-m-d'),
+                                             'service_type'=>'loan']); 
+
+                                                      //interst main
+                                                  Journalentry::create([
+                                             'dr'=>$interest_to_pay, 
+                                             'mainaccount_id'=>$bankaccount->id,
+                                             'payment_id'=>$payment->id,
+                                             'date'=>date('Y-m-d'),
+                                             'service_type'=>'interest']); 
+
+                                                   // interest member
+
+                                                   Journalentry::create([
+                                             'cr'=>$interest_to_pay, 
+                                             'memberaccount_id'=>$member_interestaccount->id,
+                                             'payment_id'=>$payment->id,
+                                             'date'=>date('Y-m-d'),
+                                             'service_type'=>'interest']);
+
+
+                                                                //update penaty status
+                                                   $monthpenaty=$loan_schedule->monthpenaty;
+                                                  $monthpenaty->status="paid";
+                                                    $monthpenaty->save(); 
+
+                                              return view('loans.receipt.repayment',compact('amountinput','getpaymenttype','member'));
+                                                             
+                                                        break;        
+                                                        
+                                         }elseif($amountinput>$totalmonthpay){
+
+
+
+                                                            
+                                                          $repayment=Repayment::create([
+
+                                                                  'loanschedule_id'=>$loan_schedule->id,
+                                                                  'principlepayed'=> $principle_to_pay,
+                                                                  'interestpayed'=>$interest_to_pay,
+                                                                  'amountpayed'=>$total_to_pay,
+                                                                  'paymentdate'=>date('Y-m-d H:i:s'),
+                                                                  'user_id'=>Auth::guard('member')->user()->member_id
+
+                                                 ]);  
+
+                                                                   $newamount=$amountinput-$totalmonthpay;   
+                                                                   
+                                                                    $repayment->monthrepayment()->attach($loan_schedule->id);
+                                                                    $loan_schedule->status='paid';
+                                                                    $loan_schedule->save();
+
+                                           Bankaccount::create([
+
+                                  'mainaccount_id'=>$main_penatyaccount->id,
+                                  'memberaccount_id'=>$member_penatyaccount->id,
+                                  'dr'=>$penaty_to_pay,
+                                  'description'=>'penaty',
+                                  'date'=>date('Y-m-d')
+                                      ]);
+
+                                       //penaty account receivable 
+
+                                      Receivableaccount::create([
+                                     'cr'=>$penaty_to_pay,
+                                     'mainaccount_id'=>$bankaccount->id,
+                                     'memberaccount_id'=>$member_penatyaccount->id,
+                                     'description'=>'penaty',
+                                      'date'=>date('Y-m-d')
+                                   ]);
+
+
+
+                                                              //interest account
+
+                                       Bankaccount::create([
+
+                                  'mainaccount_id'=>$main_interestaccount->id,
+                                  'memberaccount_id'=>$member_interestaccount->id,
+                                  'dr'=>$interest_to_pay,
+                                  'description'=>'interest',
+                                  'date'=>date('Y-m-d')
+                                      ]);
+
+
+                                              //interest in receivable
+
+                                       Receivableaccount::create([
+                                     'cr'=>$interest_to_pay,
+                                     'memberaccount_id'=>$member_interestaccount->id,
+                                      'mainaccount_id'=>$bankaccount->id,
+                                      'description'=>'interest',
+                                       'date'=>date('Y-m-d')
+                                   ]); 
+
+
+                                      Bankaccount::create([
+
+                                  'memberaccount_id'=>$request->memberaccount_id,
+                                  'mainaccount_id'=>$request->mainaccount_id,
+                                  'dr'=>$principle_to_pay,
+                                  'description'=>'loan',
+                                  'date'=>date('Y-m-d')
+                                      ]); 
+
+                                     // dr bankaccount
+
+                                       Loanaccount::create([
+                                       'memberaccount_id'=>$request->memberaccount_id,
+                                       'mainaccount_id'=>$bankaccount->id,
+                                       'dr'=>$principle_to_pay,
+                                       'description'=>'loan',
+                                       'date'=>date('Y-m-d')
+                                    ]); 
+
+                                              //loan receivable
+                                        Receivableaccount::create([
+                                     'cr'=>$principle_to_pay,
+                                     'mainaccount_id'=>$bankaccount->id,
+                                     'memberaccount_id'=>$request->memberaccount_id,
+                                      'description'=>'loan',
+                                       'date'=>date('Y-m-d')
+                                   ]);
+                                        
+
+
+
+
+                                                          //penalty main account 
+
+                                                 Journalentry::create(
+                                                  [
+                               
+                                             'dr'=>$penaty_to_pay, 
+                                             'mainaccount_id'=>$bankaccount->id, //from penalty account
+                                              'payment_id'=>$payment->id,
+                                              'date'=>date('Y-m-d'),
+                                              'service_type'=>'penaty']
+                                   
+                                                  ); 
+                                                              //penalty member account
+
+                                             Journalentry::create( [
+                                             'cr'=>$penaty_to_pay, 
+                                             'memberaccount_id'=>$member_penatyaccount->id,//$request->memberaccount_id, //from penalty account
+                                             'payment_id'=>$payment->id,
+                                             'date'=>date('Y-m-d'),
+                                             'service_type'=>'penaty']); 
+
+
+                                                        //principle main  
+
+                                                 Journalentry::create(
+                                                  [
+                               
+                                             'dr'=>$principle_to_pay, 
+                                             'mainaccount_id'=>$bankaccount->id,
+                                              'payment_id'=>$payment->id,
+                                              'date'=>date('Y-m-d'),
+                                              'service_type'=>'loan']
+                                   
+                                                  ); 
+
+                                                  //principle member
+
+                                             Journalentry::create( [
+                                             'cr'=>$principle_to_pay, 
+                                             'memberaccount_id'=>$request->memberaccount_id,
+                                             'payment_id'=>$payment->id,
+                                             'date'=>date('Y-m-d'),
+                                             'service_type'=>'loan']); 
+
+                                                      //interst main
+                                                  Journalentry::create([
+                                             'dr'=>$interest_to_pay, 
+                                             'mainaccount_id'=>$bankaccount->id,
+                                             'payment_id'=>$payment->id,
+                                             'date'=>date('Y-m-d'),
+                                             'service_type'=>'interest']); 
+
+                                                   // interest member
+
+                                                   Journalentry::create([
+                                             'cr'=>$interest_to_pay, 
+                                             'memberaccount_id'=>$member_interestaccount->id,
+                                             'payment_id'=>$payment->id,
+                                             'date'=>date('Y-m-d'),
+                                             'service_type'=>'interest']);
+
+
+
+                                                    }elseif($amountinput<$totalmonthpay){
+
+                                                      
+                                                       if($amountinput<$penaty_to_pay){
+
+                                                               
+                                                         $repayment=Repayment::create([
+
+                                                                  'loanschedule_id'=>$loan_schedule->id,
+                                                                  'principlepayed'=> 0,
+                                                                  'interestpayed'=>$interest_to_pay,
+                                                                  'amountpayed'=>$interest_to_pay,
+                                                                  'paymentdate'=>date('Y-m-d H:i:s'),
+                                                                  'user_id'=>Auth::guard('member')->user()->member_id
+
+                                                 ]);  
+
+                                                                    $newamount=0;
+                                                                   
+                                                                    $repayment->monthrepayment()->attach($loan_schedule->id);
+                                                                    $loan_schedule->status='incomplete';
+                                                                    $loan_schedule->save();
+                           
+
+                                        Bankaccount::create([
+
+                                  'mainaccount_id'=>$main_penatyaccount->id,
+                                  'memberaccount_id'=>$member_penatyaccount->id,
+                                  'dr'=>$penaty_to_pay,
+                                  'description'=>'penaty',
+                                  'date'=>date('Y-m-d')
+                                      ]);
+
+                                       //penaty account receivable 
+
+                                      Receivableaccount::create([
+                                     'cr'=>$penaty_to_pay,
+                                     'mainaccount_id'=>$bankaccount->id,
+                                     'memberaccount_id'=>$member_penatyaccount->id,
+                                     'description'=>'penaty',
+                                      'date'=>date('Y-m-d')
+                                   ]);
+
+
+
+
+                                                //store in jornal table 
+
+                                     Journalentry::create(
+                                                  [
+                               
+                                             'dr'=>$penaty_to_pay, 
+                                             'mainaccount_id'=>$bankaccount->id, //from penalty account
+                                              'payment_id'=>$payment->id,
+                                              'date'=>date('Y-m-d'),
+                                              'service_type'=>'penaty']
+                                   
+                                                  ); 
+                                                              //penalty member accoount
+
+                                             Journalentry::create( [
+                                             'cr'=>$penaty_to_pay, 
+                                             'memberaccount_id'=>$member_penatyaccount->id, //from penalty account
+                                             'payment_id'=>$payment->id,
+                                             'date'=>date('Y-m-d'),
+                                             'service_type'=>'penaty']);
+
+                                                  
+                                                //update penaty sataus
+                                                 
+
+                                              return view('loans.receipt.repayment',compact('amountinput','getpaymenttype','member'));
+                                                              
+
+                                       }elseif($amountinput<($penaty_to_pay+$interest_to_pay)){
+
+                                            $repayment=Repayment::create([
+
+                                                                  'loanschedule_id'=>$loan_schedule->id,
+                                                                  'principlepayed'=> 0,
+                                                                  'interestpayed'=>($amountinput-$penaty_to_pay),
+                                                                  'amountpayed'=>($amountinput-$penaty_to_pay),
+                                                                'paymentdate'=>date('Y-m-d H:i:s'),
+                                                        'user_id'=>Auth::guard('member')->user()->member_id
+
+                                                 ]);  
+
+                                                                    $newamount=0;
+                                                                   
+                                                                $repayment->monthrepayment()->attach($loan_schedule->id);
+                                                                $loan_schedule->status='incomplete';
+                                                                $loan_schedule->save();
+
+
+
+                                                            Bankaccount::create([
+
+                                  'mainaccount_id'=>$main_penatyaccount->id,
+                                  'memberaccount_id'=>$member_penatyaccount->id,
+                                  'dr'=>$penaty_to_pay,
+                                  'description'=>'penaty',
+                                  'date'=>date('Y-m-d')
+                                      ]);
+
+                                       //penaty account receivable 
+
+                                      Receivableaccount::create([
+                                     'cr'=>$penaty_to_pay,
+                                     'mainaccount_id'=>$bankaccount->id,
+                                     'memberaccount_id'=>$member_penatyaccount->id,
+                                     'description'=>'penaty',
+                                      'date'=>date('Y-m-d')
+                                   ]);
+
+
+                                               //interest bank
+                                                Bankaccount::create([
+
+                                  'mainaccount_id'=>$bankaccount->id,
+                                  'memberaccount_id'=>$member_interestaccount->id,
+                                  'dr'=>($amountinput-$penaty_to_pay),
+                                  'description'=>'interest',
+                                  'date'=>date('Y-m-d')
+                                      ]);
+
+
+                                              //interest in receivable
+
+                                       Receivableaccount::create([
+                                     'cr'=>($amountinput-$penaty_to_pay),
+                                     'memberaccount_id'=>$member_interestaccount->id,
+                                      'mainaccount_id'=>$bankaccount->id,
+                                      'description'=>'interest',
+                                       'date'=>date('Y-m-d')
+                                   ]); 
+
+
+
+
+
+
+
+                                                Journalentry::create(
+                                                  [
+                               
+                                             'dr'=>$penaty_to_pay, 
+                                             'mainaccount_id'=>$bankaccount->id, //from penalty account
+                                              'payment_id'=>$payment->id,
+                                              'date'=>date('Y-m-d'),
+                                              'service_type'=>'penaty']
+                                   
+                                                  ); 
+                                                              //penalty member accoount
+
+                                             Journalentry::create( [
+                                             'cr'=>$penaty_to_pay, 
+                                             'memberaccount_id'=>$member_penatyaccount->id, //from penalty account
+                                             'payment_id'=>$payment->id,
+                                             'date'=>date('Y-m-d'),
+                                             'service_type'=>'penaty']);                     
+
+                                                                   //interst main
+                                                  Journalentry::create([
+                                             'dr'=>($amountinput-$penaty_to_pay), 
+                                             'mainaccount_id'=>$bankaccount->id,
+                                             'payment_id'=>$payment->id,
+                                             'date'=>date('Y-m-d'),
+                                             'service_type'=>'interest']); 
+
+                                                   // interest member
+
+                                                   Journalentry::create([
+                                             'cr'=>$amountinput-$penaty_to_pay, 
+                                             'memberaccount_id'=>$member_interestaccount->id,
+                                             'payment_id'=>$payment->id,
+                                             'date'=>date('Y-m-d'),
+                                             'service_type'=>'interest']);
+
+                                                     $monthpenaty=$loan_schedule->monthpenaty;
+                                                  $monthpenaty->status="paid";
+                                                    $monthpenaty->save(); 
+
+
+                                                              return view('loans.receipt.repayment',compact('amountinput','getpaymenttype','member'));
+                                                             
+                                                              break;
+                                                          
+                                                        }elseif ($amountinput>=($penaty_to_pay+$interest_to_pay)) {
+
+                                                               $repayment=Repayment::create([
+
+                                                                  'loanschedule_id'=>$loan_schedule->id,
+                                                                'principlepayed'=>($amountinput-($penaty_to_pay+$interest_to_pay)),
+                                                                  'interestpayed'=>$interest_to_pay,
+                                                                  'amountpayed'=>$amountinput,
+                                                                  'paymentdate'=>date('Y-m-d H:i:s'),
+                                                                  'user_id'=>Auth::guard('member')->user()->member_id
+
+                                                 ]);  
+
+                                                                    $newamount=0;
+                                                                   
+                                                                    $repayment->monthrepayment()->attach($loan_schedule->id);
+                                                                    $loan_schedule->status='incomplete';
+                                                                    $loan_schedule->save();
+
+
+
+                                       Bankaccount::create([
+
+                                  'mainaccount_id'=>$main_penatyaccount->id,
+                                  'memberaccount_id'=>$member_penatyaccount->id,
+                                  'dr'=>$penaty_to_pay,
+                                  'description'=>'penaty',
+                                  'date'=>date('Y-m-d')
+                                      ]);
+
+                                       //penaty account receivable 
+
+                                      Receivableaccount::create([
+                                     'cr'=>$penaty_to_pay,
+                                     'mainaccount_id'=>$bankaccount->id,
+                                     'memberaccount_id'=>$member_penatyaccount->id,
+                                     'description'=>'penaty',
+                                      'date'=>date('Y-m-d')
+                                   ]);
+
+
+                                               //interest bank
+                                                Bankaccount::create([
+
+                                  'mainaccount_id'=>$main_interestaccount->id,
+                                  'memberaccount_id'=>$member_interestaccount->id,
+                                  'dr'=>$interest_to_pay,
+                                  'description'=>'interest',
+                                  'date'=>date('Y-m-d')
+                                      ]);
+
+
+                                              //interest in receivable
+
+                                       Receivableaccount::create([
+                                     'cr'=>$interest_to_pay,
+                                     'memberaccount_id'=>$member_interestaccount->id,
+                                      'mainaccount_id'=>$bankaccount->id,
+                                      'description'=>'interest',
+                                       'date'=>date('Y-m-d')
+                                   ]); 
+
+
+                                               Bankaccount::create([
+
+                                  'memberaccount_id'=>$request->memberaccount_id,
+                                  'mainaccount_id'=>$request->mainaccount_id,
+                                  'dr'=>($amountinput-($penaty_to_pay+$interest_to_pay)),
+                                  'description'=>'loan',
+                                  'date'=>date('Y-m-d')
+                                      ]); 
+
+                                     // dr bankaccount
+
+                                       Loanaccount::create([
+                                       'memberaccount_id'=>$request->memberaccount_id,
+                                       'mainaccount_id'=>$bankaccount->id,
+                                       'dr'=>($amountinput-($penaty_to_pay+$interest_to_pay)),
+                                       'description'=>'loan',
+                                       'date'=>date('Y-m-d')
+                                    ]); 
+
+                                              //loan receivable
+                                        Receivableaccount::create([
+                                     'cr'=>($amountinput-($penaty_to_pay+$interest_to_pay)),
+                                     'mainaccount_id'=>$bankaccount->id,
+                                     'memberaccount_id'=>$request->memberaccount_id,
+                                      'description'=>'loan',
+                                       'date'=>date('Y-m-d')
+                                   ]);
+
+                            
+                                                    
+                                       Journalentry::create(
+                                                  [
+                               
+                                             'dr'=>$penaty_to_pay, 
+                                             'mainaccount_id'=>$bankaccount->id, //from penalty account
+                                              'payment_id'=>$payment->id,
+                                              'date'=>date('Y-m-d'),
+                                              'service_type'=>'penaty']
+                                   
+                                                  ); 
+                                                              //penalty member accoount
+
+                                             Journalentry::create( [
+                                             'cr'=>$penaty_to_pay, 
+                                             'memberaccount_id'=>$member_penatyaccount->id, //from penalty account
+                                             'payment_id'=>$payment->id,
+                                             'date'=>date('Y-m-d'),
+                                             'service_type'=>'penaty']); 
+                      
+                                                //store in jornal table 
+
+
+                                                            //principle main
+                                                      Journalentry::create(
+                                                  [
+                               
+                                             'dr'=>($amountinput-($penaty_to_pay+$interest_to_pay)), 
+                                             'mainaccount_id'=>$bankaccount->id,
+                                              'payment_id'=>$payment->id,
+                                              'date'=>date('Y-m-d'),
+                                              'service_type'=>'loan']
+                                   
+                                                  ); 
+
+                                                  //principle member
+
+                                             Journalentry::create( [
+                                            'cr'=>($amountinput-($penaty_to_pay+$interest_to_pay)), 
+                                             'memberaccount_id'=>$request->memberaccount_id,
+                                             'payment_id'=>$payment->id,
+                                             'date'=>date('Y-m-d'),
+                                             'service_type'=>'loan']); 
+
+                                                      //interst main
+                                                  Journalentry::create([
+                                             'dr'=>$interest_to_pay, 
+                                             'mainaccount_id'=>$bankaccount->id,
+                                             'payment_id'=>$payment->id,
+                                             'date'=>date('Y-m-d'),
+                                             'service_type'=>'interest']); 
+
+                                                   // interest member
+
+                                                   Journalentry::create([
+                                             'cr'=>$interest_to_pay, 
+                                             'memberaccount_id'=>$member_interestaccount->id,
+                                             'payment_id'=>$payment->id,
+                                             'date'=>date('Y-m-d'),
+                                             'service_type'=>'interest']);
+
+                                                  
+                                              
+                                                    $monthpenaty=$loan_schedule->monthpenaty;
+                                                  $monthpenaty->status="paid";
+                                                    $monthpenaty->save(); 
+                  
+
+                                                  
+                                              return view('loans.receipt.repayment',compact('amountinput','getpaymenttype','member'));
+                                                             
+                                                              break;
+
+
+
+                                                          
+                                                        }
+
+                          
+                                                } 
+                                          if($newamount>0){
+
+
+                                              $amountinput=$newamount;
+                                                        } 
+            else return view('loans.receipt.repayment',compact('amountinput','getpaymenttype','member'));
+//next if  
+                                              }    
+
+                                                     
+                                              }//loan status  
+
                                                
                                  }
                                    
@@ -706,19 +1729,71 @@ public function updateloan(Request $request)
                                     
                                    $no_share=Member::find($request->member)->no_shares->sum('No_shares');
         
-                                             if($no_share<$max_shares){                           
+                                             if($no_share<$max_shares){
 
-                         Member_share::create([
+
+                                   
+                         $share=Member_share::create([
                               
                                'member_id'=>$request->member,
                                'amount'=>$request->payment,
                                'share_date'=>date('Y-m-d H:i:s'),
-                               'user_id'=>Auth::user()->id,
+                               'user_id'=>Auth::guard('member')->user()->member_id,
                                'No_shares'=>$request->payment/$share
 
                          ]);
 
-                          return back()->with('status','your share deposited'); 
+                                 $payment=Payment::create([
+                                 'member_share_id'=>$share->id,
+                                 'amount'=>$request->payment,
+                                 'narration'=>$request->narration,
+                                 'paid_by'=>Auth::guard('member')->user()->member_id, 
+                                 'payment_type'=>$request->payment_method,
+                                 'state'=>'in',
+                                 'date'=>date('Y-m-d')
+                             
+                         ]);
+                               
+
+
+                                   //jornal cr main saccoss
+
+                                      Bankaccount::create([
+                                       'dr'=>$request->payment,
+                                        'mainaccount_id'=>$request->mainaccount_id,
+                                        'memberaccount_id'=>$request->memberaccount_id,
+                                        'description'=>'share',
+                                         'date'=>date('Y-m-d')
+                                            
+                                      ]);
+
+                                       Payableaccount::create([
+                                       'member_share_id'=>$share->id,
+                                       'cr'=>$request->payment,
+                                       'date'=>date('Y-m-d')
+                                       ]);
+
+                                       Journalentry::create( [
+                                             'cr'=>$request->payment, 
+                                             'mainaccount_id'=>$request->mainaccount_id,
+                                             'payment_id'=>$payment->id,
+                                             'date'=>date('Y-m-d'),
+                                             'service_type'=>'share']); 
+
+
+                                  //jornal dr member share account
+
+                                        Journalentry::create( [
+                                             'dr'=>$request->payment, 
+                                             'memberaccount_id'=>$request->memberaccount_id,
+                                             'payment_id'=>$payment->id,
+                                             'date'=>date('Y-m-d'),
+                                             'service_type'=>'share']); 
+
+
+
+
+                          return view('loans.receipt.repayment',compact('amountinput','getpaymenttype','member')); 
                 } else{
 
 
@@ -726,23 +1801,146 @@ public function updateloan(Request $request)
                 }
                   
 
-                     }else{
-
-                                  
-                           Membersaving::create([
+                     }elseif($request->payment_type=='saving'){
+     
+                           $saving=Membersaving::create([
                                
                                'member_id'=>$request->member,
                                'saving_code'=>1111,
                                'amount'=>$request->payment,
-                               'user_id'=>Auth::user()->id,
+                               'user_id'=>Auth::guard('member')->user()->member_id,
                                'saving_date'=>date('Y-m-d H:i:s')
                            ]);
 
-                            return back()->with('status','your savings deposited'); 
+
+                                  $payment=Payment::create([
+                                 'membersaving_id'=>$saving->id,
+                                 'amount'=>$request->payment,
+                                 'narration'=>$request->narration,
+                                 'paid_by'=>Auth::guard('member')->user()->member_id, 
+                                 'payment_type'=>$request->payment_method,
+                                 'state'=>'in',
+                                 'date'=>date('Y-m-d')
+                             
+                         ]);
+
+
+                                     Bankaccount::create([
+                                       'dr'=>$request->payment,
+                                        'mainaccount_id'=>$request->mainaccount_id,
+                                        'memberaccount_id'=>$request->memberaccount_id,
+                                        'description'=>'saving',
+                                         'date'=>date('Y-m-d')
+                                            
+                                      ]);
+
+                                       Payableaccount::create([
+                                       'membersaving_id'=>$saving->id,
+                                       'cr'=>$request->payment,
+                                       'date'=>date('Y-m-d')
+                                       ]);
+                                      
+
+                                       //jornal dr main saving account
+                               Journalentry::create( [
+                                             'cr'=>$request->payment, 
+                                             'mainaccount_id'=>$request->mainaccount_id,
+                                             'payment_id'=>$payment->id,
+                                             'date'=>date('Y-m-d'),
+                                             'service_type'=>'saving']); 
+
+                                  //jornal dr member saving account
+
+                                        Journalentry::create( [
+                                             'dr'=>$request->payment, 
+                                             'memberaccount_id'=>$request->memberaccount_id,
+                                             'payment_id'=>$payment->id,
+                                             'date'=>date('Y-m-d'),
+                                             'service_type'=>'saving']); 
+
+
+                            return view('loans.receipt.repayment',compact('amountinput','getpaymenttype','member'));
+
+
+
+                     }else{ 
+                                 $member=Member::find($member_id);
+                                  if($request->payment==$member->regfee->amount){
+                                  
+                                  $memberregfee=$member->regfee;
+                                  $memberregfee->status='paid';
+                                   $memberregfee->save();
+
+                                  $member->status='active';
+                                  $member->save();
+
+                                 $payment=Payment::create([
+                                 'regfee_id'=>$memberregfee->id,
+                                 'amount'=>$request->payment,
+                                 'narration'=>$request->narration,
+                                 'paid_by'=>Auth::guard('member')->user()->member_id, 
+                                 'payment_type'=>$request->payment_method,
+                                 'state'=>'in',
+                                 'date'=>date('Y-m-d')  
+                         ]);
+
+
+                                    Bankaccount::create([
+                                       'dr'=>$request->payment,
+                                        'mainaccount_id'=>$request->mainaccount_id,
+                                        'memberaccount_id'=>$request->memberaccount_id,
+                                        'description'=>'registration fee',
+                                         'date'=>date('Y-m-d')
+                                            
+                                      ]); 
+
+
+
+                                      Receivableaccount::create([
+                                     'cr'=>$request->payment,
+                                     'mainaccount_id'=>$bankaccount->id,
+                                     'memberaccount_id'=>$request->memberaccount_id,
+                                      'description'=>'registration fee',
+                                       'date'=>date('Y-m-d')
+                                   ]);
+
+
+                                        Journalentry::create( [
+                                             'cr'=>$request->payment, 
+                                             'mainaccount_id'=>$request->mainaccount_id,
+                                             'payment_id'=>$payment->id,
+                                             'date'=>date('Y-m-d'),
+                                             'service_type'=>'registration fee']); 
+
+                                  //jornal dr member saving account
+
+                                        Journalentry::create( [
+                                             'dr'=>$request->payment, 
+                                             'memberaccount_id'=>$request->memberaccount_id,
+                                             'payment_id'=>$payment->id,
+                                             'date'=>date('Y-m-d'),
+                                             'service_type'=>'registration fee']); 
+
+
+                               }else{
+
+                                 return back()->with('error','Please enter the fee required');
+                               }
+
 
                      }
 
                 
+                    }
+
+
+                    public function repayment_slip($member_id,$amountinput,$getpaymenttype){
+
+                          $member=Member::find($member_id);
+
+                         $pdf = PDF::loadView('loans.receipt.repayment',compact('member','amountinput','getpaymenttype'));
+                          return $pdf->download('paid.pdf');
+                          
                     }
 
 
