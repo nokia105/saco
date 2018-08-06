@@ -9,20 +9,10 @@
           </a>
         
         </li>
-    
-           <li class="">
-          <a href="{{url('/reports')}}">
-            <i class="fa fa-file"></i> <span>Reports</span>
-            <span class="pull-right-container">
-              <i class="fa  pull-right"></i>
-            </span>
-          </a>
-       
-        </li>
 
         <li class="treeview">
           <a href="#">
-            <i class="fa fa-user-circle-o"></i>
+            <i class=" fa fa-group"></i>
             <span>Members</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
@@ -41,7 +31,7 @@
 
         <li class="">
           <a href="{{route('members')}}">
-            <i class="fa fa-user-circle-o"></i> <span>Members</span>
+            <i class="fa fa-group"></i> <span>Members</span>
             <span class="pull-right-container">
               <i class="fa  pull-right"></i>
             </span>
@@ -51,39 +41,7 @@
      </ul>
    </li>
 
-         <li class="treeview">
-          <a href="#">
-            <i class="fa fa-file"></i>
-            <span>Finacial reports</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu">
-             <li class="">
-          <a href="{{url('/income_statments')}}">
-            <i class="fa fa-file"></i> <span>Income statments</span>
-            <span class="pull-right-container">
-              <i class="fa  pull-right"></i>
-            </span>
-          </a>
-       
-        </li>
-
-        <li class="">
-          <a href="{{route('balance_sheets')}}">
-            <i class="fa fa-file"></i> <span>Balance sheets</span>
-            <span class="pull-right-container">
-              <i class="fa  pull-right"></i>
-            </span>
-          </a>
-       
-        </li>
-     </ul>
-   </li>
-                   
-
-               <li class="treeview">
+    <li class="treeview">
           <a href="#">
             <i class="fa fa-tasks"></i>
             <span>Loans</span>
@@ -159,12 +117,11 @@
 
           </ul>
         </li>
+  <li class="header">PAYMENTS</li>
 
-
-
-            <li class="treeview">
+    <li class="treeview">
           <a href="#">
-            <i class="fa fa-gears"></i>
+            <i class="fa fa-money"></i>
             <span>Payments</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
@@ -216,7 +173,7 @@
 
             <li class="treeview">
           <a href="#">
-            <i class="fa fa-gears"></i>
+            <i class="fa fa-money"></i>
             <span>Receive Payments</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
@@ -236,9 +193,49 @@
           
      </ul>
    </li>
+<li class="header">REPORTS</li>
+<li class="">
+          <a href="{{url('/reports')}}">
+            <i class="fa fa-file"></i> <span>Loan Reports</span>
+            <span class="pull-right-container">
+              <i class="fa  pull-right"></i>
+            </span>
+          </a>
+       
+  </li>
+      <li class="treeview">
+          <a href="#">
+            <i class="fa fa-file"></i>
+            <span>Finacial reports</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+             <li class="">
+          <a href="{{url('/income_statments')}}">
+            <i class="fa fa-file"></i> <span>Income statments</span>
+            <span class="pull-right-container">
+              <i class="fa  pull-right"></i>
+            </span>
+          </a>
+       
+        </li>
 
+        <li class="">
+          <a href="{{route('balance_sheets')}}">
+            <i class="fa fa-file"></i> <span>Balance sheets</span>
+            <span class="pull-right-container">
+              <i class="fa  pull-right"></i>
+            </span>
+          </a>
+       
+        </li>
+     </ul>
+   </li>
              
-            <li class="treeview">
+<li class="header">SETTING</li>
+<li class="treeview">
           <a href="#">
             <i class="fa fa-gears"></i>
             <span>Admin</span>
@@ -279,6 +276,7 @@
         </li>
      </ul>
    </li>
+
 
 
           
