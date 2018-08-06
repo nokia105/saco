@@ -139,9 +139,9 @@
                  
                   <button   value="Post"  class="form-control btn btn-info pull-left"
                    data-toggle="confirm" 
-                   data-title="Wait!" 
+                   data-title="Warning!" 
                    data-message="The posted amount cannot be edited!. Do you want to post this ? "
-                   data-type="success">
+                   data-type="info">
                    Post
 
                    </button>

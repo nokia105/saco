@@ -9,6 +9,9 @@
       background-color:#0000;
   border: 0;
 }
+.total td {
+  
+}
    </style>
        @endsection
 
@@ -24,24 +27,24 @@
                          <h3 class="box-title"><strong>TASAF SACOS</strong></h3>
                           <br>
                          <br>
-                 <h3 class="box-title"> Income statement Starting <strong>01 November </strong> Ending <strong>  {{$year}}.</strong></h3>
+                 <h3 class="box-title"> Income statement Starting  at month<strong> {{$startmonth}} </strong> Ending {{$endmonth}} <strong>  {{$year}}.</strong></h3>
                <!--   For the 12 month period Ending December 31, 2003  -->
                       
                               
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-              <table class="table">
+              <table class="table col-md-12">
                 <thead>
-                <tr  style="border:0">
-                 <th style="font-size">ACCOUNT</th>
-                  <th class="pull-right">AMOUNT</th>
+                <tr  style="border:3px;" class="total">
+                  <th style="">ACCOUNT</th>
+                  <th style="" class="pull-right">AMOUNT</th>
                 </tr>
                 </thead>
                 <tbody>
-                  <tr >
-                  <td><strong>Income</strong></td> 
-                    <td></td>
+                  <tr>
+                  <td><strong>INCOME</strong></td> 
+                    <td> &nbsp;</td>
                   </tr>
 
                   @php
@@ -57,7 +60,8 @@
                       $loanncomes_total+=$interestincome->dramount;
                     @endphp
 
-                <tr class="no-border">
+               <tbody>
+                <tr>
                   <td>{{$interestincome->mainnames}}</td>
                   <td class="pull-right">{{number_format($interestincome->dramount,2)}}</td>  
                 </tr>
@@ -84,9 +88,10 @@
                   <tr>
                     <td></td>
                     <td></td>
-                    <td></td>
+                   
                   </tr>
-                  <td ><strong style="color:blue">Total Income</strong></td>
+                 <tr style="" class="total">
+                  <td><strong style="color:blue">Total Income</strong></td>
                   <td class="pull-right"><strong>{{number_format(($totalincome=$otherincome_total+$loanncomes_total),2)}}</strong></td>  
                 </tr>
 
@@ -95,8 +100,8 @@
                   <td></td>  
                 </tr>
 
-                <tr>
-                  <td style=""><strong>Expenses</strong></td>
+                <tr >
+                  <td ><strong>EXPENSES</strong></td>
                    <td></td>
                 </tr>
                 <tr>
@@ -166,7 +171,7 @@
                   <td></td>
                 </tr>
                  <tr>
-                  <td><strong style="color:blue">Total Expense</strong></td>
+                  <td><strong style="color:blue" >Total Expense</strong></td>
                   <td class="pull-right" ><strong>{{number_format($totalexpense=$operatinalexpense_total+$busnessexpense_total+$otherexpense_total,2)}}</strong></td>  
                 </tr>
                   <tr>
@@ -227,6 +232,11 @@
         </div>
         <!-- /.col -->
       </div>
+      <style type="text/css">
+        .total{
+
+        }
+      </style>
 
       @endsection
 

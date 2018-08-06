@@ -216,7 +216,7 @@ class ReportsController extends Controller
                  
 
 
-                return view('reports.finacial.duration_incomestatment',compact('startdate','enddate','otherincomes','loanncomes','operatinalexpenses','busnessexpenses','otherexpenses','year','taxpecentage','startmonth','endmonth'));
+                return view('reports.finacial.duration_incomestatment',compact('endmonth','startmonth','otherincomes','loanncomes','operatinalexpenses','busnessexpenses','otherexpenses','year','taxpecentage','startmonth','endmonth'));
        }
 
 
