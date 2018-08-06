@@ -31,14 +31,15 @@
               <h3 class="box-title">Approved Vouchers</h3>
             </div>
             <!-- /.box-header -->
-              <div class="mainprinting">
+            <div class="mainprinting pull-right col-md-3" style="text-align: right;">
              <div class="printcheck" >
-                <button id="printcheck">print check</button>
+                <button id="printcheck"><i class="fa fa-print"></i>Check</button>
              </div>
              <div class="printdispatch"  >
-                <button id="printdispatch">print dispatch</button>
+                <button id="printdispatch" style=""><i class="fa fa-print"></i>Dispatch</button>
              </div>
            </div>
+             
             <div class="box-body">
               <table id="example1" class="table table-bordered table-striped">
                 <thead>
@@ -97,16 +98,28 @@
           <!-- /.box -->
 
             <div  id="printtable" class="container-fluid"  style="display:none">
+ <div style="margin-bottom:5px;">
+   </div> 
+
+         <div  id="div" class="col-md-8" style="background-color:#fff; margin-top:px;">
+
+  <div class="col-md-6" style="margin-left:300px;">    
+           <label><strong>CHECK LIST</strong></label>                              
+   </div>
+ 
+   
 
 
-   <div class="loaninfo">
+
+<!--    <div class="loaninfo">
      <div class="company">
-  <label>MIFUMOTZ</label>
+      
+  <label>TASAF SACCOSS</label>
   </div>
 
       <div class="col-md-6 ">
          
-           <label><strong>Check List</strong></label>
+           <label><strong>CHECK LIST</strong></label>
                <br>
                <br>
                        
@@ -122,7 +135,7 @@
                           <br>
       
     </div>
-   </div>
+   </div> -->
     
    <div id="table">
 
@@ -153,28 +166,9 @@
 
 
    <div class="loaninfo">
-     <div class="company">
-  <label>MIFUMOTZ</label>
-  </div>
-
-      <div class="col-md-6 ">
-         
-           <label><strong>Dispatch</strong></label>
-               <br>
-               <br>
-                       
-      </div>
-
-
-       <div class="col-md-6">
-
-         
-                <label>Date Created: <strong>{{\Carbon\Carbon::now()}}</strong></label>
-             
-                          <br>
-                          <br>
-      
-    </div>
+  <div class="col-md-6" style="margin-left:300px;">    
+           <label><strong>DISPATCH LIST</strong></label>                              
+   </div>
    </div>
     
    <div id="table">
