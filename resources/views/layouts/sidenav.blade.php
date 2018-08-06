@@ -234,7 +234,7 @@
      </ul>
    </li>
              
-<li class="header"><strong>SETTING</strong></li>
+<li class="header"><strong>GENERAL SETTING</strong></li>
 <li class="treeview">
           <a href="#">
             <i class="fa fa-gears"></i>
