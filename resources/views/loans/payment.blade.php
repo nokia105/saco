@@ -137,7 +137,14 @@
               
               <div class="form-group">
                  
-                  <input type="submit"  value="Save" class="form-control btn btn-info pull-left" >
+                  <button   value="Post"  class="form-control btn btn-info pull-left"
+                   data-toggle="confirm" 
+                   data-title="Wait!" 
+                   data-message="The posted amount cannot be edited!. Do you want to post this ? "
+                   data-type="success">
+                   Post
+
+                   </button>
               </div>
             </div>
         </div>

@@ -101,41 +101,28 @@
  <div style="margin-bottom:5px;">
    </div> 
 
-         <div  id="div" class="col-md-8" style="background-color:#fff; margin-top:px;">
+        <div  id="div" class="col-md-8" style="background-color:#fff; margin-top:px;">
+     <div class="info" style="margin-top:20px; margin-left: 300px;";>
+    
+     <div style="margin-top:20px;">
+    <strong>TASAF SACOSS</strong>
+</div>
 
-  <div class="col-md-6" style="margin-left:300px;">    
-           <label><strong>CHECK LIST</strong></label>                              
+     <div class="img">
+     <img src="{{asset('/images/logo/saccos.jpg')}}" style="">
+     </div>
+  </div>
+  <div style="float:right; margin-bottom:10px;">
+     <br>
+   Date: {{date('d-m-Y')}}
    </div>
- 
-   
 
-
-
-<!--    <div class="loaninfo">
-     <div class="company">
-      
-  <label>TASAF SACCOSS</label>
+   <div style="text-align:center; margin-top:30px; margin-bottom: 10px;">
+   <label><strong>CHECK LIST</strong></label>
   </div>
 
-      <div class="col-md-6 ">
-         
-           <label><strong>CHECK LIST</strong></label>
-               <br>
-               <br>
-                       
-      </div>
 
-
-       <div class="col-md-6">
-
-         
-                <label>Date Created: <strong>{{\Carbon\Carbon::now()}}</strong></label>
-             
-                          <br>
-                          <br>
-      
-    </div>
-   </div> -->
+   </div>
     
    <div id="table">
 
@@ -166,9 +153,30 @@
 
 
    <div class="loaninfo">
-  <div class="col-md-6" style="margin-left:300px;">    
-           <label><strong>DISPATCH LIST</strong></label>                              
+  <div style="margin-bottom:5px;">
+   </div> 
+
+  <div  id="div" class="col-md-8" style="background-color:#fff; margin-top:px;">
+     <div class="info" style="margin-top:20px; margin-left: 300px;";>
+    
+     <div style="margin-top:20px;">
+    <strong>TASAF SACOSS</strong>
+</div>
+
+     <div class="img">
+     <img src="{{asset('/images/logo/saccos.jpg')}}" style="">
+     </div>
+  </div>
+  <div style="float:right; margin-bottom:10px;">
+     <br>
+    Date: {{date('d-m-Y')}}
    </div>
+
+   <div style="text-align:center; margin-top:30px; margin-bottom: 10px;">
+   <label><strong>DISPATCH LIST</strong></label>
+  </div>
+
+
    </div>
     
    <div id="table">

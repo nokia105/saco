@@ -193,7 +193,7 @@
           
      </ul>
    </li>
-<li class="header">REPORTS</li>
+<li class="header"><strong>REPORTS</strong></li>
 <li class="">
           <a href="{{url('/reports')}}">
             <i class="fa fa-file"></i> <span>Loan Reports</span>
@@ -234,7 +234,7 @@
      </ul>
    </li>
              
-<li class="header">SETTING</li>
+<li class="header"><strong>SETTING</strong></li>
 <li class="treeview">
           <a href="#">
             <i class="fa fa-gears"></i>

@@ -44,6 +44,11 @@
         jQuery('#modal-4').modal('show', {backdrop: 'static'});
         document.getElementById('delete_link').setAttribute('href' , delete_url);
     }
+      function confirm_post(delete_url)
+    {
+        jQuery('#modal-post').modal('show', {backdrop: 'static'});
+        /*document.getElementById('delete_link').setAttribute('href' , delete_url);*/
+    }
     </script>
     
     <!-- (Normal Modal)-->
@@ -54,6 +59,23 @@
                 <div class="modal-header modal-header-primary">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h4 class="modal-title" style="text-align:center;">Are you sure to delete this information ?</h4>
+                </div>
+                
+                
+                <div class="modal-footer" style="margin:0px; border-top:0px; text-align:center;">
+                    <a href="#" class="btn btn-danger" id="delete_link"><?php echo 'delete';?></a>
+                    <button type="button" class="btn btn-info" data-dismiss="modal"><?php echo 'cancel';?></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modal-post">
+        <div class="modal-dialog" >
+            <div class="modal-content" style="margin-top:100px;">
+                
+                <div class="modal-header modal-header-primary">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" style="text-align:center;">The posted amount cannot be edited! Do you want to post this?</h4>
                 </div>
                 
                 

@@ -59,6 +59,9 @@
 
   <!-- Google Font -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+  <style type="text/css">
+    .sidebar-menu>li.header {color:#FFF !important;}
+  </style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
@@ -179,10 +182,8 @@
   </div>
   <!-- /.content-wrapper -->
   <footer class="main-footer">
-    <div class="pull-right hidden-xs">
-      <b>Version</b> 1.0
-    </div>
-    <strong>Copyright &copy; {{ date('Y') }}  SACCOS</a>.</strong> All rights
+    
+    <strong>Copyright &copy; {{ date('Y') }}  <a href="http://www.mifumotz.com">MIFUMOTZ TECHNOLOGIES</a>.</strong> All rights
     reserved.
   </footer>
 
@@ -447,6 +448,8 @@
     <script src="{{asset('js/buttons.print.min.js')}}"></script>
     <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/select/1.2.0/js/dataTables.select.min.js">
     </script>
+
+    <script src="{{ asset('js/confirm/bootstrap.confirm.js') }}"></script>
  
    
     <script src="{{ asset('js/newloan_script.js') }}"></script>
@@ -467,6 +470,7 @@
           },5000);
 
         });
+
     </script>
    
     
